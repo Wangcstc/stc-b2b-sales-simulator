@@ -1,0 +1,9 @@
+{
+  "description": "出题质量门槛。抽屉的质检工序按它卡新题（不过就退回）；对已有题库只出提醒，不阻止装入。阈值在抽屉实测后可调，调整须升考纲版本。",
+  "hidden_cards": { "min": 4, "max": 7 },
+  "unlock_patterns_per_card": { "min": 2 },
+  "verify_should_per_card": { "min": 3 },
+  "verify_should_not_per_card": { "min": 2 },
+  "distractors": { "max": 5 },
+  "init_state_range": { "min": 0, "max": 100 }
+}

@@ -1,0 +1,176 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 13,
+    "客户发言": 7,
+    "我方发言": 6,
+    "客户平均字数": 15,
+    "时间跨度": "2026-01-05 ~ 2026-01-06",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 30
+    },
+    {
+      "category": "业务员姓名",
+      "count": 20
+    },
+    {
+      "category": "公司名",
+      "count": 3
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S03.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S03",
+      "地区": "Sweden",
+      "负责人": "示例业务员",
+      "消息数量": "13",
+      "时间范围": "2026-01-05 ~ 2026-01-06"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S03",
+        "国家": "Sweden",
+        "买家等级": "A",
+        "注册时间": "2017-02"
+      },
+      "behavior90d": {
+        "90天登录天数": "52",
+        "90天浏览产品数": "64",
+        "90天有效询盘数": "2"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "09:00",
+        "text": "Hello, please confirm the IP rating, battery capacity and certificates of your LT-300 lantern. We need documents before we can discuss price.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hello, LT-300 is IPX4 with a 4400 mAh battery. May I ask how the lanterns will be used, so I send the right reports?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "09:29",
+        "text": "They are for our guided kayak tours in the archipelago. The lanterns hang outside the tent all night, often in rain.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Thanks. How many hours do you need on one charge?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "09:58",
+        "text": "At least 12 hours on medium mode, the whole night.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "Understood. Which documents do you need exactly?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "10:27",
+        "text": "We need the IP test report, UN38.3, MSDS and the CE certificate, all showing the model number LT-300.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:09",
+        "text": "Sure. May I ask why the model number on the documents is so important for you?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "09:32",
+        "text": "Our previous supplier sent an IPX6 report that was for a different model. We will not make that mistake again.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:38",
+        "text": "I understand. What quantity and timeline do you have in mind?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "10:01",
+        "text": "Around 800 pieces for the summer season. We decide by the end of February.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:07",
+        "text": "Thank you. I will send all reports with model LT-300 today.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S03",
+        "time": "10:30",
+        "text": "Good, thank you.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# 密钥绝不进 git（计划 T-P4-2）
+.env
+.env.local
+.env.*.local
+
+# LLM 调用日志与实测原始输出：体积大、含 token 计费信息，本地留存即可
+*.log
+
+# 跑局产生的对话记录默认留本地；确认脱敏后再手动 git add -f
+
+.DS_Store
+Thumbs.db
+
+# Next.js
+.next/
+next-env.d.ts
+
+# 覆盖率报告是生成物。只忽略项目根目录的那个：不写开头的斜杠，会连 src/app/workshop/coverage/ 页面一起忽略（真出过：页面没进 git，别人克隆下来点「覆盖」是 404）
+/coverage/
+
+# TS 增量编译缓存：每次构建都变，不该进仓
+tsconfig.tsbuildinfo
+
+# 导入的聊天记录素材：含脱敏后的真实客户对话，不进仓
+imports/
+
+.vercel
+.env*
+# 例外：环境变量样板要进仓（只有占位值），否则按 README 复制 .env.example 会找不到文件
+!.env.example
+
+# 原始培训逐字稿：4 小时录音转写，含员工真名，是标尺底稿的素材而非成品。
+# 《新人谈单标准_第一课核心提炼.md》是它脱敏后的提炼件，那份可以进仓。
+docs/业务员演习系统/业务员新人客户-*.txt
+
+# 转译产物（免 tsx 跑脱敏用），源在 scripts/import/*.ts
+scripts/_dist/
+
+# 启动脚本的运行日志
+_启动日志.txt
+
+# 演示数据清单：里面是本地库的行 id，跟着库走不跟着代码走
+prisma/.demo-manifest.json
+
+# 数据库备份：里面是真实对话、员工姓名与准入判定历史，**绝不能进 git**。
+# 默认放在仓库外面（../_数据库备份），这一行是防着有人把 BACKUP_DIR 指到仓库里。
+_数据库备份/
+*.dump
+
+# 字体构建中间产物（上游原件 + 中间 ttf），产物 woff2 在 src/app/fonts/ 是入仓的
+_fontwork/
+_charset.txt
+
+# 抽屉工作区：客户自己的原材料与加工中间件，永不进仓库
+/workspace/

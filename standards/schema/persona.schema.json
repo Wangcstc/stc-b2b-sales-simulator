@@ -1,0 +1,181 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/persona.schema.json",
+  "title": "题库格式 v1 · 题目（人设）",
+  "description": "一道题 = 一个 AI 买家。柜子在询盘页、产品卡、买家扮演、暗牌解锁、评分、考试抽题、质检这些环节读取下列字段。下划线开头的字段只给人看，柜子运行时不读。",
+  "type": "object",
+  "required": ["id", "skeleton", "pool_type", "open_card", "product", "hidden_card", "leak_fallback", "init_state", "exit_lines", "quote_reactions", "language_style", "verify_cases"],
+  "properties": {
+    "id": { "$ref": "#/definitions/questionId" },
+    "derived_from": { "$ref": "#/definitions/questionId", "description": "变体指向母题" },
+    "version": { "type": "string", "description": "题目内容自己的版本号" },
+    "active": { "type": "boolean", "description": "false = 停用，不进任何题池" },
+    "skeleton": {
+      "type": "object",
+      "required": ["type_code", "name", "session_type", "difficulty", "tests", "active_forces", "na_forces"],
+      "properties": {
+        "type_code": { "type": "string", "pattern": "^[A-G][0-9]{2}$", "description": "考纲题型编码" },
+        "name": { "type": "string", "minLength": 1, "description": "题型名" },
+        "session_type": { "enum": ["inquiry", "followup"] },
+        "difficulty": { "$ref": "#/definitions/difficulty" },
+        "tests": { "type": "string", "minLength": 1, "description": "这一局具体考什么" },
+        "active_forces": { "type": "array", "items": { "$ref": "#/definitions/force" }, "uniqueItems": true },
+        "na_forces": { "type": "array", "items": { "$ref": "#/definitions/force" }, "uniqueItems": true }
+      },
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "difficulty": { "$ref": "#/definitions/difficulty", "description": "变体级难度覆盖；不写就跟 skeleton.difficulty" },
+    "pool_type": { "enum": ["drill", "admission_exam"] },
+    "open_card": {
+      "type": "object",
+      "required": ["name", "country", "company", "inquiry_text"],
+      "properties": {
+        "name": { "type": "string" },
+        "country": { "type": "string" },
+        "company": { "type": "string" },
+        "buyer_level": { "type": "string" },
+        "categories": { "type": "array", "items": { "type": "string" } },
+        "login_days_90d": { "type": ["number", "null"] },
+        "product_views_90d": { "type": ["number", "null"] },
+        "valid_inquiries_90d": { "type": ["number", "null"] },
+        "tags": { "type": "array", "items": { "type": "string" } },
+        "blacklisted_count": { "type": "number" },
+        "spam_inquiry_count": { "type": "number" },
+        "registered_at": { "type": "string" },
+        "email": { "type": "string" },
+        "inquiry_text": { "type": "string", "minLength": 1 }
+      },
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "product": { "$ref": "product.schema.json" },
+    "hidden_card": {
+      "type": "object",
+      "minProperties": 1,
+      "patternProperties": {
+        "^_": {},
+        "^[A-Za-z0-9][A-Za-z0-9_]*$": { "$ref": "#/definitions/hiddenCard" }
+      },
+      "additionalProperties": false
+    },
+    "leak_fallback": { "type": "string" },
+    "distractors": { "type": "array", "items": { "$ref": "#/definitions/distractor" } },
+    "customs_capability": { "type": "string" },
+    "init_state": {
+      "type": "object",
+      "required": ["patience", "trust", "interest"],
+      "properties": {
+        "patience": { "$ref": "#/definitions/percent" },
+        "trust": { "$ref": "#/definitions/percent" },
+        "interest": { "$ref": "#/definitions/percent" }
+      },
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "rules_override": { "type": "object" },
+    "exit_lines": {
+      "type": "object",
+      "required": ["maxTurns"],
+      "properties": {
+        "maxTurns": { "type": "string" },
+        "patienceZero": { "type": ["string", "null"] },
+        "stagnant": { "type": ["string", "null"] }
+      },
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "quote_reactions": {
+      "type": "object",
+      "required": ["compliant", "redline_R1", "qty_mismatch", "oneline_big_quote"],
+      "additionalProperties": { "type": ["string", "null"] }
+    },
+    "followup_reactions": { "type": "object" },
+    "language_style": { "type": "string", "minLength": 1 },
+    "preset_elements": { "type": "array", "items": { "type": "string" } },
+    "verify_cases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["card", "should", "shouldNot"],
+        "properties": {
+          "card": { "type": "string" },
+          "should": { "type": "array", "items": { "type": "string" } },
+          "shouldNot": { "type": "array", "items": { "type": "string" } }
+        },
+        "patternProperties": { "^_": {} },
+        "additionalProperties": false
+      }
+    },
+    "_source": { "$ref": "#/definitions/source" }
+  },
+  "patternProperties": { "^_": {} },
+  "additionalProperties": false,
+  "definitions": {
+    "questionId": {
+      "type": "string",
+      "pattern": "^[A-G][0-9]{2}-[A-Z]{2}-[0-9]{3}$",
+      "description": "<题型编码>-<国家两位代码>-<三位序号>，如 A09-PL-001；国家不明用 XX"
+    },
+    "difficulty": { "enum": ["simple_with_distractors", "standard", "hard"] },
+    "force": { "enum": ["insight", "guidance", "solution", "trust", "closing", "negotiation", "stability"] },
+    "percent": { "type": "number", "minimum": 0, "maximum": 100 },
+    "hiddenCard": {
+      "type": "object",
+      "required": ["value", "unlock", "leak_signals"],
+      "properties": {
+        "value": { "type": "string", "minLength": 1, "description": "买家藏着的信息" },
+        "unlock": { "type": "string", "description": "业务员要问到什么才解锁（给人看的说明）" },
+        "unlock_patterns": { "type": "array", "items": { "type": "string" }, "description": "解锁正则：代码据此判定" },
+        "unlock_patterns_topic": { "type": "array", "items": { "type": "string" } },
+        "unlock_patterns_framing": { "type": "array", "items": { "type": "string" } },
+        "requires": { "type": "array", "items": { "type": "string" }, "description": "前置暗牌" },
+        "leak_signals": { "type": "array", "items": { "type": "string" } }
+      },
+      "anyOf": [
+        { "required": ["unlock_patterns"] },
+        { "required": ["unlock_patterns_topic", "unlock_patterns_framing"] }
+      ],
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "distractor": {
+      "type": "object",
+      "required": ["code", "turn_range", "content", "tests"],
+      "properties": {
+        "code": { "type": "string" },
+        "turn_range": { "type": "array", "items": { "type": "number" }, "minItems": 2, "maxItems": 2 },
+        "content": { "type": "string" },
+        "tests": { "type": "string" },
+        "unlocks": { "type": ["string", "null"] },
+        "scoring": { "type": "string" }
+      },
+      "patternProperties": { "^_": {} },
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "description": "来源备注：只记脱敏素材编号与暗牌出处，不写日期、条数、国家、成交结果。导出题库包时可整段剥掉。",
+      "required": ["material_id", "quotes"],
+      "properties": {
+        "material_id": { "type": ["string", "null"], "description": "脱敏素材编号；派生题或无素材时为 null" },
+        "quotes": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["card"],
+            "properties": {
+              "card": { "type": "string" },
+              "message_index": { "type": ["integer", "null"], "description": "出自原对话第几条" },
+              "quote": { "type": "string", "description": "原文（已脱敏），供忠实度质检比对" },
+              "invented": { "type": "boolean", "description": "true = 这张暗牌是设计出来的，不来自素材" },
+              "why": { "type": "string", "description": "补写的理由（invented 为真时必填）" }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  }
+}

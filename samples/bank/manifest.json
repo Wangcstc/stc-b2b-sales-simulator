@@ -1,0 +1,33 @@
+{
+  "format_version": 1,
+  "syllabus_version": 3,
+  "bank_id": "bank-sample0001",
+  "bank_version": "1.0.2",
+  "drawer_version": "8.3.0",
+  "generator": "hand-crafted-sample",
+  "created_at": "2026-11-05T00:00:00.000Z",
+  "counts": {
+    "total": 8,
+    "drill": 5,
+    "admission_exam": 3,
+    "bg_packages": 1,
+    "by_type": {
+      "A01": 1,
+      "A02": 1,
+      "A03": 1,
+      "A09": 1,
+      "B01": 1,
+      "B03": 1,
+      "C02": 1,
+      "E01": 1
+    },
+    "by_slot": {
+      "STANDARD_INQUIRY": 1,
+      "HARD_INQUIRY": 1,
+      "FOLLOWUP": 1
+    }
+  },
+  "source_batches": [
+    "sample"
+  ]
+}

@@ -1,0 +1,26 @@
+# 本地开发数据库。应用镜像启动时会先执行 `prisma migrate deploy`，再启动 Next.js。
+
+# ★ 项目名必须钉死 ★ Compose 默认拿目录名当项目名；目录名一改（尤其含中文时被剥成空串），
+# 就会新建一套空卷、连上空库。钉死 name 之后，目录叫什么都不影响。
+name: drill-system
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: drill-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: drill
+      POSTGRES_PASSWORD: drill_local_dev
+      POSTGRES_DB: drill
+    ports:
+      - "5433:5432"   # 用 5433 避开本机可能已占用的 5432
+    volumes:
+      - drill-pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U drill -d drill"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  drill-pgdata:

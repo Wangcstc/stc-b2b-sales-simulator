@@ -1,0 +1,9 @@
+{
+  "description": "题池开放门槛与考试池健康度。演习不设下限：有 1 道题就能练，题越多越不容易撞题。考试要求每个槽位题够多、题型够散，否则业务员第二轮就开始撞题；抽屉打包时会按槽位提示还差什么。演示或试用时可用环境变量调低考试门槛（见 .env.example）。",
+  "drill_min_questions": 1,
+  "exam_slot_min_questions": 14,
+  "exam_slot_min_types": 4,
+  "exam_slot_target_types": 8,
+  "exam_slot_max_type_share": 0.25,
+  "fresh_days_warn": 5
+}

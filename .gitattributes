@@ -1,0 +1,17 @@
+# 换行符一律 LF，Windows、Mac、Linux 拉下来都一样。
+# 题库包按字节算校验和、文档检查按原文比对：Windows 的 git 默认会把 LF 换成 CRLF，
+# 换了以后样品题库装不进去、自检报「打包后被改过」。所以这里锁死。
+* text=auto eol=lf
+
+# PowerShell 脚本在 Windows 上用，保留 CRLF
+*.ps1 text eol=crlf
+
+# 二进制，不做任何换行转换
+*.png binary
+*.jpg binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.xlsx binary
+*.zip binary

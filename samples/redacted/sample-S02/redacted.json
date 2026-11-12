@@ -1,0 +1,158 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 11,
+    "客户发言": 6,
+    "我方发言": 5,
+    "客户平均字数": 9,
+    "时间跨度": "2026-01-05 ~ 2026-01-06",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 19
+    },
+    {
+      "category": "业务员姓名",
+      "count": 13
+    },
+    {
+      "category": "公司名",
+      "count": 2
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S02.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S02",
+      "地区": "United States",
+      "负责人": "示例业务员",
+      "消息数量": "11",
+      "时间范围": "2026-01-05 ~ 2026-01-06"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S02",
+        "国家": "United States",
+        "买家等级": "B",
+        "注册时间": "2021-08"
+      },
+      "behavior90d": {
+        "90天登录天数": "18",
+        "90天浏览产品数": "240",
+        "90天有效询盘数": "6"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "09:00",
+        "text": "Price?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hi, thanks! The price depends on quantity and version. How many pieces do you need?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "09:29",
+        "text": "500 for a start. If it sells, around 2000 every quarter.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Great. Where do you sell, so I can suggest the right packaging?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "09:58",
+        "text": "I sell camping gear on Amazon US under my own small brand.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "Understood. Do you have a target price?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "10:27",
+        "text": "Another supplier offered 5.20 FOB. Can you beat that?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:33",
+        "text": "Do you need the FCC certificate and battery documents for Amazon?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "10:56",
+        "text": "Yes, Amazon requires the FCC certificate and the UN38.3 report for the battery.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "11:02",
+        "text": "We have both. For 500 pcs our price is USD 6.50 FOB Ningbo with full documents.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S02",
+        "time": "09:30",
+        "text": "Ok, send me the quotation sheet.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

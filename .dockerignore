@@ -1,0 +1,14 @@
+# 不进镜像的东西。
+# ★ .env 一定不能进 ★ 密钥打进镜像层，镜像传到哪密钥就跟到哪；容器的密钥走 docker-compose 的 environment。
+# ★ node_modules 一定不能进 ★ 本机（Windows / Mac）装的是本机平台的二进制，进了 Linux 镜像会把镜像里装好的覆盖掉。
+node_modules
+.next
+.env
+.env.*
+!.env.example
+.git
+workspace
+backup
+coverage
+*.log
+tsconfig.tsbuildinfo

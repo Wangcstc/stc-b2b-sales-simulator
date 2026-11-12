@@ -1,0 +1,10 @@
+{
+  "description": "回流（阶段 6）：每道题在实战里表现异常时出回炉建议的口径。只出建议、由主管拍板，不自动改题。每道题至少攒够 min_sessions 局有分的局才判；主管拍过板的同一条建议，要再攒够这么多新局才会再提。",
+  "min_sessions": 10,
+  "pass_score": 65,
+  "too_easy_pass_rate": 0.9,
+  "too_hard_pass_rate": 0.1,
+  "one_phrase_share": 0.6,
+  "one_phrase_min_unlocks": 5,
+  "rare_card_unlock_rate": 0.2
+}

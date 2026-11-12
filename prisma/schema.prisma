@@ -1,0 +1,780 @@
+// 数据模型（技术方案 11.1）
+//
+// 两个设计要点：
+// ① messages 必须存状态快照——出问题能逐轮回放，这是调状态机参数的唯一手段
+// ② 暗牌用 Json，不建关系表——字段随人设类型差异极大，关系建模会非常痛苦
+//
+// ★ 存储隔离铁律（需求 1.3）★
+// 本库只存演习数据。演习系统**永不写入** wang-grade-coach-memory。
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  TRAINEE // 新人业务员
+  MANAGER // 主管 / 王老师
+  ADMIN
+}
+
+/// v3.0：员工身份与页面权限彻底分开。Role 只决定能看什么，不能再拿来猜员工阶段。
+enum EmployeeType {
+  INTERN
+  REGULAR
+  /// 管理员：主管本人。不走准入、不走校准，**跟着 Role.MANAGER 自动设定，不给人手选**。
+  ///
+  /// ★ 2026-08-23 加 ★ 在这之前主管只能选 OTHER，而 OTHER 在界面上叫「待确认」——
+  /// 一个值同时表示「新账号还没定身份」和「这个人不参加考核」两件事。
+  /// 后果是主管账号被手选成了 REGULAR（正式业务员），而它的 participationMode 是 NONE，
+  /// 两个字段对不上，`check-readiness` 一直报「1 个正式业务员账号口径错误」。
+  /// 根因不是选错了，是**这件事根本不该由人来选**：主管要不要考，由角色决定。
+  MANAGER
+  OTHER
+}
+
+/// 他按哪套训练要求走。★ 跟着 employeeType 自动写死，不是独立开关 ★
+enum ParticipationMode {
+  /// 实习业务员：准入训练（每天 3 局演习解锁考试，最近 6 局判询盘分配权）
+  ADMISSION
+  /// 正式业务员：每周至少 2 场考试（6 局出分）。只记录，不挂任何权限
+  ///
+  /// ★ 2026-08-24 由 CALIBRATION 改名 ★ 老名字来自「正式业务员校准任务」，
+  /// 那套东西同日整个删掉了（8 条任务全是自动生成、一条没启动，校准局零开局）。
+  /// 名字留着只会让人以为正式业务员还在做校准。
+  WEEKLY_EXAM
+  /// 主管、身份待确认：不参加任何训练
+  NONE
+}
+
+enum InquiryAccessStatus {
+  NOT_ADMITTED
+  PROVISIONAL
+  ACTIVE
+  PAUSED
+  NOT_APPLICABLE
+}
+
+enum AccessSetBy {
+  SYSTEM
+  MANAGER
+}
+
+/// v1.1 期别。★ 这是准入的权威状态 ★
+/// InquiryAccessStatus 从此只做兼容映射（ACTIVE↔ACTIVE，TRAINING↔NOT_ADMITTED/PAUSED），
+/// 两个字段同时存在时以 stage 为准——方案第二节写明「否则会互相打架」。
+enum Stage {
+  TRAINING // 训练期：还没有新询盘分配权
+  ACTIVE // 在岗期：已有新询盘分配权
+}
+
+/// ★ 题池物理隔离 ★ 练习题绝不能出现在考试里，反过来也一样。
+/// 2026-08-24 删掉 CALIBRATION 池（21 份，零引用零开局）——正式业务员的周考
+/// 与实习业务员抽同一个 ADMISSION_EXAM 池，同一把尺。
+enum PoolType {
+  DRILL
+  ADMISSION_EXAM
+}
+
+enum AttemptType {
+  LEGACY
+  /// v1.1 每日 1 场考试（3 局）。训练期与在岗期共用同一种考试，区别只在开考前置条件。
+  DAILY
+  ADMISSION_1
+  ADMISSION_2
+  MAINTENANCE
+  RETEST
+}
+
+enum TrainingTaskStatus {
+  PENDING
+  UNLOCKED
+  COMPLETED
+  INVALID
+}
+
+enum TrainingTaskType {
+  BASELINE
+  REMEDIAL
+  RECOVERY
+}
+
+enum TrainingSlotType {
+  SIMPLE_INQUIRY
+  STANDARD_INQUIRY
+  HARD_INQUIRY
+  FOLLOWUP
+}
+
+enum SessionType {
+  INQUIRY // 探需局
+  FOLLOWUP // 跟进局
+}
+
+enum SessionMode {
+  DRILL // 演习：无限次
+  EXAM // v2.0 历史考试，只读保留，不进入 v3.0 准入窗口
+  /// 考试局。★ 2026-08-24 起实习业务员的准入考试与正式业务员的周考共用这一个 mode ★
+  /// 两者抽同一个池、同一把尺；分流靠的是「谁的局」，不是 mode
+  ADMISSION_EXAM
+}
+
+enum SessionStatus {
+  ACTIVE
+  ENDED
+}
+
+model User {
+  id                    String              @id @default(cuid())
+  name                  String
+  code                  String              @unique // 业务员简码，用于演习 ID：D-简码-人设-日期-序号
+  role                  Role                @default(TRAINEE)
+  /// scrypt 派生，格式 scrypt$盐$密钥。null = 还没设过口令，首次登录时自己设
+  passwordHash          String?
+  /// 令牌版本号（N-9，2026-08-28）。签发时写进令牌，读令牌时比对，**对不上一律当没登录**。
+  ///
+  /// ★ 它修的是什么 ★ 令牌有效期 30 天且原来不带版本号，于是「重置口令」之后
+  /// **已经签发的旧令牌照样能用**——主管以为把人挡在外面了，其实没有。
+  /// 停用有当场生效的兜底（getCurrentUser 查 disabledAt），重置口令一条兜底都没有。
+  ///
+  /// 重置口令、停用、恢复，三处各 +1。加一就作废这个人手上所有旧令牌。
+  tokenVersion          Int                 @default(0)
+  /// 停用时间。null = 在用。
+  /// ★ 为什么不直接删 ★ 一旦这个人跑过局，他的台账就是团队资产——
+  /// 演习 ID 里长着他的简码，历史分、标尺校准都挂在上面，删了台账就断了。
+  /// 所以有记录的人只能停用（登不进来，但账和历史都在）；
+  /// 一个局都没开过的（多半是简码敲错了）才允许真删。
+  disabledAt            DateTime?
+  /// v3.0 四层身份。历史账号默认 OTHER/NONE/NOT_APPLICABLE，必须由管理员逐一确认，程序不猜。
+  employeeType          EmployeeType        @default(OTHER)
+  participationMode     ParticipationMode   @default(NONE)
+  inquiryAccessStatus   InquiryAccessStatus @default(NOT_APPLICABLE)
+  accessSetBy           AccessSetBy         @default(SYSTEM)
+  accessSetAt           DateTime            @default(now())
+  accessEffectiveDay    String?
+  overrideUntil         DateTime?
+  overrideReason        String?
+  trainingStartDay      String?
+  identityConfirmedAt   DateTime?
+  /// ★ v1.1 期别四件套（方案第二节）★
+  /// stageOverride = true 时，每晚结算**照算照记，但不改 stage**——
+  /// 这样管理员点「恢复自动」的那一刻，能立刻看到真实判定是什么，
+  /// 而不是以为一切正常。到期时间不设：人工锁定就是锁定，只能由人解。
+  stage                 Stage               @default(TRAINING)
+  stageOverride         Boolean             @default(false)
+  stageSetBy            AccessSetBy         @default(SYSTEM)
+  stageSetAt            DateTime            @default(now())
+  createdAt             DateTime            @default(now())
+  sessions              Session[]
+  examAttempts          ExamAttempt[]
+  redlineReviews        RedlineReview[]
+  trainingTasks         TrainingTask[]
+  accessDecisions       AccessDecision[]    @relation("AccessDecisionSubject")
+  accessDecisionActions AccessDecision[]    @relation("AccessDecisionOperator")
+  dailyEvaluations      DailyEvaluation[]
+  weeklyExamRecords     WeeklyExamRecord[]
+  loginEvents           LoginEvent[]
+  leaveDays             LeaveDay[]
+  adminAudits           AdminAudit[]        @relation("AdminAuditActor")
+  adminAuditsAbout      AdminAudit[]        @relation("AdminAuditSubject")
+  /// 他改过的难度系数（主管才会有）
+  difficultySets        DifficultyProfile[] @relation("DifficultySetter")
+  questionFeedback      QuestionFeedback[]  @relation("QuestionFeedbackBy")
+}
+
+/// 工作日历。**只存例外**，没记录的日子走默认（周一至周五上班）。
+///
+/// ★ 必须双向 ★ 中国的法定假期一定带调休：国庆放 10/1–10/7，配 10/11（周日）上班。
+/// 只能标放假、不能标调休的日历，一年至少错六次。
+///
+/// ★ 为什么不存每一天 ★ 存例外的话，"没维护"和"标成了工作日"在数据上分得开；
+/// 存每一天则分不开——一张没人维护的全量日历，看起来和一张认真维护过的一模一样。
+model BusinessCalendar {
+  /// 业务日 YYYY-MM-DD（上海时区口径，与 lib/business-day.ts 一致）
+  day       String   @id
+  /// false = 放假（把本该上班的日子标成假）｜ true = 调休上班（把周末标成上班）
+  isWorkday Boolean
+  /// 「国庆节」「中秋调休」。给人看的，也是将来对账的凭据
+  label     String?
+  setBy     String?
+  setAt     DateTime @default(now())
+
+  @@index([day, isWorkday])
+}
+
+/// 个人请假。病假、事假、出差——那一天对**这个人**不是业务日。
+///
+/// ★ 和公司放假分开存 ★ 公司放假是全员的，请假是一个人的；
+/// 混在一张表里，"全员放假"就得给每个人插一行，加人时还得补历史。
+model LeaveDay {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  /// 业务日 YYYY-MM-DD
+  day    String
+  /// 病假 / 事假 / 出差 …… 自由填，会显示在台账那一行上
+  reason String?
+  setBy  String?
+  setAt  DateTime @default(now())
+
+  @@unique([userId, day])
+  @@index([day])
+}
+
+/// 管理动作流水：谁、什么时候、对谁、干了什么、改前改后。
+///
+/// ★ 为什么要有它 ★（2026-08-22）在这之前，全系统只有「改期别」留了痕
+/// （AccessDecision，账号管理页底下那张「主管改过的期别」）。另外十一个动作——
+/// 加人、改角色、改身份、重置口令、停用、恢复、删除、标假期、标调休、标请假、点重算——
+/// **一条记录都没有**。一个人的口令被谁重置过、某天为什么标成假期、
+/// 上个月那次重算是谁点的，事后一律查不到。
+///
+/// ★ 只增不改不删 ★ 这是流水，不是状态。任何一条写进去就不动了。
+///
+/// ★ 记不下操作对象的动作也要记 ★ 标假期、点重算没有「被操作的人」，
+/// subjectId 为 null——那不是缺数据，是这个动作本来就针对全员。
+model AdminAudit {
+  id        String   @id @default(cuid())
+  at        DateTime @default(now())
+  /// 谁干的
+  actorId   String
+  actor     User     @relation("AdminAuditActor", fields: [actorId], references: [id])
+  /// 对谁干的。日历类动作（标假期、重算）没有对象，为 null
+  subjectId String?
+  /// 与迁移 20260822160000_admin_audit 一致：流水里指着的人不许被硬删（RESTRICT）
+  subject   User?    @relation("AdminAuditSubject", fields: [subjectId], references: [id], onDelete: Restrict)
+  /// 动作代号。中文名在 lib/admin-audit.ts 的 AUDIT_LABEL，别把中文存进库
+  action    String
+  /// 改之前 / 改之后，各一句人话。没有「之前」的动作（加人）before 为 null
+  before    String?
+  after     String?
+  /// 理由、事由、备注
+  note      String?
+
+  @@index([at])
+  @@index([subjectId, at])
+}
+
+/// 难度系数的变更历史（王老师 2026-08-23 指令）。
+///
+/// ★ 只增不改 ★ 改一次加一行，绝不 update 现有行。
+/// 判定要能回答「8 月 20 号那一局是按哪个系数打的」——覆盖写就永远答不出来，
+/// 而那正是跨变更日的判定窗口唯一能讲清楚的凭据。
+model DifficultyProfile {
+  id            String   @id @default(cuid())
+  /// 0.6–1.5。越小越容易达标，1.0 = 标准难度
+  factor        Float
+  /// 从哪个业务日 00:00（上海）开始生效。与「每晚结算、次日生效」同节奏
+  effectiveFrom DateTime
+  /// 谁改的
+  setBy         String
+  setByUser     User     @relation("DifficultySetter", fields: [setBy], references: [id])
+  /// 为什么改。这一栏空着的变更，三个月后没人说得清当初在想什么
+  note          String?
+  createdAt     DateTime @default(now())
+
+  @@index([effectiveFrom])
+}
+
+/// 考试闸门（需求第 11 章）：3 局（探需×2 + 跟进×1），每人每日 1 次
+model ExamAttempt {
+  id                  String      @id @default(cuid())
+  userId              String
+  user                User        @relation(fields: [userId], references: [id])
+  day                 String // 历史兼容字段；v3.0 新记录与 businessDay 写同一个上海业务日
+  attemptType         AttemptType @default(LEGACY)
+  businessDay         String?
+  groupNo             Int?
+  scoreRuleVersion    String      @default("legacy_pre_v3")
+  poolVersion         String      @default("legacy")
+  validSessionCount   Int?
+  failedRules         Json?
+  gateResults         Json?
+  trainingCycleId     String?
+  sessionIds          String[]
+  medianScore         Int?
+  minInsight          Int?
+  anyRedline          Boolean?
+  medianAnswerQuality Int?
+  /// null 有两种含义，靠 verdict 区分：还没结算，或结算了但悬置等复核
+  passed              Boolean?
+  /// null = 还没结算 ｜ PASSED ｜ FAILED ｜ PENDING_REVIEW（红线②③等主管裁定）
+  /// ★ 加这一列是因为 passed 撑不住三态 ★ 过去 passed===null 就当"还在考"，
+  /// 悬置的场次会被误判成可以继续打局
+  verdict             String?
+  /// 通过时的结论文案。★只能是「已获得询盘接待准入资格」★
+  conclusion          String?
+  createdAt           DateTime    @default(now())
+
+  @@unique([userId, businessDay, attemptType])
+  @@index([userId, attemptType, businessDay])
+}
+
+/// v3.0 结构化训练任务。没有这张表就无法保证 2 简单 + 3 标准 + 2 困难 + 1 跟进的顺序解锁。
+model TrainingTask {
+  id              String             @id @default(cuid())
+  userId          String
+  user            User               @relation(fields: [userId], references: [id])
+  cycleId         String
+  orderNo         Int
+  taskType        TrainingTaskType   @default(BASELINE)
+  slotType        TrainingSlotType
+  requiresBg      Boolean            @default(false)
+  skeletonCode    String?
+  sessionId       String?            @unique
+  session         Session?           @relation(fields: [sessionId], references: [id])
+  status          TrainingTaskStatus @default(PENDING)
+  sourceAttemptId String?
+  reason          String?
+  dueAt           DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime           @default(now())
+  updatedAt       DateTime           @updatedAt
+
+  @@unique([userId, cycleId, orderNo])
+  @@index([userId, cycleId, status])
+}
+
+/// 每次系统建议或主管实际改变询盘权限都单独留痕，User 只保留当前快照。
+model AccessDecision {
+  id                String              @id @default(cuid())
+  subjectId         String
+  subject           User                @relation("AccessDecisionSubject", fields: [subjectId], references: [id])
+  attemptIds        String[]
+  gateResults       Json
+  recommendedStatus InquiryAccessStatus
+  appliedStatus     InquiryAccessStatus
+  manualOverride    Boolean             @default(false)
+  operatorId        String?
+  operator          User?               @relation("AccessDecisionOperator", fields: [operatorId], references: [id])
+  reason            String?
+  effectiveDay      String
+  overrideUntil     DateTime?
+  poolVersion       String
+  scoreRuleVersion  String
+  createdAt         DateTime            @default(now())
+
+  @@index([subjectId, createdAt])
+}
+
+/// 考纲题型（v8.2 起）。一行 = 考纲里的一个题型，如 A09 技术尽调型。
+///
+/// ★ 真源是标准层 `standards/syllabus/syllabus-v3.json` ★ 题库装入器按考纲写这一行，
+/// 题目自己写的骨架字段不会改到它——题库里的题只能挂在已有题型下，不能新增或改动题型。
+/// 旧数据里 P1–P32 的行保留（历史局还指着它们），但它们的题已不在当前题库里。
+model Persona {
+  id           String           @id @default(cuid())
+  code         String           @unique // A01 … G04（考纲 v2）；旧数据为 P1 … P32
+  name         String
+  tests        String // 考什么能力
+  sessionType  SessionType
+  difficulty   String
+  /// 本局评哪几力 / 哪几力不评。真源是人设 JSON 的 skeleton.active_forces / na_forces。
+  ///
+  /// ★ 2026-08-14 加 ★ 在这之前评分接口把七力**写死成 P1 的配置**，对所有人设一视同仁
+  /// （`const activeForces = ['insight','guidance','solution','trust','closing']`，
+  /// 旁边还留着一句「后续人设从配置里读」——这件事一直没做）。
+  /// 后果是 P7 极限压价型的谈判力不评、P19 首响过慢型的稳定力不评，
+  /// 而那恰恰是这两个骨架的主考点。人设 JSON 里的七力字段等于纯装饰。
+  ///
+  /// 默认给空数组是为了 db:push 不炸历史行；评分接口读到空会**拒绝评分并要求重跑 seed**，
+  /// 不会自己顶一套默认值——顶了就没人知道这一局是按什么口径判的。
+  activeForces Json             @default("[]")
+  naForces     Json             @default("[]")
+  /// 这一行按哪一版考纲写的（如 `v2`）。check:syllabus 据此核对库里的题型与标准层一致。
+  syllabus     String           @default("")
+  variants     PersonaVariant[]
+}
+
+/// 题库包的一个版本（v8.2 起）。题库包一经装入不再修改；改题就装一个新版本。
+///
+/// ★ 同一时刻只有一个「当前版本」★ 切换版本时，所有题的 `active` 重新计算：
+/// 只有当前版本里、且题目本身没停用（`enabledInBank`）的题才是 active。
+/// 题池查询一律只认 `active: true`，所以切换、回滚都不用改任何查询。
+/// 旧版本的题留在库里，历史局、报告、判定照常能打开。
+model BankVersion {
+  id              String           @id @default(cuid())
+  bankId          String
+  bankVersion     String
+  formatVersion   Int
+  syllabusVersion Int
+  drawerVersion   String
+  generator       String?
+  /// 题库包的打包时间（manifest.created_at）
+  packedAt        DateTime
+  loadedAt        DateTime         @default(now())
+  /// checksums.json 的指纹：同一个版本号再装一次时，用它判断内容是不是同一份
+  fingerprint     String
+  isCurrent       Boolean          @default(false)
+  manifest        Json
+  coverage        Json
+  variants        PersonaVariant[]
+
+  @@unique([bankId, bankVersion])
+}
+
+model PersonaVariant {
+  id             String       @id @default(cuid())
+  personaId      String
+  persona        Persona      @relation(fields: [personaId], references: [id])
+  /// 题目编号，如 A09-PL-001（旧数据为 P22-EX-001）。同一题库的不同版本里编号相同，
+  /// 所以唯一性是「题库版本 + 编号」，不是编号本身。
+  variantId      String
+  /// 属于哪个题库版本。null ＝ v8.2 之前用旧方式灌进来的题
+  bankVersionId  String?
+  bankVersion    BankVersion? @relation(fields: [bankVersionId], references: [id])
+  /// 题目在题库包里有没有被停用（题目自己的 active 字段）。
+  /// `active` 由「是否当前版本 && enabledInBank」算出来，切换版本时重算。
+  enabledInBank  Boolean      @default(true)
+  openCard       Json // 明牌
+  hiddenCard     Json // 暗牌（含 unlock_patterns / leak_signals）
+  product        Json
+  distractors    Json
+  initState      Json
+  exitLines      Json
+  quoteReactions Json
+  languageStyle  String
+  /// 前情里已经定死的六要素（跟进局用），如 ["product_attr","quantity",...]。
+  /// 这几项开局即标为已知，既不算业务员的功劳也不算他的缺失——
+  /// 订单都建好了还去问一遍产品参数，那不是洞察，是没看前情。
+  presetElements Json         @default("[]")
+  /// 变体级难度覆盖（2026-08-28 第三批）。null ＝ 跟骨架的 `Persona.difficulty` 走。
+  ///
+  /// ★ 为什么要下沉这一层 ★ 难度原来只挂在骨架上，一个考点只能有一个档位。
+  /// 于是想要一道「困难的专业定制型」，只能新建一个考点 P33——重新设计考点、
+  /// 重定七力、重写母本、重过两道闸。**扩困难题的唯一路径是造新考点**，
+  /// 而考点是这套系统里最贵的东西。方案 v1.1 第四节自己已经算到头了：
+  /// 「转移已经榨干，只能新写」。
+  /// 下沉之后同一个考点能出两档，供给翻倍且不新增考点；对产品化尤其关键——
+  /// 客户喂进来的素材绝大多数是普通标准对话，困难素材天然稀缺。
+  ///
+  /// ★ 覆盖不是随便写的 ★ 声明了覆盖，就必须在机制难度指数上真的跟同考点的兄弟
+  /// 拉开 `MIN_BAND_GAP`，否则 autoplay 报硬问题（见 scripts/import/autoplay.ts 闸⑧）。
+  /// 一个只改了字段、机制没变的「困难版」，会让困难槽名义上有题、实际考标准难度。
+  ///
+  /// 取值与 `Persona.difficulty` 同一套：simple_with_distractors / standard / hard。
+  difficulty     String?
+  /// 考试专用池与演习池物理分离（需求 5.3）
+  examOnly       Boolean      @default(false)
+  /// v3.0 三池。examOnly 暂留一个兼容版本，所有新逻辑只读 poolType。
+  poolType       PoolType     @default(DRILL)
+  poolVersion    String       @default("v3.0")
+  active         Boolean      @default(true)
+  retiredAt      DateTime?
+  sessions       Session[]
+  bgPackage      BgPackage?
+
+  @@unique([bankVersionId, variantId])
+  @@index([variantId])
+}
+
+/// 背调资料包（需求第 6 章）。每份都预埋一个张冠李戴的错误结论——
+/// 那是「AI 会乱抓，你要自己有判断」这个考点的载体。
+model BgPackage {
+  id        String         @id @default(cuid())
+  variantId String         @unique
+  variant   PersonaVariant @relation(fields: [variantId], references: [id])
+  aiReport  Json // content + planted_error{type,truth,detectable_via}
+  website   Json // 假官网快照
+  social    Json // 假 Facebook / TikTok
+  contacts  Json // WhatsApp / 邮箱域名
+}
+
+model Session {
+  id               String            @id @default(cuid())
+  drillId          String            @unique // D-简码-人设-日期-序号，前缀 D 强制
+  userId           String
+  user             User              @relation(fields: [userId], references: [id])
+  variantId        String
+  variant          PersonaVariant    @relation(fields: [variantId], references: [id])
+  type             SessionType       @default(INQUIRY)
+  mode             SessionMode       @default(DRILL)
+  status           SessionStatus     @default(ACTIVE)
+  exitReason       String? // patienceZero / stagnant / maxTurns
+  /// 当前状态与解锁状态。放这里而不是内存——多实例下内存态必然失效
+  state            Json
+  unlockState      Json
+  facts            Json
+  /// session 级串行锁：并发写入时用 SELECT ... FOR UPDATE 抢这一行
+  lockedAt         DateTime?
+  /// 开局那一刻的难度系数快照（默认 1.0 = 标准难度）。
+  ///
+  /// ★ 必须存在局上，不许跑局时去读"当前设置" ★ 两条理由，任何一条都够：
+  ///   1. 主管中途改系数，不能影响正在跑的局——聊到一半客户突然变难缠，那是 bug 不是难度；
+  ///   2. 判定要能回答「那天那一局是按哪个系数打的」。读不出来，跨变更日的窗口就没法解释。
+  difficultyFactor Float             @default(1.0)
+  createdAt        DateTime          @default(now())
+  endedAt          DateTime?
+  messages         Message[]
+  score            Score?
+  coachQa          CoachQa[]
+  calibration      ScoreCalibration?
+  trainingTask     TrainingTask?
+  redlineReviews   RedlineReview[]
+}
+
+model Message {
+  id            String   @id @default(cuid())
+  sessionId     String
+  session       Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  turn          Int
+  role          String // trainee / customer / system
+  content       String
+  extraction    Json?
+  /// ★每轮必存状态快照★ —— 回放工具的数据基础
+  stateSnapshot Json?
+  leakBlocked   Json? // 本轮拦截了哪些泄露
+  clientMsgId   String? // 幂等：重复提交直接返回已有结果
+  createdAt     DateTime @default(now())
+
+  @@unique([sessionId, clientMsgId])
+  @@index([sessionId, turn])
+}
+
+model Score {
+  id               String   @id @default(cuid())
+  sessionId        String   @unique
+  session          Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  forces           Json // 七力分 + 证据
+  coverage         Float
+  evaluableCount   Int
+  precise          Boolean
+  /// 最终局分（已按难度系数折算）。段位、红旗、中位数、准入判定读的都是它
+  rawScore         Int?
+  /// 折算之前的分。★ 存着才答得出「他 70 分为什么显示 65」★
+  /// 系数本身记在 `Session.difficultyFactor` 上，两个数一起才是完整的账。
+  /// 2026-08-23 之前的历史行为 null——那时候还没有难度系数，rawScore 就是原始分。
+  baselineScore    Int?
+  tier             String? // D1–D5，**永不写作 L**
+  progress         Int? // 即时推进度 0/1/2
+  answerQuality    Int? // 复盘作答质量 0/1/2
+  flags            Json
+  reportMd         String?
+  /// 这一局是按哪套评分口径判的。**不同口径的分不可比，别混在一起算中位数。**
+  ///
+  /// - `v1_forces_hardcoded`：2026-08-14 之前。七力写死成 P1 的配置，
+  ///   所有人设一律「不评谈判力、不评稳定力」。历史行加字段时自动落到这个默认值。
+  /// - `v2_forces_from_persona`：七力从人设读。
+  ///
+  /// ★ 为什么不重算历史局 ★ 七力分是 L3 自由评分（LLM 打的），重跑会得到第三个版本——
+  /// 既不是当初那个分，也不是所谓"正确的分"。而且考试局的准入结论一旦发出去，
+  /// 人当天就去接真实询盘了，撤不回来。所以历史局原样保留，靠这个字段标出口径，
+  /// 让统计的时候能把两批分开。
+  scoreRuleVersion String   @default("v1_forces_hardcoded")
+  createdAt        DateTime @default(now())
+}
+
+model CoachQa {
+  id             String   @id @default(cuid())
+  sessionId      String
+  session        Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  idx            Int
+  question       String
+  answer         String?
+  followUp       String?
+  followUpAnswer String?
+  skipped        Boolean  @default(false)
+  createdAt      DateTime @default(now())
+
+  @@unique([sessionId, idx])
+}
+
+/// 注入评分 prompt 的判例，优先级高于所有通用锚点（见 lib/llm/score.ts）。
+/// ★ 只有「归因＝锚点问题」的校准才会写进来 ★ 取证问题要修的是引文校验，不是锚点；
+/// 把它也写成判例，等于用一条错误读数去掰弯一把本来准的尺子。
+model Calibration {
+  id        String   @id @default(cuid())
+  scenario  String
+  shouldBe  String
+  reason    String
+  createdAt DateTime @default(now())
+}
+
+/// 一局一条的人机对照记录。Gate 0／Gate 4 的两个硬数字就从这张表算出来：
+/// 七力逐项差异 ≤1 分的比例（要 ≥80%）、段位判定一致率（要 100%）。
+/// 与 Calibration 分开存是因为两者用途不同——这张表用来算统计，那张表用来喂模型。
+model ScoreCalibration {
+  id         String   @id @default(cuid())
+  sessionId  String   @unique
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  systemTier String?
+  humanTier  String?
+  /// { insight: { system: 4, human: 3, cause: 'anchor'|'evidence'|'facts'|null }, ... }
+  /// 只存王老师实际填了分的力；没填的不参与统计，避免用空值稀释比例
+  forces     Json
+  note       String?
+  createdAt  DateTime @default(now())
+}
+
+/// 红线复核队列（需求 8.3 / 计划执行方案硬约束③）
+///
+/// ★ 为什么要有这张表 ★ 三条红线的判定可靠性天差地别：R1 是纯代码读事实表判的，
+/// 100% 准，可以直接把考试判死；R2「疑罪从有」和 R3「空催」靠 LLM 判——
+/// 一句正常的跟进被读成空催，新人的上岗资格就没了，而且过去没有任何人能翻案。
+/// 所以它们触发后不直接生效，先在这里排队，等主管看过对话原文再裁定。
+///
+/// ★ 只收考试局 ★ 演习局照常扣分照常写进报告——演习没有"通过"这回事，
+/// 扣分是反馈不是判决，不需要谁来复核。
+model RedlineReview {
+  id           String    @id @default(cuid())
+  sessionId    String
+  session      Session   @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  /// 冗余一份考试 id：复核完要回头重算那一场的结论，没有它就得反查 sessionIds 数组
+  attemptId    String?
+  redline      String // R2 / R3（R1 不进队列，它不需要复核）
+  /// PENDING（等裁定）/ CONFIRMED（红线成立，计入否决）/ DISMISSED（误报，不计）
+  status       String    @default("PENDING")
+  /// 触发时的现场：轮次、原话、当时的事实表判断依据。主管不必翻完整局也能判
+  evidence     Json?
+  reviewedById String?
+  reviewedBy   User?     @relation(fields: [reviewedById], references: [id])
+  reviewedAt   DateTime?
+  /// 裁定理由。误报要写清楚哪里判错了——这些话攒起来就是修抽取 prompt 的材料
+  note         String?
+  createdAt    DateTime  @default(now())
+
+  /// 同一局同一条红线只排一次队
+  @@unique([sessionId, redline])
+  @@index([status])
+}
+
+model LlmCall {
+  id               String   @id @default(cuid())
+  sessionId        String?
+  purpose          String // extract / roleplay / coach_qa / score
+  model            String
+  promptTokens     Int
+  completionTokens Int
+  cacheHitTokens   Int
+  reasoningTokens  Int
+  latencyMs        Int
+  createdAt        DateTime @default(now())
+
+  @@index([sessionId])
+}
+
+/// v1.1 每晚结算，一人一天一条。
+///
+/// ★ 为什么判定要单独落一张表，而不是复用 ExamAttempt ★
+/// ExamAttempt 是「一场考试」，v1.1 的判定单位是「最近 6 局的滚动窗口」，
+/// 两者跨度不同：今晚这一条判的是昨天 3 局 + 今天 3 局。挂在考试上算不出连续天数，
+/// 也没法在「今天没考」的日子留下一条「样本不足，不构成判定」的记录。
+///
+/// ★ 覆盖期间照记 ★ overrideActive = true 的那几天，recommendedStage 与 appliedStage
+/// 会不一样。面板上那两行打架的字，数据就出自这里。
+model DailyEvaluation {
+  id               String   @id @default(cuid())
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  /// 结算所属的上海业务日（判定用的是这一天及之前的局）
+  day              String
+  /// 结论生效日 = day 的下一个业务日。方案时序表的「次日生效」就是这一列。
+  effectiveDay     String
+  /// 进入窗口的局（最近 6 局考试局，新到旧）
+  sessionIds       String[]
+  sampleCount      Int
+  preciseCount     Int
+  medianScore      Float?
+  insightMedian    Float?
+  answerMedian     Float?
+  scoreOk          Boolean  @default(false)
+  insightOk        Boolean  @default(false)
+  redlineOk        Boolean  @default(false)
+  answerOk         Boolean  @default(false)
+  /// null = 样本不足 6 局，**不构成判定**（既不算达标也不算不达标）
+  passed           Boolean?
+  /// 逐条差距的人话文案 + 待复核红线，面板直接渲染
+  detail           Json
+  /// 连续不达标天数。样本不足的日子既不加也不清零
+  consecutiveFails Int      @default(0)
+  stageBefore      Stage
+  recommendedStage Stage
+  appliedStage     Stage
+  overrideActive   Boolean  @default(false)
+  /// GRANTED 获得 / KEPT 保留 / WARNED 预警 / SUSPENDED 暂停；null = 无横幅
+  banner           String?
+  createdAt        DateTime @default(now())
+
+  @@unique([userId, day])
+  @@index([userId, day])
+}
+
+/// 正式业务员的周考记录。一人一周一条。
+///
+/// ★ 2026-08-24 加 ★ 王老师定：正式业务员每周至少考 2 场（＝6 局出分），
+/// 「这 6 局的考试分数出来之后，也同样像实习业务员那样记录在那里」。
+///
+/// ★ 它不定生死 ★ 形制照着 DailyEvaluation，但**刻意少了三样东西**：
+/// 没有 consecutiveFails、没有 stage、没有 banner。
+/// 正式业务员不受询盘准入约束，这张表只落数字与「本周考够没有」，
+/// 任何人想在这里接上处罚逻辑，先回去看 2026-08-24 那条裁定。
+model WeeklyExamRecord {
+  id           String   @id @default(cuid())
+  userId       String
+  user         User     @relation(fields: [userId], references: [id])
+  /// 自然周的周一，如 2026-08-24。**周的唯一键**
+  weekStart    String
+  /// 自然周的周日
+  weekEnd      String
+  /// 本周的考试局，新到旧
+  sessionIds   String[]
+  /// 本周开了几场（按业务日去重，每天最多 1 场）
+  examCount    Int
+  sampleCount  Int
+  preciseCount Int
+  medianScore  Float?
+  /// 本周考够没有。★ 三态 ★ null = 这一周还没过完，**不构成结论**
+  met          Boolean?
+  /// 「还差几场」那句人话，面板直接渲染
+  detail       Json
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@unique([userId, weekStart])
+  @@index([userId, weekStart])
+}
+
+/// 登录流水。
+///
+/// ★ 只从上线那天起有 ★ 系统过去一条登录事件都没存过，历史补不出来。
+/// 加它的理由很直接：主管要知道谁三天没登了——那比任何分数都先说明问题。
+///
+/// ★ 只记「谁、什么时候、哪种登录」★ 不记 IP、不记 UA。
+/// 这是内部训练系统，多存一个字段就多一份要保管的东西。
+model LoginEvent {
+  id     String   @id @default(cuid())
+  userId String
+  user   User     @relation(fields: [userId], references: [id])
+  at     DateTime @default(now())
+  /// SIGN_IN 常规登录 ｜ FIRST_PASSWORD 首次设口令那一次
+  kind   String   @default("SIGN_IN")
+
+  @@index([userId, at])
+  @@index([at])
+}
+
+/// 回流（阶段 6）：主管对「回炉建议」拍的板。
+/// ★ 为什么要记 ★ 主管选了「保留」，同一条建议不该第二天又冒出来——要再攒够一批新局（标准层 feedback-rules 的 min_sessions）才再提。
+/// 题按「题库号 + 题目编号」认，跨版本是同一道题。
+model QuestionFeedback {
+  id                 String   @id @default(cuid())
+  bankId             String
+  /// 题目编号，如 A09-PL-001
+  variantId          String
+  /// too_easy / too_hard / one_phrase
+  kind               String
+  /// rework / to_drill / retire / keep / other
+  decision           String
+  note               String?
+  /// 拍板那一刻这道题攒了多少局有分的局
+  sessionsAtDecision Int
+  decidedById        String
+  decidedBy          User     @relation("QuestionFeedbackBy", fields: [decidedById], references: [id])
+  decidedAt          DateTime @default(now())
+
+  @@index([bankId, variantId])
+}

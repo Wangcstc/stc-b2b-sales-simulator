@@ -1,0 +1,167 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 12,
+    "客户发言": 6,
+    "我方发言": 6,
+    "客户平均字数": 14,
+    "时间跨度": "2026-01-05 ~ 2026-01-05",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 39
+    },
+    {
+      "category": "业务员姓名",
+      "count": 27
+    },
+    {
+      "category": "公司名",
+      "count": 4
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S04.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S04",
+      "地区": "Poland",
+      "负责人": "示例业务员",
+      "消息数量": "12",
+      "时间范围": "2026-01-05 ~ 2026-01-05"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S04",
+        "国家": "Poland",
+        "买家等级": "B",
+        "注册时间": "2020-11"
+      },
+      "behavior90d": {
+        "90天登录天数": "33",
+        "90天浏览产品数": "190",
+        "90天有效询盘数": "9"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "09:00",
+        "text": "Hello, we need folding camping chairs, 3000 pcs. Our target price is USD 6.50 FOB. Can you do it?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hi, thanks. May I ask which chair the 6.50 price is for? Same aluminium frame?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "09:29",
+        "text": "It is a steel frame chair, 2.4 kg. But price is price.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Ours is 1.1 kg aluminium. Who are your customers, if weight matters to them?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "09:58",
+        "text": "We sell to hikers and bikepacking shops. For them every gram counts, to be honest.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "Then aluminium is the right choice. Are there options, like simpler packaging, that would help your price?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "10:27",
+        "text": "If you use a brown box instead of the color box, we could accept 8.40.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:33",
+        "text": "Possible. What payment terms do you prefer?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "10:56",
+        "text": "The other supplier wants 100% prepayment. We prefer 30% deposit.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "11:02",
+        "text": "30% deposit works for us. When do you need to decide?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S04",
+        "time": "11:25",
+        "text": "We must confirm next week, because the retail chain closes the listing.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "11:31",
+        "text": "I will send the brown box offer today.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

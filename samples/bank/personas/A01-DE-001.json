@@ -1,0 +1,324 @@
+{
+  "id": "A01-DE-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "A01",
+    "name": "配合探需型",
+    "session_type": "inquiry",
+    "difficulty": "simple_with_distractors",
+    "tests": "六要素问全：用途、数量与颜色拆分、logo 定制、到货时间、贸易术语",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing"
+    ],
+    "na_forces": [
+      "negotiation",
+      "stability"
+    ]
+  },
+  "pool_type": "drill",
+  "open_card": {
+    "name": "Jonas Weber",
+    "country": "Germany",
+    "company": "Bergfeld Outdoor GmbH",
+    "buyer_level": "A",
+    "categories": [
+      "Camping Furniture",
+      "Tents",
+      "Outdoor Lighting"
+    ],
+    "login_days_90d": 41,
+    "product_views_90d": 86,
+    "valid_inquiries_90d": 3,
+    "tags": [
+      "回复积极",
+      "实物图偏好"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2019-04",
+    "email": "jonas@bergfeld-outdoor.example",
+    "inquiry_text": "Hello,\n\nwe are interested in your aluminium folding camping chair. Could you send us more information?\n\nBest regards,\nJonas"
+  },
+  "product": {
+    "model": "CC-120",
+    "name": "Aluminium Folding Camping Chair",
+    "attributes": {
+      "frame": "7075 aluminium",
+      "seat": "600D oxford",
+      "load": "120 kg",
+      "weight": "1.1 kg",
+      "colors": [
+        "Black",
+        "Forest Green",
+        "Sand"
+      ]
+    },
+    "page_price": "USD 8.20-9.80",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "max_qty": 999,
+        "unit_price": 9.8,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 1000,
+        "max_qty": 2999,
+        "unit_price": 8.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 3000,
+        "max_qty": null,
+        "unit_price": 8.2,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 300,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 7,
+      "bulk_days": 35
+    },
+    "packing": {
+      "qty_per_carton": 20,
+      "carton_cm": "62 × 38 × 40",
+      "gross_kg": 24
+    },
+    "certifications": [
+      {
+        "name": "EN 581-1",
+        "market": "EU"
+      },
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ],
+    "surcharges": {
+      "logo_print_backrest": 0.3,
+      "color_box": 0.45
+    }
+  },
+  "hidden_card": {
+    "H1_use_rental": {
+      "value": "他们开露营装备租赁，椅子每季给很多不同的客人用——耐用性比价格更重要，要推荐加强版并讲清承重与易损件",
+      "unlock": "问用途 / 谁来用 / 用在什么场景",
+      "unlock_patterns": [
+        "(use|using|used) (it|them|these|the chairs?) for",
+        "\\b(purpose|application|usage)\\b",
+        "who (will|is going to) (use|sit)",
+        "用途|做什么用|谁(来)?用|用在"
+      ],
+      "leak_signals": [
+        "rental",
+        "rent them out",
+        "many different guests",
+        "hire out"
+      ]
+    },
+    "H2_quantity_split": {
+      "value": "首单 600 把：黑色 400、绿色 200。只问「多少」他会说 600，问到颜色才会拆分",
+      "unlock": "问数量，最好连颜色一起问",
+      "unlock_patterns": [
+        "how many",
+        "\\bquantity\\b|\\bqty\\b",
+        "数量|多少(把|个|件|套)"
+      ],
+      "leak_signals": [
+        "400 black",
+        "200 green",
+        "600 pieces"
+      ]
+    },
+    "H3_logo": {
+      "value": "要在靠背上印一个小的白色 logo",
+      "unlock": "问有没有定制需求 / logo / 品牌",
+      "unlock_patterns": [
+        "\\blogo\\b",
+        "customi[sz]",
+        "\\bbrand(ing)?\\b",
+        "定制|印.{0,4}(标|logo)"
+      ],
+      "leak_signals": [
+        "white logo",
+        "on the backrest",
+        "our logo"
+      ]
+    },
+    "H4_deadline": {
+      "value": "3 月中旬前要到汉堡，4 月开季",
+      "unlock": "问需要什么时候到货",
+      "unlock_patterns": [
+        "(when|what date|which date)[^.?!]{0,25}(need|receive|arrive|deliver|have them)",
+        "\\bdeadline\\b|\\bETA\\b|delivery (date|time)",
+        "交期|什么时候(要|到|需要)"
+      ],
+      "leak_signals": [
+        "mid-March",
+        "season opening",
+        "before April"
+      ]
+    },
+    "H5_forwarder": {
+      "value": "他们在中国有自己的货代，走 FOB",
+      "unlock": "问贸易术语 / 运输方式 / 有没有货代",
+      "unlock_patterns": [
+        "forwarder",
+        "incoterm",
+        "\\b(FOB|EXW|CIF|DDP|CFR)\\b",
+        "shipping (term|method|way)",
+        "货代|贸易术语"
+      ],
+      "leak_signals": [
+        "own forwarder",
+        "our forwarder",
+        "FOB is fine"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        3,
+        4
+      ],
+      "content": "By the way, do you also make camping tables?",
+      "tests": "引导力：顺口答一句，马上把话题收回到椅子的需求上，别被带去聊桌子",
+      "unlocks": null,
+      "scoring": "答完桌子继续问需求 → guidance 正常；顺着聊桌子两轮以上 → guidance 扣分"
+    }
+  ],
+  "customs_capability": "德国进口常规，清关不是问题；问了正常答",
+  "init_state": {
+    "patience": 80,
+    "trust": 60,
+    "interest": 75
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Thank you, please send us the offer when it is ready.",
+    "patienceZero": null,
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "德国小企业主写的英语：礼貌、简洁、信息给得痛快，问一句答一句，不绕弯；Hello 开头、Best regards 收尾，不用表情。",
+  "verify_cases": [
+    {
+      "card": "H1_use_rental",
+      "should": [
+        "What will you use the chairs for?",
+        "May I ask the purpose of these chairs?",
+        "Who will use them, campers or your staff?",
+        "这些椅子是做什么用的？"
+      ],
+      "shouldNot": [
+        "Which color do you prefer?",
+        "Do you need a logo on the chair?"
+      ]
+    },
+    {
+      "card": "H2_quantity_split",
+      "should": [
+        "How many pieces do you need?",
+        "What quantity are you planning for the first order?",
+        "Could you tell me the qty for each color?",
+        "首单数量是多少？"
+      ],
+      "shouldNot": [
+        "Which colors do you like?",
+        "When do you need the chairs?"
+      ]
+    },
+    {
+      "card": "H3_logo",
+      "should": [
+        "Do you need your logo printed on the chair?",
+        "Would you like any customization?",
+        "Shall we add your brand on the backrest?"
+      ],
+      "shouldNot": [
+        "What color do you need?",
+        "How many pieces do you need?"
+      ]
+    },
+    {
+      "card": "H4_deadline",
+      "should": [
+        "When do you need the goods to arrive?",
+        "What is your deadline for delivery?",
+        "Which date do you need to receive them?",
+        "你们什么时候要货？"
+      ],
+      "shouldNot": [
+        "When can you arrange shipping?",
+        "How many pieces do you need?"
+      ]
+    },
+    {
+      "card": "H5_forwarder",
+      "should": [
+        "Do you have a forwarder in China?",
+        "Would you prefer FOB or CIF?",
+        "What shipping method do you prefer?"
+      ],
+      "shouldNot": [
+        "When do you need the goods?",
+        "Do you need a logo?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S01",
+    "quotes": [
+      {
+        "card": "H1_use_rental",
+        "message_index": 2,
+        "quote": "We run a camping equipment rental in Bavaria, so the chairs will be used by many different guests every season."
+      },
+      {
+        "card": "H2_quantity_split",
+        "message_index": 4,
+        "quote": "For the first order we need 600 pieces, 400 black and 200 green."
+      },
+      {
+        "card": "H3_logo",
+        "message_index": 6,
+        "quote": "Yes, we would like a small white logo on the backrest."
+      },
+      {
+        "card": "H4_deadline",
+        "message_index": 8,
+        "quote": "We need them in Hamburg by mid-March, before our season opening in April."
+      },
+      {
+        "card": "H5_forwarder",
+        "message_index": 10,
+        "quote": "FOB is fine, we have our own forwarder in China."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 A01 配合探需型，改编自样品素材 sample-S01。"
+}

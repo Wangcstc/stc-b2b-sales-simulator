@@ -1,0 +1,98 @@
+.page {
+  width: min(calc(100% - 40px), 680px);
+  margin: 0 auto;
+  padding: clamp(24px, 5vw, 60px) 0 48px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 32px;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--accent-text);
+}
+
+.heading {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 28px 0 26px;
+}
+
+.heading h1 {
+  font-size: var(--fs-2xl);
+  line-height: 1.25;
+}
+
+.heading p {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.services {
+  border-top: 1px solid var(--line);
+}
+
+.services section {
+  padding: 17px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.services h2 {
+  font-size: var(--fs-lg);
+}
+
+.services p {
+  margin: 5px 0 0;
+  color: var(--muted);
+}
+
+.contact {
+  margin-top: 24px;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--panel);
+}
+
+.contactRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px 16px;
+}
+
+.wechat {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  font-weight: 600;
+}
+
+.wechat code {
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: var(--fs-lg);
+}
+
+.contact button {
+  min-width: 108px;
+}
+
+.contact p,
+.copyStatus {
+  margin: 7px 0 0;
+  color: var(--muted);
+  font-size: var(--fs-sm);
+}
+
+.copyStatus {
+  display: block;
+}

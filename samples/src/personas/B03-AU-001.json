@@ -1,0 +1,300 @@
+{
+  "id": "B03-AU-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "B03",
+    "name": "报价沉默型",
+    "session_type": "followup",
+    "difficulty": "standard",
+    "tests": "报价后沉默：每次跟进都带新信息或新理由，问出沉默的真实原因和决策人，禁止空催",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "stability"
+    ],
+    "na_forces": [
+      "negotiation"
+    ]
+  },
+  "pool_type": "admission_exam",
+  "open_card": {
+    "name": "Sophie Grant",
+    "country": "Australia",
+    "company": "Coastline Camping Pty Ltd",
+    "buyer_level": "A",
+    "categories": [
+      "Sleeping Pads",
+      "Beach Tents",
+      "Camping Furniture"
+    ],
+    "login_days_90d": 27,
+    "product_views_90d": 58,
+    "valid_inquiries_90d": 2,
+    "tags": [
+      "回复慢",
+      "旺季备货"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2018-06",
+    "email": "sophie@coastline-camping.example",
+    "inquiry_text": "【本局起点：十天前你报了价，客户一直没回】\n\n你 10 天前的报价：SP-50 自充气睡垫 1000 张，USD 11.60 / 张 FOB Ningbo，交期 35 天，印 logo 每张加 0.40。\n客户上一条消息（报价前）：「Thanks, we are reviewing offers for the summer range.」\n之后再无回复。\n\n──── 现在轮到你开口 ────\n你发出去的第一条消息，就是这一局的第一手。"
+  },
+  "product": {
+    "model": "SP-50",
+    "name": "Self-Inflating Sleeping Pad 5 cm",
+    "attributes": {
+      "thickness": "5 cm",
+      "r_value": "3.2",
+      "size": "190 × 60 cm",
+      "fabric": "75D polyester + TPU",
+      "weight": "1.2 kg"
+    },
+    "page_price": "USD 10.90-12.50",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "max_qty": 999,
+        "unit_price": 12.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 1000,
+        "max_qty": 2999,
+        "unit_price": 11.6,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 3000,
+        "max_qty": null,
+        "unit_price": 10.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 300,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 7,
+      "bulk_days": 35
+    },
+    "packing": {
+      "qty_per_carton": 10,
+      "carton_cm": "65 × 40 × 45",
+      "gross_kg": 16
+    },
+    "certifications": [
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ],
+    "surcharges": {
+      "logo_print": 0.4,
+      "custom_color": 0.6
+    }
+  },
+  "hidden_card": {
+    "H1_silence_reason": {
+      "value": "她拿到了另一家 R 值 4、价格差不多的报价，所以一直没回",
+      "unlock": "问还有什么顾虑 / 是不是在比价 / 有什么需要调整的；空问「看了吗」不给",
+      "unlock_patterns": [
+        "(other|another) (supplier|offer|quote)",
+        "compar(e|ing)",
+        "(any|what)[^.?!]{0,20}(concern|question|problem|worry)",
+        "(anything|something)[^.?!]{0,45}(adjust|change|improve)",
+        "顾虑|在比|其他(供应商|报价)|需要调整"
+      ],
+      "leak_signals": [
+        "another quote",
+        "R-value 4"
+      ]
+    },
+    "H2_decision_maker": {
+      "value": "她只负责做候选名单，最后由老板拍板",
+      "unlock": "问谁做最终决定",
+      "unlock_patterns": [
+        "who[^.?!]{0,20}(decide|decision|approve|final)",
+        "decision maker",
+        "(your|the) (boss|owner|manager)",
+        "谁(决定|拍板)|老板"
+      ],
+      "leak_signals": [
+        "the owner decides",
+        "shortlist"
+      ]
+    },
+    "H3_season_deadline": {
+      "value": "10 月底前要到货，所以 8 月中旬前必须下单",
+      "unlock": "问旺季前什么时候需要到货 / 时间线",
+      "unlock_patterns": [
+        "(when|by when)[^.?!]{0,15}(need|want)[^.?!]{0,20}(goods|stock|arrive|receive)",
+        "(your|the) (season|timeline|deadline)",
+        "旺季|什么时候(要|到货|下单)"
+      ],
+      "leak_signals": [
+        "end of October",
+        "mid-August"
+      ]
+    },
+    "H4_rvalue_value": {
+      "value": "她的客户只在夏天海滩露营，R 值 3.2 完全够用——R 值 4 是冬季规格，更重，对她没价值",
+      "unlock": "知道她在比 R 值之后，问客户在什么季节、什么环境用",
+      "unlock_patterns": [
+        "(where|when|which season)[^.?!]{0,30}(camp|use)",
+        "(what|which) (conditions|season|temperature|weather)",
+        "R[- ]?value[^.?!]{0,25}(need|really|actually|enough)",
+        "(need|needs|require)[^.?!]{0,12}R[- ]?value",
+        "使用环境|季节|什么时候用"
+      ],
+      "requires": [
+        "H1_silence_reason"
+      ],
+      "leak_signals": [
+        "beach camping",
+        "summer only",
+        "nobody uses our pads in winter"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "Sorry, very busy this week.",
+      "tests": "她在拖。别回「好的不急」，给一个有价值的理由再跟一步",
+      "unlocks": null,
+      "scoring": "带新信息跟进 → closing 加分；空回 → R3 风险"
+    },
+    {
+      "code": "D2",
+      "turn_range": [
+        5,
+        7
+      ],
+      "content": "Can you just lower the price a bit?",
+      "tests": "先弄清她在比什么，再谈价格；R 值对她的客户没价值，这是比降价更好的牌",
+      "unlocks": null,
+      "scoring": "先挖原因再谈条件 → negotiation 加分；直接降价 → negotiation 扣分"
+    }
+  ],
+  "customs_capability": "澳大利亚进口常规；问了正常答",
+  "init_state": {
+    "patience": 60,
+    "trust": 55,
+    "interest": 50
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Thanks, I will pass this to the owner.",
+    "patienceZero": null,
+    "stagnant": "Ok, thanks. We will let you know."
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "澳洲买手的英语：友好但很忙，回得慢、句子短；不喜欢被空催，被问到具体问题会实话实说。",
+  "verify_cases": [
+    {
+      "card": "H1_silence_reason",
+      "should": [
+        "Is there anything in our offer you would like us to adjust?",
+        "Are you comparing with another supplier?",
+        "Do you have any concern about our quotation?",
+        "是不是有其他报价在比？"
+      ],
+      "shouldNot": [
+        "Hi, just checking if you had a chance to review our offer?",
+        "Any update?"
+      ]
+    },
+    {
+      "card": "H2_decision_maker",
+      "should": [
+        "Who will make the final decision on the supplier?",
+        "Will the owner decide?",
+        "Who approves the order on your side?"
+      ],
+      "shouldNot": [
+        "When do you need the goods?",
+        "Any update?"
+      ]
+    },
+    {
+      "card": "H3_season_deadline",
+      "should": [
+        "When do you need the goods in stock for the season?",
+        "What is your timeline for the summer range?",
+        "By when do you need to receive the pads?"
+      ],
+      "shouldNot": [
+        "When your order is ready we will send you photos.",
+        "Who decides?"
+      ]
+    },
+    {
+      "card": "H4_rvalue_value",
+      "should": [
+        "Where do your customers usually camp, and in which season?",
+        "What conditions will the pads be used in?",
+        "Do you really need R-value 4 for your market?"
+      ],
+      "shouldNot": [
+        "Who decides on the supplier?",
+        "Any update?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S06",
+    "quotes": [
+      {
+        "card": "H1_silence_reason",
+        "message_index": 5,
+        "quote": "Sorry for the delay. Honestly we got another quote with R-value 4 at a similar price."
+      },
+      {
+        "card": "H4_rvalue_value",
+        "message_index": 7,
+        "quote": "Mostly beach camping in summer only. Nobody uses our pads in winter."
+      },
+      {
+        "card": "H2_decision_maker",
+        "message_index": 9,
+        "quote": "I prepare the shortlist, but the owner decides."
+      },
+      {
+        "card": "H3_season_deadline",
+        "message_index": 11,
+        "quote": "We need stock by the end of October, so we must order by mid-August."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 B03 报价沉默型，改编自样品素材 sample-S06。",
+  "preset_elements": [
+    "product_attr",
+    "quantity",
+    "customization",
+    "address"
+  ]
+}

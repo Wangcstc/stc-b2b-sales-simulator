@@ -1,0 +1,43 @@
+# 自有服务器部署：app / db 两容器。用法见 docs/部署/部署说明.md 第五节。
+#
+# 适合需要国内稳定访问、或数据要留在自己服务器上的场景。
+# 应用一律走 Postgres 行锁、不用内存态，多实例也安全。
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: drill
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      # 每日备份：演习记录是训练资产
+      - ./backup:/backup
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d drill"]
+      interval: 10s
+      retries: 10
+
+  app:
+    build: .
+    restart: unless-stopped
+    depends_on:
+      db: { condition: service_healthy }
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/drill?schema=public
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      AUTH_SECRET: ${AUTH_SECRET}
+      CRON_SECRET: ${CRON_SECRET:-}
+      LLM_BASE_URL: ${LLM_BASE_URL:-https://api.deepseek.com}
+      MODEL_EXTRACT: ${MODEL_EXTRACT:-deepseek-v4-flash}
+      MODEL_TRANSLATE: ${MODEL_TRANSLATE:-deepseek-v4-flash}
+      MODEL_ROLEPLAY: ${MODEL_ROLEPLAY:-deepseek-v4-flash}
+      MODEL_COACH_QA: ${MODEL_COACH_QA:-deepseek-v4-pro}
+      MODEL_SCORE: ${MODEL_SCORE:-deepseek-v4-pro}
+    ports:
+      - "3100:3100"
+    command: sh -c "npx prisma db push --skip-generate && npm run start"
+
+volumes:
+  pgdata:

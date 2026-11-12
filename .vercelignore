@@ -1,0 +1,23 @@
+node_modules/
+.next/
+.git/
+.env
+.env.*
+imports/
+coverage/
+_回滚备份_*/
+_扩池草稿_*/
+_可删除_压缩包/
+docs/
+*.command
+*.log
+*.xlsx
+*.xls
+*.docx
+*.pdf
+
+# 本机跑出来的运行日志：里面有员工姓名与局的流水，函数产物里用不到它
+_启动日志.txt
+_灌库日志.txt
+_数据库备份/
+*.dump

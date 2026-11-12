@@ -1,0 +1,53 @@
+{
+  "persona_id": "A03-GB-001",
+  "version": "1.0",
+  "_comment": "样品背调包（虚构数据）。预埋错误：AI 报告把询盘人当成了 Summit Outfitters 的采购总监。",
+  "ai_report": {
+    "title": "AI 客户背景调查报告 · Summit Outfitters Ltd",
+    "generated_at": "自动生成",
+    "content": "根据公开信息检索，询盘人 Daniel Hart 为英国户外连锁零售商 Summit Outfitters Ltd 的采购总监，该公司在英国有 40 余家门店，年采购额较大，属于高价值客户，建议优先报价。",
+    "planted_error": {
+      "type": "wrong_identity",
+      "claim": "Summit Outfitters 的采购总监，代表 40 家门店采购",
+      "truth": "他是独立采购代理，替五家小店集货，从马来西亚付款；Summit 的采购团队用的是企业邮箱，名单里没有他",
+      "detectable_via": [
+        "email_domain_mismatch",
+        "account_age",
+        "contacts_team_list"
+      ]
+    }
+  },
+  "website": {
+    "url": "www.summit-outfitters.example",
+    "title": "Summit Outfitters — Outdoor Gear Since 1998",
+    "categories": [
+      "Tents",
+      "Sleeping Bags",
+      "Backpacks",
+      "Climbing"
+    ],
+    "about": "Summit Outfitters runs 40 outdoor stores across the UK. Supplier enquiries are handled by our buying team at buying@summit-outfitters.example.",
+    "contact_footer": "Manchester, United Kingdom ｜ buying@summit-outfitters.example",
+    "_cross_check_hint": "官网写明供应商对接走企业邮箱 buying@…；询盘人用的是免费邮箱。对不上。"
+  },
+  "social": {
+    "linkedin": {
+      "company_page": "Summit Outfitters Ltd · 1,200 employees",
+      "head_of_purchasing": "Claire Whitfield",
+      "_cross_check_hint": "领英上 Summit 的采购总监是另一个人。"
+    }
+  },
+  "contacts": {
+    "email_domain": "freemail.example",
+    "platform_account_age": "2 个月",
+    "buying_team": [
+      "Claire Whitfield — Head of Purchasing",
+      "Tom Reyes — Buyer, Camping"
+    ],
+    "_cross_check_hint": "平台账号只有两个月，邮箱是免费邮箱，采购团队名单里没有 Daniel Hart。三处都对不上 AI 报告的结论。"
+  },
+  "_scoring_hooks": {
+    "insight_5_path": "识破 AI 报告的身份结论，并礼貌地问出真实身份（采购代理）",
+    "trust_penalty": "拿错误的背调结论当实锤去质问客户 → trust 扣分"
+  }
+}

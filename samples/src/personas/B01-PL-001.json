@@ -1,0 +1,344 @@
+{
+  "id": "B01-PL-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "B01",
+    "name": "极限压价型",
+    "session_type": "inquiry",
+    "difficulty": "hard",
+    "tests": "破解价格锚点：问清目标价从哪来、对比的是什么规格，用配置和条件换价格，不裸降",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "negotiation",
+      "stability"
+    ],
+    "na_forces": []
+  },
+  "pool_type": "admission_exam",
+  "open_card": {
+    "name": "Piotr Nowicki",
+    "country": "Poland",
+    "company": "Wierzbowa Trade Sp. z o.o.",
+    "buyer_level": "B",
+    "categories": [
+      "Camping Furniture",
+      "Garden Furniture"
+    ],
+    "login_days_90d": 33,
+    "product_views_90d": 190,
+    "valid_inquiries_90d": 9,
+    "tags": [
+      "价格敏感",
+      "强势压价"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2020-11",
+    "email": "piotr@wierzbowa-trade.example",
+    "inquiry_text": "Hello,\n\nwe need folding camping chairs, 3000 pcs. Our target price is USD 6.50 FOB. Can you do it?\n\nPiotr"
+  },
+  "product": {
+    "model": "CC-120",
+    "name": "Aluminium Folding Camping Chair",
+    "attributes": {
+      "frame": "7075 aluminium",
+      "seat": "600D oxford",
+      "load": "120 kg",
+      "weight": "1.1 kg",
+      "colors": [
+        "Black",
+        "Forest Green",
+        "Sand"
+      ]
+    },
+    "page_price": "USD 8.20-9.80",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "max_qty": 999,
+        "unit_price": 9.8,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 1000,
+        "max_qty": 2999,
+        "unit_price": 8.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 3000,
+        "max_qty": null,
+        "unit_price": 8.2,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 300,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 7,
+      "bulk_days": 35
+    },
+    "packing": {
+      "qty_per_carton": 20,
+      "carton_cm": "62 × 38 × 40",
+      "gross_kg": 24
+    },
+    "certifications": [
+      {
+        "name": "EN 581-1",
+        "market": "EU"
+      },
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ],
+    "surcharges": {
+      "logo_print_backrest": 0.3,
+      "color_box": 0.45
+    }
+  },
+  "hidden_card": {
+    "H1_price_source": {
+      "value": "6.50 是另一家钢架椅（2.4 公斤）的报价——规格根本不同",
+      "unlock": "问目标价从哪来 / 对比的是什么规格、材质",
+      "unlock_patterns": [
+        "(which|what) (chair|model|version|spec|specification|material|frame)",
+        "same (spec|specification|material|frame|quality)",
+        "(where|how)[^.?!]{0,25}(price|6\\.5|target)[^.?!]{0,20}(from|come)",
+        "compar(e|ing|ison)",
+        "材质|规格|对比|同样的"
+      ],
+      "leak_signals": [
+        "steel frame",
+        "2.4 kg",
+        "steel chair"
+      ]
+    },
+    "H2_real_priority": {
+      "value": "他卖给徒步和骑行露营店，重量才是卖点——轻量化值得溢价",
+      "unlock": "问他的客户 / 市场 / 为什么在意重量",
+      "unlock_patterns": [
+        "(your|their) (customers?|market|buyers|end users?)",
+        "who (are|is) (your|the) (customers?|buyers)",
+        "why[^.?!]{0,20}(aluminium|aluminum|weight|light)",
+        "卖给谁|客户群|市场|为什么.{0,6}(轻|重量)"
+      ],
+      "leak_signals": [
+        "bikepacking",
+        "every gram",
+        "hikers"
+      ]
+    },
+    "H3_budget_flex": {
+      "value": "换牛皮纸箱、不要彩盒，他能接受 8.40",
+      "unlock": "在弄清价格来源之后，问有没有可调的条件 / 方案 / 包装",
+      "unlock_patterns": [
+        "(packag|carton|box)[^.?!]{0,30}(simpl|basic|brown|plain)",
+        "(simpl|basic|brown|plain)[^.?!]{0,20}(packag|box|carton)",
+        "\\boptions?\\b|alternative|flexib",
+        "简化包装|牛皮纸|方案|可以接受"
+      ],
+      "requires": [
+        "H1_price_source"
+      ],
+      "leak_signals": [
+        "8.40",
+        "brown box instead"
+      ]
+    },
+    "H4_competitor_terms": {
+      "value": "另一家要 100% 预付，他更想要 30% 定金——付款条件是能换价的筹码",
+      "unlock": "问付款方式 / 条件",
+      "unlock_patterns": [
+        "payment (terms?|method|conditions?)",
+        "\\bdeposit\\b",
+        "\\b(T/T|L/C)\\b",
+        "付款(方式|条件)|定金"
+      ],
+      "leak_signals": [
+        "100% prepayment",
+        "full prepayment"
+      ]
+    },
+    "H5_deadline_listing": {
+      "value": "下周必须确认，零售连锁那边要截止上架",
+      "unlock": "问什么时候决定 / 时间线",
+      "unlock_patterns": [
+        "(when|by when) (will|do|can|must) you (decide|confirm|place|make)",
+        "(when|by when) do you need to (decide|confirm)",
+        "(your|the) (timeline|deadline)",
+        "什么时候(决定|确认|下单)"
+      ],
+      "leak_signals": [
+        "next week",
+        "retail chain",
+        "closes the listing"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "6.50 or we go to the other factory.",
+      "tests": "锚点施压。不跟着锚点降价，先问清这个价对比的是什么",
+      "unlocks": null,
+      "scoring": "顶住并追问规格 → negotiation 加分；当场降价 → negotiation 扣分"
+    },
+    {
+      "code": "D2",
+      "turn_range": [
+        4,
+        6
+      ],
+      "content": "Why is aluminium so expensive? It is just a chair.",
+      "tests": "把价格问题转成价值问题：重量、承重、寿命，对他的客户意味着什么",
+      "unlocks": null,
+      "scoring": "讲清价值并关联他的客户 → solution 加分"
+    },
+    {
+      "code": "D3",
+      "turn_range": [
+        7,
+        9
+      ],
+      "content": "Send me the price for 3000 pcs right now.",
+      "tests": "报价要带条件：配置、包装、付款方式一起报，不要只甩一个数字",
+      "unlocks": null,
+      "scoring": "带条件报价 → closing 加分；只报单价 → closing 扣分"
+    }
+  ],
+  "customs_capability": "欧盟进口常规；问了正常答",
+  "init_state": {
+    "patience": 50,
+    "trust": 35,
+    "interest": 55
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Ok. We will think about it.",
+    "patienceZero": "Too expensive. We will go with the other factory.",
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "波兰贸易商的英语：直接、强硬，句子短；喜欢用「price is price」这类话施压，但对讲得清的数字和条件会认真听。",
+  "verify_cases": [
+    {
+      "card": "H1_price_source",
+      "should": [
+        "Which chair is the 6.50 price for?",
+        "Is it the same material and frame as ours?",
+        "Could you compare the specification of that offer?",
+        "6.50 是什么材质的椅子？"
+      ],
+      "shouldNot": [
+        "What is your best price?",
+        "What payment terms do you prefer?"
+      ]
+    },
+    {
+      "card": "H2_real_priority",
+      "should": [
+        "Who are your customers?",
+        "May I ask why weight matters so much?",
+        "Which market do you sell to? Who are your buyers?"
+      ],
+      "shouldNot": [
+        "How many pieces do you need?",
+        "What payment terms do you prefer?"
+      ]
+    },
+    {
+      "card": "H3_budget_flex",
+      "should": [
+        "Are there options, like simpler packaging, that would help your price?",
+        "Could a brown box instead of the color box work for you?",
+        "Is there any flexibility if we simplify the packaging?"
+      ],
+      "shouldNot": [
+        "Please send the packing list and the invoice.",
+        "When do you need to decide?"
+      ]
+    },
+    {
+      "card": "H4_competitor_terms",
+      "should": [
+        "What payment terms do you prefer?",
+        "Is a 30% deposit ok for you?",
+        "Do you pay by T/T or L/C?"
+      ],
+      "shouldNot": [
+        "When do you need to decide?",
+        "Who are your customers?"
+      ]
+    },
+    {
+      "card": "H5_deadline_listing",
+      "should": [
+        "When do you need to decide?",
+        "What is your deadline for this order?",
+        "By when will you confirm the supplier?"
+      ],
+      "shouldNot": [
+        "When the shipping is ready we will confirm.",
+        "What payment terms do you prefer?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S04",
+    "quotes": [
+      {
+        "card": "H1_price_source",
+        "message_index": 2,
+        "quote": "It is a steel frame chair, 2.4 kg. But price is price."
+      },
+      {
+        "card": "H2_real_priority",
+        "message_index": 4,
+        "quote": "We sell to hikers and bikepacking shops. For them every gram counts, to be honest."
+      },
+      {
+        "card": "H3_budget_flex",
+        "message_index": 6,
+        "quote": "If you use a brown box instead of the color box, we could accept 8.40."
+      },
+      {
+        "card": "H4_competitor_terms",
+        "message_index": 8,
+        "quote": "The other supplier wants 100% prepayment. We prefer 30% deposit."
+      },
+      {
+        "card": "H5_deadline_listing",
+        "message_index": 10,
+        "quote": "We must confirm next week, because the retail chain closes the listing."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 B01 极限压价型，改编自样品素材 sample-S04。"
+}

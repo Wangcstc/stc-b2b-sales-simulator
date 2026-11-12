@@ -1,0 +1,149 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 10,
+    "客户发言": 5,
+    "我方发言": 5,
+    "客户平均字数": 14,
+    "时间跨度": "2026-01-19 ~ 2026-01-20",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 73
+    },
+    {
+      "category": "业务员姓名",
+      "count": 54
+    },
+    {
+      "category": "公司名",
+      "count": 8
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S08.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S08",
+      "地区": "United Kingdom",
+      "负责人": "示例业务员",
+      "消息数量": "10",
+      "时间范围": "2026-01-19 ~ 2026-01-20"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S08",
+        "国家": "United Kingdom",
+        "买家等级": "A",
+        "注册时间": "2017-09"
+      },
+      "behavior90d": {
+        "90天登录天数": "38",
+        "90天浏览产品数": "72",
+        "90天有效询盘数": "3"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-19",
+        "side": "client",
+        "sender": "示例买家 S08",
+        "time": "09:00",
+        "text": "The chairs arrived and many of them are damaged. This is not acceptable. What are you going to do about it?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "I am very sorry to hear this. Could you tell me how many chairs are damaged and send photos of the chairs and the cartons?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "client",
+        "sender": "示例买家 S08",
+        "time": "09:29",
+        "text": "About 40 chairs have bent legs. The photos show the cartons were crushed.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Thank you. What would help you most right now, replacements or another solution?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "client",
+        "sender": "示例买家 S08",
+        "time": "09:58",
+        "text": "We need replacements before the bank holiday weekend sale. Speed matters more than money.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "Understood. Since the cartons were crushed in transit, did you check with your forwarder about insurance?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-19",
+        "side": "client",
+        "sender": "示例买家 S08",
+        "time": "10:27",
+        "text": "No, we have not checked the insurance with our forwarder yet.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:09",
+        "text": "We will air-ship 40 replacement chairs this week. How is the rest of the season looking?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "client",
+        "sender": "示例买家 S08",
+        "time": "09:32",
+        "text": "If this is handled well, we plan to reorder 1500 for summer.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:38",
+        "text": "Thank you for the trust. I will send the tracking number tomorrow.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

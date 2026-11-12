@@ -1,0 +1,310 @@
+{
+  "id": "E01-GB-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "E01",
+    "name": "售后纠纷型",
+    "session_type": "followup",
+    "difficulty": "hard",
+    "tests": "售后纠纷：先稳情绪，再用照片和数量核实事实，给出具体补救动作，守住底线并挽回返单",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "stability"
+    ],
+    "na_forces": [
+      "negotiation"
+    ]
+  },
+  "pool_type": "drill",
+  "open_card": {
+    "name": "Oliver Brooks",
+    "country": "United Kingdom",
+    "company": "Hillcrest Outdoor Ltd",
+    "buyer_level": "A",
+    "categories": [
+      "Camping Furniture",
+      "Garden Furniture"
+    ],
+    "login_days_90d": 38,
+    "product_views_90d": 72,
+    "valid_inquiries_90d": 3,
+    "tags": [
+      "老客户",
+      "售后中"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2017-09",
+    "email": "oliver@hillcrest-outdoor.example",
+    "inquiry_text": "【本局起点：800 把椅子到货，客户发来一条很冲的消息】\n\n上个月出运：CC-120 折叠椅 800 把，FOB Ningbo，客户自己的货代。\n客户今天的消息：「The chairs arrived and many of them are damaged. This is not acceptable. What are you going to do about it?」\n\n──── 现在轮到你开口 ────\n你发出去的第一条消息，就是这一局的第一手。"
+  },
+  "product": {
+    "model": "CC-120",
+    "name": "Aluminium Folding Camping Chair",
+    "attributes": {
+      "frame": "7075 aluminium",
+      "seat": "600D oxford",
+      "load": "120 kg",
+      "weight": "1.1 kg",
+      "colors": [
+        "Black",
+        "Forest Green",
+        "Sand"
+      ]
+    },
+    "page_price": "USD 8.20-9.80",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "max_qty": 999,
+        "unit_price": 9.8,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 1000,
+        "max_qty": 2999,
+        "unit_price": 8.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 3000,
+        "max_qty": null,
+        "unit_price": 8.2,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 300,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 7,
+      "bulk_days": 35
+    },
+    "packing": {
+      "qty_per_carton": 20,
+      "carton_cm": "62 × 38 × 40",
+      "gross_kg": 24
+    },
+    "certifications": [
+      {
+        "name": "EN 581-1",
+        "market": "EU"
+      },
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ],
+    "surcharges": {
+      "logo_print_backrest": 0.3,
+      "color_box": 0.45
+    }
+  },
+  "hidden_card": {
+    "H1_real_scope": {
+      "value": "其实是 800 把里有 40 把（5%）腿弯了，照片显示外箱被压扁——更像运输损坏，不是质量问题",
+      "unlock": "问具体多少把 / 要照片 / 哪几箱",
+      "unlock_patterns": [
+        "how many (pieces|chairs|pcs|units)",
+        "how many (are|of them|chairs are)",
+        "(send|share|take)[^.?!]{0,20}(photos?|pictures?) (of|showing)",
+        "which (cartons?|boxes)",
+        "多少(把|个|件)|照片|哪几箱"
+      ],
+      "leak_signals": [
+        "40 chairs",
+        "cartons were crushed",
+        "bent legs"
+      ]
+    },
+    "H2_real_need": {
+      "value": "他最在意的是银行假日周末大促前补到货，速度比赔钱重要",
+      "unlock": "弄清范围之后，问他最需要什么 / 希望怎么处理",
+      "unlock_patterns": [
+        "(what|how)[^.?!]{0,25}(help you|would you like|do you need|do you prefer|can we do)",
+        "\\b(replacements?|refund|compensat)",
+        "(most important|priority)",
+        "怎么(处理|解决)|希望|补发|退款"
+      ],
+      "requires": [
+        "H1_real_scope"
+      ],
+      "leak_signals": [
+        "bank holiday",
+        "speed matters more"
+      ]
+    },
+    "H3_shipping_claim": {
+      "value": "货是 FOB、他自己的货代——运输损坏可能走货代的运输保险理赔，他还没去查",
+      "unlock": "问运输保险 / 货代 / 理赔",
+      "unlock_patterns": [
+        "\\binsur",
+        "\\bclaim\\b",
+        "forwarder",
+        "运输保险|理赔|货代"
+      ],
+      "leak_signals": [
+        "insurance with our forwarder",
+        "not checked the insurance"
+      ]
+    },
+    "H4_next_order": {
+      "value": "处理得好，他准备夏季返单 1500 把",
+      "unlock": "处理好补救之后，问后续合作 / 返单计划",
+      "unlock_patterns": [
+        "(next|future|repeat|summer)[^.?!]{0,20}(order|season|cooperation)",
+        "re-?order",
+        "rest of the season",
+        "返单|下一单|继续合作"
+      ],
+      "requires": [
+        "H2_real_need"
+      ],
+      "leak_signals": [
+        "reorder 1500",
+        "1500 for summer"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        1,
+        2
+      ],
+      "content": "This is unacceptable. I want a full refund for the whole shipment.",
+      "tests": "先承接情绪，不急着答应也不急着辩解；核实事实之前不谈全额退款",
+      "unlocks": null,
+      "scoring": "先稳情绪再核实 → stability 加分；当场答应全额退款或推卸责任 → stability 扣分"
+    },
+    {
+      "code": "D2",
+      "turn_range": [
+        3,
+        5
+      ],
+      "content": "Your quality is terrible.",
+      "tests": "不争辩，用照片和数量把讨论拉回事实",
+      "unlocks": null,
+      "scoring": "回到事实 → trust 加分；情绪化回应 → trust 扣分"
+    }
+  ],
+  "customs_capability": "英国进口常规；FOB 条款下运输风险在买方，这一条本身是暗牌，不要主动提",
+  "init_state": {
+    "patience": 50,
+    "trust": 35,
+    "interest": 55
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Ok. Send me the details in writing.",
+    "patienceZero": "Forget it. We will find another supplier.",
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "英国老客户的英语：一开始很冲、情绪化；被认真对待、看到具体动作后会迅速缓和，讲究效率。",
+  "verify_cases": [
+    {
+      "card": "H1_real_scope",
+      "should": [
+        "Could you tell me how many chairs are damaged?",
+        "Please send photos of the damaged chairs and the cartons.",
+        "Which cartons were affected?",
+        "坏了多少把？"
+      ],
+      "shouldNot": [
+        "The goods arrived broken.",
+        "Some items arrived broken in the last shipment."
+      ]
+    },
+    {
+      "card": "H2_real_need",
+      "should": [
+        "What would help you most right now?",
+        "Would you prefer replacements or a refund?",
+        "What is most important for you now?"
+      ],
+      "shouldNot": [
+        "Some items arrived broken in the last shipment.",
+        "Please send photos."
+      ]
+    },
+    {
+      "card": "H3_shipping_claim",
+      "should": [
+        "Did you check with your forwarder about insurance?",
+        "Was the shipment insured?",
+        "Can your forwarder make a claim for the transit damage?"
+      ],
+      "shouldNot": [
+        "How many chairs are damaged?",
+        "What would help you most?"
+      ]
+    },
+    {
+      "card": "H4_next_order",
+      "should": [
+        "How is the rest of the season looking?",
+        "Are you planning a repeat order for summer?",
+        "Will you reorder next season?"
+      ],
+      "shouldNot": [
+        "How many chairs are damaged?",
+        "Did you check the insurance?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S08",
+    "quotes": [
+      {
+        "card": "H1_real_scope",
+        "message_index": 2,
+        "quote": "About 40 chairs have bent legs. The photos show the cartons were crushed."
+      },
+      {
+        "card": "H2_real_need",
+        "message_index": 4,
+        "quote": "We need replacements before the bank holiday weekend sale. Speed matters more than money."
+      },
+      {
+        "card": "H3_shipping_claim",
+        "message_index": 6,
+        "quote": "No, we have not checked the insurance with our forwarder yet."
+      },
+      {
+        "card": "H4_next_order",
+        "message_index": 8,
+        "quote": "If this is handled well, we plan to reorder 1500 for summer."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 E01 售后纠纷型，改编自样品素材 sample-S08。",
+  "preset_elements": [
+    "product_attr",
+    "quantity",
+    "customization",
+    "address"
+  ]
+}

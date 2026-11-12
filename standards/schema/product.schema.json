@@ -1,0 +1,75 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/product.schema.json",
+  "title": "题库格式 v1 · 题目里的产品（规范化）",
+  "description": "价格档位不再靠字段名区分港口，一律写进 price_tiers 的 incoterm / port。题目专用、柜子代码不读的背景信息放 extra，只进买家扮演提示词。",
+  "type": "object",
+  "required": ["name"],
+  "properties": {
+    "model": { "type": "string" },
+    "name": { "type": "string", "minLength": 1 },
+    "attributes": { "type": "object" },
+    "page_price": { "type": ["number", "string", "object", "array", "null"] },
+    "price_tiers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["unit_price"],
+        "properties": {
+          "min_qty": { "type": ["number", "null"] },
+          "max_qty": { "type": ["number", "null"] },
+          "unit_price": { "type": ["number", "string"] },
+          "currency": { "type": "string" },
+          "incoterm": { "type": ["string", "null"], "description": "EXW / FOB / CIF / DDP 等；不明为 null" },
+          "port": { "type": ["string", "null"] },
+          "variant": { "type": ["string", "null"], "description": "同一产品的不同配置或档次" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "moq": {
+      "type": "object",
+      "required": ["qty"],
+      "properties": {
+        "qty": { "type": ["number", "string"] },
+        "unit": { "type": "string" },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "lead_time": {
+      "type": "object",
+      "properties": {
+        "sample_days": { "type": ["number", "string"] },
+        "bulk_days": { "type": ["number", "string"] },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "packing": {
+      "type": "object",
+      "properties": {
+        "qty_per_carton": { "type": ["number", "string"] },
+        "carton_cm": { "type": ["string", "array"] },
+        "gross_kg": { "type": ["number", "string"] },
+        "net_kg": { "type": ["number", "string"] },
+        "cbm": { "type": ["number", "string"] },
+        "note": { "type": "string" }
+      },
+      "additionalProperties": false
+    },
+    "certifications": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name"],
+        "properties": { "name": { "type": "string" }, "market": { "type": "string" } },
+        "additionalProperties": false
+      }
+    },
+    "surcharges": { "type": "object", "description": "附加项加价，如定制彩盒、印 logo" },
+    "extra": { "type": "object", "description": "题目专用背景信息，柜子代码不读" }
+  },
+  "patternProperties": { "^_": {} },
+  "additionalProperties": false
+}

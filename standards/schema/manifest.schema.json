@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/manifest.schema.json",
+  "title": "题库格式 v1 · 题库包身份证",
+  "type": "object",
+  "required": ["format_version", "syllabus_version", "bank_id", "bank_version", "drawer_version", "created_at", "counts"],
+  "properties": {
+    "format_version": { "const": 1 },
+    "syllabus_version": { "type": "integer", "minimum": 1 },
+    "bank_id": { "type": "string", "pattern": "^bank-[a-z0-9]{8,}$", "description": "随机生成，不含公司名" },
+    "bank_version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$" },
+    "drawer_version": { "type": "string" },
+    "generator": { "type": "string", "description": "生成方式，如 drawer / legacy-migration" },
+    "created_at": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T" },
+    "counts": {
+      "type": "object",
+      "required": ["total", "drill", "admission_exam", "by_type", "by_slot"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "drill": { "type": "integer", "minimum": 0 },
+        "admission_exam": { "type": "integer", "minimum": 0 },
+        "bg_packages": { "type": "integer", "minimum": 0 },
+        "by_type": { "type": "object", "additionalProperties": { "type": "integer" } },
+        "by_slot": { "type": "object", "additionalProperties": { "type": "integer" } }
+      },
+      "additionalProperties": false
+    },
+    "source_batches": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

@@ -1,0 +1,8 @@
+{
+  "redlines": [
+    { "code": "R1", "label": "数量没确认就报价", "judged_by": "code", "effect": "直接生效" },
+    { "code": "R2", "label": "疑罪从有：怀疑买家就敷衍、降低投入", "judged_by": "model", "effect": "已触发、待人工确认" },
+    { "code": "R3", "label": "空催：只问有没有消息，没有新信息、没有新理由", "judged_by": "model", "effect": "已触发、待人工确认" },
+    { "code": "R4", "label": "用中文回复海外买家", "judged_by": "code", "effect": "直接生效" }
+  ]
+}

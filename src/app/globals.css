@@ -1,0 +1,3659 @@
+/**
+ * 设计系统 · STC 双皮（深色为默认，浅色为可选）
+ *
+ * ★ 2026-08-25 换皮：旧浅色皮 → STC 深色皮，并重新加回深浅切换 ★
+ * 2026-08-14 那次砍掉切换，理由是「手册只定了浅色令牌，深色没有对应色号，
+ * 留着一套非品牌皮等于允许业务员把界面切成不合规的样子」。这个理由现在不成立了：
+ * 母版给的是**一整条色阶**（见下面的说明），深浅两头都能在同一套色阶里取到值，
+ * 不需要就地发明任何色号——所以切换可以回来，铁律 14a 也没被破。
+ * 色值、字号一律取自「诊断报告母版 v3.0」的令牌层（下称母版），
+ * 与王铖运营社那一套诊断报告同源——业务员在两边看到的是同一套视觉语言。
+ * 改颜色前先看下面 :root 的对照表，别就地发明色号（铁律 14a）。
+ *
+ * 三条自律（"高级感"是减出来的，不是加出来的）：
+ * 1. 只有一个强调色。红/黄只给红线与警告，不许当装饰。
+ * 2. 克制使用渐变——只有版头、品牌方块、KPI 顶条三处（母版同款），别处一律实色。
+ * 3. 数字一律 tabular-nums——分数、轮次、耗时跳动时不许抖。
+ *
+ * ★ 颜色一律走变量，不许在规则里写死 ★（2026-08-08 立的规矩）
+ * 这条在换皮时救了命：全站 2100 行 CSS 里只有 1 处硬编码色值、TSX 里 0 处，
+ * 所以整套皮换掉只动了下面这一块令牌。以后也照此办理——
+ * 要提亮一档用 --raise-*，要底色用 --panel / --panel-2 / --field-bg。
+ *
+ * ★ --raise-* 在两套皮里方向相反 ★
+ * 深皮上是"提亮一档"（白色透明度），浅皮上是"压暗一档"（板岩墨透明度）。
+ * 两边各自在自己的令牌块里定义，用的地方只管写 var(--raise-2)，不要判断当前是哪套皮。
+ */
+
+/**
+ * ── STC 深色皮（唯一一套）── 2026-08-25 按「诊断报告母版 v3.0」令牌换皮
+ *
+ * 母版令牌 → 本站令牌的对照（左边是母版里的名字，照着抄的就是它）：
+ *   --bg  #080D18  深空底  → --bg
+ *   --sf  #0F1623  卡片面  → --panel
+ *   --sf2 #161F2E  次级面  → --panel-2 / --field-bg
+ *   --bd  rgba(255,255,255,.07) 细线 → --line
+ *   --ac  #3B82F6  蓝强调  → --accent      （--ac2 青 / --ac3 紫 只给渐变）
+ *   --tx  #E2E8F0  正文    → --text
+ *   --tx2 #94A3B8  次级字  → --muted
+ *   --tx3 #475569  三级字  → --faint
+ *
+ * ★ 语义色一律取母版的 400 亮阶，不取 500 阶 ★
+ * 母版把两阶分得很清楚：500 阶（--gn/--or/--rd）是"评级语义色"，给组件填充用；
+ * 400 阶（--gn2/--or2/--rd2）是"判定标签色"，专为 #080D18 这种深底上**能读清**而调的。
+ * 本站的 --ok/--warn/--bad 全是写在文字和描边上的，所以一律走 400 阶。
+ * 500 阶留在下面备用，只给实心填充（进度条、热力底）用。
+ *
+ * ★ 强调色是点睛不是底色 ★ 只给红线、风险、关键强调和主按钮（CTA）。
+ * 不许出现大面积强调色实心块——那类满宽条、卡片底、表头底一律走 --panel / --panel-2。
+ *
+ * ★ 母版没覆盖、我按最接近的令牌套用的两处 ★
+ * ① --text-2：母版文字只有三阶，这套密排后台需要第四阶（元信息带、表头标签、
+ *    占位符如果和正文同色会糊成一片）。没有发明新色号，用的是 --tx 本身的透明度档。
+ * ② --accent-strong（主按钮 hover）：母版没定 hover 档。深底上的惯例是**提亮**而非压暗，
+ *    所以直接取母版 400 阶的 --bl2 #60A5FA，同样不是新色号。
+ */
+:root {
+  color-scheme: dark;
+
+  /* 背景三层：页面 → 卡片 → 卡片内的凹陷块（母版 --bg / --sf / --sf2） */
+  --bg: #080d18;
+  --panel: #0f1623;
+  --panel-2: #161f2e;
+
+  /* 分割线要弱。看得见就够了，看得清就重了（母版 --bd） */
+  --line: rgba(255, 255, 255, 0.07);
+  --line-strong: rgba(255, 255, 255, 0.13);
+
+  /* 文字：母版三阶 + 一个透明度档补出来的第四阶，不引入第二个色相。
+     四档必须单调递减：text > text-2 > muted > faint，实测对比度 15.8 / 9.9 / 7.6 / 5.3。 */
+  --text: #e2e8f0;                        /* 母版 --tx */
+  --text-2: rgba(226, 232, 240, 0.78);
+  --muted: #94a3b8;                       /* 母版 --tx2 */
+  /* ★ 这一档我没照抄母版 ★ 母版 --tx3 是 #475569，在 #080d18 上只有 2.4:1，
+     远低于可读线（3:1）。母版里它只用在极少数 9px 装饰标签上，尚可；
+     本站的 .faint 却扛着大量正经内容——元信息带、卡片脚注、指引小字，
+     照抄会让全站二十多处说明文字糊在底色里（换皮后实测 25 处不达标）。
+     所以这一档改用 --tx 的透明度档（和 --text-2 同一手法，不是新色号），
+     对比度 5.3:1。母版原值保留在 --tx3-deco，只给分隔线、禁用态这类**非文字**用途。 */
+  --faint: rgba(226, 232, 240, 0.55);
+  --tx3-deco: #475569;
+
+  /* 唯一强调色 · 母版蓝 --ac */
+  --accent: #3b82f6;
+  --accent-dim: rgba(59, 130, 246, 0.15); /* = 母版 .tag-bl 的底 */
+  --accent-text: #60a5fa;                 /* 写在文字上要提亮一档：母版 --bl2 */
+  --on-accent: #fff;
+  --accent-strong: #60a5fa;               /* 主按钮 hover：深底上提亮，不压暗 */
+
+  /* 语义色：一律母版 400 亮阶，同一语义全站同色 */
+  --ok: #34d399;   /* 达标 / 正向 · 母版 --gn2 */
+  --warn: #fbbf24; /* 警示 · 母版 --or2 */
+  --bad: #f87171;  /* 风险 / 落后 · 母版 --rd2 */
+
+  /* 500 阶：只给实心填充（进度条、热力底），**不要**写在文字或细描边上——深底上会发闷 */
+  --ok-solid: #10b981;
+  --warn-solid: #f59e0b;
+  --bad-solid: #ef4444;
+
+  /* 渐变专用色：只在版头、品牌方块、KPI 顶条三处出现（母版 --ac2 青 / --ac3 紫 / --pk 粉） */
+  --grad-cyan: #06b6d4;
+  --grad-violet: #8b5cf6;
+  --grad-pink: #ec4899;
+
+  /* 叠加层：深底上是"提亮一档"，一律用白色透明度，不用纯黑（深皮上等于没写） */
+  --raise-1: rgba(255, 255, 255, 0.015); /* 表格行 hover，几乎看不见的那一档 */
+  --raise-2: rgba(255, 255, 255, 0.045); /* TAB hover */
+  --raise-3: rgba(255, 255, 255, 0.06);  /* 图标按钮 hover */
+  --raise-4: rgba(255, 255, 255, 0.07);  /* TAB 按下 / 徽章底 */
+  --hover-line: rgba(255, 255, 255, 0.24);
+
+  --scroll-thumb: rgba(255, 255, 255, 0.09);
+  --scroll-thumb-hover: rgba(255, 255, 255, 0.16);
+  --chat-track: rgba(255, 255, 255, 0.04);
+  --chat-thumb: rgba(255, 255, 255, 0.2);
+  --chat-thumb-hover: rgba(255, 255, 255, 0.32);
+
+  /* 具名底色 */
+  --field-bg: #161f2e;      /* 输入框：母版 .thr-input 就是 --sf2，浮起一档而不是凹下去 */
+  --card-hover-bg: #161f2e;
+  /* 版头：母版 .header 的三段渐变（深蓝 → 靛紫 → 深蓝），全站唯一一处彩色渐变大面积 */
+  --hero-from: #0a0f1e;
+  --hero-mid: #1a1640;
+  --hero-to: #0a0f1e;
+  --tabbar-bg: rgba(8, 13, 24, 0.92);
+  --tab-on-bg: rgba(59, 130, 246, 0.07);
+  --callout: rgba(59, 130, 246, 0.1); /* 结论区强调框底 */
+  --scrim: rgba(0, 0, 0, 0.6);
+  --shadow-pop: rgba(0, 0, 0, 0.5);   /* 浮层投影：深底上要黑，不要板岩墨 */
+
+  /* ── 高度（2026-08-26 加）──
+     在这之前全站 box-shadow 只用在 Help 浮层一处，卡片是纯平的：
+     一个 --panel 底 + 一圈 7% 白边，靠边框把自己"画"出来。深底上这不够——
+     7% 的线在 #080d18 上几乎是灰的，卡片读起来像贴在页面上的一块色差，不是浮起来的面。
+
+     ★ 深皮的高度主要靠顶边内高光，不靠投影 ★
+     黑影打在近黑的底上本来就看不见（对比不出来），真正让人读出"这是一个面"的
+     是顶边那道 1px 的白——光从上面来，面的上棱会亮。投影只补一点点接触阴影，
+     让卡片和页面之间有一层空气。浅皮正相反：白底上内高光等于没写，全靠投影，
+     所以两套皮的构成不一样，各自在自己的令牌块里定义。 */
+  --elev-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 12px rgba(0, 0, 0, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+  --elev-2: 0 2px 4px rgba(0, 0, 0, 0.45), 0 12px 28px rgba(0, 0, 0, 0.32),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+  /* 凹陷面：卡片里再嵌一层时用，方向朝内——它不该也浮起来 */
+  --elev-sunken: inset 0 1px 3px rgba(0, 0, 0, 0.28);
+  /* 吸顶导航压住下面滚过去的内容 */
+  --elev-bar: 0 4px 16px rgba(0, 0, 0, 0.3);
+
+  /* ── 圆角阶梯（2026-08-26 收敛）──
+     收之前全站 12 种圆角：2/3/4/5/6/7/8/9/10/12/14/999，而令牌只定义了 10 和 14。
+     圆角是形状语言，12 种等于没有语言——挨着摆的两个块差 1px，看不出是刻意还是手滑。
+     现在只剩 6 级，**新写的样式一律从这儿取，不许再写字面量**。 */
+  /* ── 模块间距：全站只有这一个值 ──（2026-08-27 立）
+     在这之前每个模块自己写内联 marginTop，实测全站有 20 种不同的值
+     （34 用了 19 次、22 用了 8 次、32 用了 3 次、28 用了 2 次……），
+     于是同一页上下滚一遍，模块之间的呼吸忽大忽小。
+     ★ 现在一律由 .section-title / .section-block 从这里取 ★
+     要调整全站节奏改这一个数，不要再往组件里写 marginTop。
+
+     ★ 2026-08-28：44 → 56 ★ 表格外面那层卡片去掉之后（见 .table-wrap），
+     分组这件事全靠间距了。要读得出「这是新的一章」，章间距必须**明显**大于
+     章内最大的那一档（标题到内容 14px），44 只有 3 倍多一点，去框后偏挤；
+     56 是 4 倍，这个对比才立得住。 */
+  --gap-section: 56px;
+
+  --r-hair: 2px;    /* 细装饰条的端头：章节标题前那根 3px 竖条、TAB 扫光条 */
+  --r-xs: 4px;      /* 小方块：代码片、徽章、骨架条、筛选小格 */
+  --r-sm: 7px;      /* 头像与品牌方块。★ 改这一档要同步改 app/icon.svg 的 rx ★ */
+  --r-md: 10px;     /* 按钮、图标按钮、单元格。原 --radius */
+  --r-lg: 14px;     /* 卡片、气泡、KPI、分组。原 --radius-lg */
+  --r-full: 999px;  /* 胶囊 */
+
+  /* ── 字号阶梯（2026-08-26 重立）──
+     ★ 旧的 --f-numL/numM/numS/h2/body/sub/tiny 全站 0 处引用，已删 ★
+     那七个是照母版抄来的，但抄完没有落地：母版的 body 是 11px，本站的正文一直是 15px，
+     两套数字从第一天起就对不上，于是谁也不会去取它，字号继续一处一处地手写。
+     收之前实际在用 19 种：25/23/22/18/17/16/15/14.5/14/13.5/13/12.5/12/11.5/11/10.5/10/9/30。
+     其中一半是**半像素近邻**（12.5 vs 12、13.5 vs 13、10.5 vs 10）——
+     这类差别肉眼分不出，只会在低分屏上把字糊掉，纯粹是债。
+
+     下面这 9 级是按**本站真实用途**重立的，不再照抄母版：
+     近邻一律并档，真正不同的层级（正文 / 表格 / 说明 / 标记）保留。 */
+  --fs-2xl: 30px;   /* 唯一的超大数字：难度系数面板那个 */
+  --fs-xl: 23px;    /* 页面 h1、KPI 大数字（原 25 一并并到这儿：和 h1 同高才读得出是同一层） */
+  --fs-lg: 17px;    /* 版头系统名、区块大标题 */
+  --fs-base: 15px;  /* 正文 */
+  --fs-md: 14px;    /* TAB、品牌方块、次级正文 */
+  --fs-sm: 13px;    /* 表格正文、.small */
+  --fs-xs: 12px;    /* 说明文字、元信息带、.tiny、等宽 */
+  --fs-2xs: 11px;   /* 角标、页脚署名 */
+  --fs-3xs: 10px;   /* 头像缩写、角色标记这类极小标签 */
+}
+
+/**
+ * ── STC 浅色皮（可选）── 切换靠 <html data-theme="light">，无属性＝深色（默认）。
+ *
+ * ★ 这一套不是另找的配色，是同一条色阶的另一头 ★
+ * 母版那套色值本身就是一条完整的色阶（蓝 400/500、翠 400/500、琥珀 400/500、
+ * 砖红 400/500、石板灰 200/400/600 …）。母版自己只用到了适合深底的那几阶——
+ * 它的产物是深色报告，用不上浅的那头。做浅皮要的正是同一条色阶里更深的那几阶：
+ *   深皮取 400 阶（#34D399 / #FBBF24 / #F87171）—— 深底上要亮才读得清
+ *   浅皮取 600/700 阶（#047857 / #B45309 / #DC2626）—— 白底上要深才读得清
+ * 色相一个没换，所以两套皮是同一个牌子的两种亮度，不是两套设计。
+ * ★ 因此这里没有发明任何色号 ★（铁律 14a）——每个值都能在母版色阶上指出它的位置。
+ *
+ * ★ 几个反过来用的地方 ★
+ * ① 母版的 --tx3 #475569 在深底上太暗（只有 2.4:1，见上面 --faint 那段），
+ *    换到白底上它反而正好，是这里的 --muted（7.4:1）。同一个色值，两套皮里各得其所。
+ * ② --raise-* 深皮是白色提亮，浅皮是板岩墨压暗——同一个"叠一档"的意思，方向相反。
+ * ③ 版头那道蓝紫渐变照搬到浅皮上会脏，这里换成同色相的最浅一阶（石板白 → 淡紫 → 石板白），
+ *    动作一样、亮度换头。
+ *
+ * ★ 品牌方块两套皮共用 ★ 蓝→紫实底配白字，在深浅两种底色上都立得住，不用分开定义。
+ */
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  /* 背景三层：石板白 → 纯白 → 石板 100 */
+  --bg: #f8fafc;
+  --panel: #ffffff;
+  --panel-2: #f1f5f9;
+
+  --line: rgba(15, 23, 42, 0.1);
+  --line-strong: rgba(15, 23, 42, 0.18);
+
+  /* 文字四档同样单调递减，实测对比度 17.9 / 11.2 / 7.4 / 4.8 */
+  --text: #0f172a;                    /* 石板 900 */
+  --text-2: rgba(15, 23, 42, 0.78);
+  --muted: #475569;                   /* 石板 600 ＝ 母版 --tx3，在白底上正合适 */
+  --faint: #64748b;                   /* 石板 500 */
+  --tx3-deco: #94a3b8;                /* 非文字用途（分隔线 / 禁用态）：石板 400 */
+
+  /* 强调色：蓝 600 / 蓝 700。白底上 500 阶只有 3.7:1，写在正文里不够 */
+  --accent: #2563eb;
+  --accent-dim: rgba(37, 99, 235, 0.1);
+  --accent-text: #1d4ed8;
+  --on-accent: #fff;
+  --accent-strong: #1d4ed8;           /* 浅底上 hover 是压暗，跟深皮正好相反 */
+
+  /* 语义色：同色相的 600/700 阶 */
+  --ok: #047857;
+  --warn: #b45309;
+  --bad: #dc2626;
+
+  /* 实心填充仍取 500 阶：它们只铺在 KPI 顶条那种无字的色块上，两套皮共用一档就够 */
+  --ok-solid: #10b981;
+  --warn-solid: #f59e0b;
+  --bad-solid: #ef4444;
+
+  --grad-cyan: #06b6d4;
+  --grad-violet: #8b5cf6;
+  --grad-pink: #ec4899;
+
+  /* 叠加层：浅底上是"压暗一档"，用板岩墨的透明度，不用纯黑（白底上会发脏） */
+  --raise-1: rgba(15, 23, 42, 0.022);
+  --raise-2: rgba(15, 23, 42, 0.05);
+  --raise-3: rgba(15, 23, 42, 0.06);
+  --raise-4: rgba(15, 23, 42, 0.08);
+  --hover-line: rgba(15, 23, 42, 0.3);
+
+  --scroll-thumb: rgba(15, 23, 42, 0.16);
+  --scroll-thumb-hover: rgba(15, 23, 42, 0.28);
+  --chat-track: rgba(15, 23, 42, 0.05);
+  --chat-thumb: rgba(15, 23, 42, 0.22);
+  --chat-thumb-hover: rgba(15, 23, 42, 0.34);
+
+  --field-bg: #ffffff;
+  --card-hover-bg: #f8fafc;
+  /* 版头：深皮那道「深蓝 → 靛紫 → 深蓝」换成同色相最浅一阶 */
+  --hero-from: #f8fafc;
+  --hero-mid: #ede9fe;
+  --hero-to: #f8fafc;
+  --tabbar-bg: rgba(248, 250, 252, 0.92);
+  --tab-on-bg: rgba(37, 99, 235, 0.08);
+  --callout: rgba(37, 99, 235, 0.08);
+  --scrim: rgba(15, 23, 42, 0.38);
+  --shadow-pop: rgba(15, 23, 42, 0.14); /* 浅底上投影要淡，深皮那档 0.5 的黑会像断电 */
+
+  /* 高度：白底上内高光等于没写，全部交给投影，而且要比深皮淡得多——
+     浅皮上投影稍微一重就会脏，看起来像 2013 年的拟物卡片。 */
+  --elev-1: 0 1px 2px rgba(15, 23, 42, 0.05), 0 4px 12px rgba(15, 23, 42, 0.06);
+  --elev-2: 0 2px 4px rgba(15, 23, 42, 0.06), 0 12px 28px rgba(15, 23, 42, 0.1);
+  --elev-sunken: inset 0 1px 3px rgba(15, 23, 42, 0.05);
+  --elev-bar: 0 4px 16px rgba(15, 23, 42, 0.07);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--text);
+  /* 字体全部自托管，声明在 src/app/fonts.ts，构建期与运行期都不连外部字体服务。
+     ★ 顺序就是回退链，别调 ★ 拉丁与数字先给 Inter（整套字号字距是照它调的），
+     它没有汉字，中文自然落到 --font-sc；--font-sc 是常用字包，
+     碰上生僻人名（犇 喆 昇 这类）再落到 --font-sc-ext，那个包只有真用到才下载。
+     最后三档是字体没下完时的兜底，不是常态。
+     ★ 这里曾经是一场空 ★ 原来写的是 `Noto Sans SC, Inter, ...`，
+     可全站没有任何一处加载过它们——实测 Inter 与 JetBrains Mono 根本没装，
+     于是拉丁落 Segoe UI、中文落微软雅黑，而字号字距全是按 Inter 调的。 */
+  font-family: var(--font-sans), var(--font-sc), var(--font-sc-ext), system-ui, -apple-system,
+    Segoe UI, PingFang SC, Microsoft YaHei, sans-serif;
+  font-size: var(--fs-base);
+  line-height: 1.65;
+  letter-spacing: 0.5px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* 数字不许抖 */
+.num,
+table,
+.mono {
+  font-variant-numeric: tabular-nums;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+a:hover {
+  color: var(--text);
+}
+
+h1,
+h2,
+h3 {
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+/* ───────── 按钮 ───────── */
+
+button {
+  font: inherit;
+  cursor: pointer;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  background: transparent;
+  color: var(--text-2);
+  padding: 9px 16px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+button:hover:not(:disabled) {
+  border-color: var(--hover-line);
+  color: var(--text);
+}
+button:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+button.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+  /* ★ 只有主按钮有影子 ★ 一屏上十几个按钮长得一模一样（透明底 + 一圈细边），
+     新人不知道该点哪个。给 CTA 一档高度，它就自己从这排幽灵按钮里立起来了——
+     这比再发明一个颜色便宜，也不违反「只有一个强调色」那条自律。 */
+  box-shadow: var(--elev-1);
+}
+button.primary:hover:not(:disabled) {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  box-shadow: var(--elev-2);
+}
+button.primary:active:not(:disabled) {
+  /* 按下去要落地：影子收回最浅一档，手感才对得上 */
+  box-shadow: var(--elev-sunken);
+}
+button.primary:disabled {
+  box-shadow: none;
+}
+
+/* ── 链接长成按钮 ──（2026-08-27）
+   ★ 用在「这一行唯一能做的事」上 ★ 考试卡里每一局末尾那个「开始」原来是个裸链接：
+   和它左边的「未开始」三个字一样大、一样是一行文字，只差一个颜色——
+   人打开考试卡，第一眼看不出从哪儿进去，得先把三列文字读一遍才反应过来那是个入口。
+
+   ★ 为什么还是 <a>，不换成 button ★ 它是导航（去 /drill/xxx），不是提交。
+   换成 button 就丢了右键新开、中键、复制链接，也不再有「点了会跳走」这层含义。
+   标签留给语义，长相借按钮那一套——这两件事本来就不冲突。
+
+   ★ 一张卡里只有一个填色的 ★ 三局都摆成主按钮等于没有重点；
+   填色的那个是「下一局该打的」，其余描边（见 exam/ExamClient.tsx 里 nextIdx）。 */
+a.as-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: transparent;
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s, box-shadow 0.15s;
+}
+a.as-btn:hover {
+  border-color: var(--hover-line);
+  color: var(--text);
+  text-decoration: none;
+}
+a.as-btn.primary {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: var(--on-accent);
+  font-weight: 500;
+  /* 和 button.primary 同一档高度：全站的「主动作」得长一个样 */
+  box-shadow: var(--elev-1);
+}
+a.as-btn.primary:hover {
+  background: var(--accent-strong);
+  border-color: var(--accent-strong);
+  color: var(--on-accent);
+  box-shadow: var(--elev-2);
+}
+a.as-btn.primary:active {
+  box-shadow: var(--elev-sunken);
+}
+
+button.ghost {
+  border-color: transparent;
+  color: var(--muted);
+  padding: 6px 10px;
+}
+button.ghost:hover:not(:disabled) {
+  color: var(--text);
+  background: var(--panel-2);
+}
+
+/* ── 危险动作（2026-08-26 加）──
+   ★ 补的是「档」，不是「颜色」★ 在这之前只有账号管理里的「删除」
+   挂了一句内联 `style={{ color: 'var(--bad)' }}`——颜色对了，但它是个补丁：
+   下一个不可逆的动作还得再抄一遍，而且 hover、focus、禁用态一概没有。
+
+   ★ 静默态只染字，不铺底 ★ 铺红底会把一整列操作按钮变成一片警报，
+   而这一列里真正不可逆的只有「删除」一个。红底留给 hover——
+   手移上去那一刻才升级成"你正要做一件收不回的事"。
+   （「停用」「重置口令」都不用这一档：那两个都能撤销，
+     染红只会让红色贬值，也违反「红只给红线与警告」那条自律。） */
+button.danger {
+  color: var(--bad);
+  border-color: transparent;
+}
+button.danger:hover:not(:disabled) {
+  color: var(--on-accent);
+  background: var(--bad);
+  border-color: var(--bad);
+}
+button.danger:focus-visible {
+  outline: 2px solid var(--bad);
+  outline-offset: 2px;
+}
+
+/* ───────── 表单 ───────── */
+
+input,
+select,
+textarea {
+  font: inherit;
+  background: var(--field-bg);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  padding: 9px 12px;
+  width: 100%;
+  transition: border-color 0.15s;
+}
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--faint);
+}
+textarea {
+  resize: vertical;
+}
+
+label {
+  display: block;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  margin-bottom: 5px;
+}
+
+/* ───────── 容器 ───────── */
+
+.card {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 20px;
+  box-shadow: var(--elev-1);
+}
+
+/* ★ 卡片里再套卡片：不投影，也不描边 ★
+   高度是相对的：一张浮起来的卡片**里面**的东西不可能也浮在同一层，
+   两层影子叠在一起只会糊成一块脏边。里层一律拍平——要表达"这是一个子块"，
+   靠的是底色差（--panel-2）而不是再浮一次。
+   写成后代选择器而不是只管 .inset：真正嵌套的那十来处多半是就地写
+   `style={{ background: 'var(--panel-2)' }}`，没挂 .inset 类。
+
+   ★ 2026-08-28 补上「不描边」★ 原来只关了投影，边还在——于是「框里套框」
+   这个最重的形状全站有十来处（周考面板、背调面板、对话页侧栏、帮助页…）。
+   外面那一圈已经说明「这是一块」了，里面再描一圈只是把同一句话说两遍。
+   ★ 语义色边是例外 ★ 里层如果就地写了 borderColor（--ok / --warn / --bad），
+   那是**警报**不是分隔，必须留着；所以这里只改颜色不改 border-width，
+   调用点写的 borderColor 权重更高，照样盖得住。 */
+.card .card {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+/* 凹陷面：影子朝内，读起来是"陷下去的槽"，和浮起来的卡片正好相反 */
+.card.inset {
+  background: var(--panel-2);
+  border-color: transparent;
+  box-shadow: var(--elev-sunken);
+}
+
+.card.hoverable {
+  transition: border-color 0.15s, background 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.card.hoverable:hover {
+  border-color: var(--line-strong);
+  background: var(--card-hover-bg);
+  /* ★ 抬 1px，不是 4px ★ 这是"可以点"的提示，不是一次动画表演。
+     位移一大，一屏十几张卡片里鼠标扫过就会此起彼伏地跳。 */
+  box-shadow: var(--elev-2);
+  transform: translateY(-1px);
+}
+@media (prefers-reduced-motion: reduce) {
+  .card.hoverable {
+    transition: border-color 0.15s, background 0.15s;
+  }
+  .card.hoverable:hover {
+    transform: none;
+  }
+}
+
+.muted {
+  color: var(--muted);
+}
+.faint {
+  color: var(--faint);
+}
+.small {
+  font-size: var(--fs-sm);
+}
+.tiny {
+  font-size: var(--fs-xs);
+}
+/* 数字与编号的等宽栈：母版用 JetBrains Mono，没装就落到系统等宽 */
+.mono {
+  font-family: var(--font-mono), ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+  font-size: var(--fs-xs);
+}
+
+/* 区块标题：小、灰、带字距。让内容自己去抢注意力。
+   母版 .card-title 同款：前面一根 3px 强调色竖条——只有这一点彩，
+   够把"这里换段了"说清楚，又不至于跟正文抢眼睛。 */
+.section-label {
+  /* ★ inline-flex，不是 flex ★ 这个类一半用在 <span> 上（准入判定、教练台、周考面板
+     都是「标签 + 后面跟一句话」的行内排法），改成 block 级 flex 会把它撑成整行，
+     后面那句话被挤到下一行去。inline-flex 既能挂住下面那根竖条，又保住行内行为。 */
+  display: inline-flex;
+  align-items: center;
+  vertical-align: middle;
+  gap: 7px;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.08em;
+  color: var(--muted);
+  text-transform: uppercase;
+  margin-bottom: 14px;
+}
+.section-label::before {
+  content: '';
+  width: 3px;
+  height: 10px;
+  border-radius: var(--r-hair);
+  background: var(--accent);
+  flex-shrink: 0;
+}
+/* ★ KPI 格里的标签不挂竖条 ★ 那一格是三行居中（名字/数字/小字），
+   前面多一根竖条会把这一行顶得偏左，六格并排看过去就是六道参差的短杠。
+   母版那根条是给「区块标题」用的，不是给指标名用的。 */
+.kpi .section-label::before {
+  display: none;
+}
+
+/* ───────── 标签 chip ───────── */
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--fs-xs);
+  line-height: 1;
+  padding: 5px 9px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.chip.accent {
+  border-color: transparent;
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+/* 母版 .tag-* 同款：15% 淡底 + 30% 同色描边 + 400 阶字色。
+   浅皮时代只描边不给底，深底上那样太飘——一片深色里认不出这是个标签。 */
+.chip.warn {
+  background: color-mix(in srgb, var(--warn) 15%, transparent);
+  border-color: color-mix(in srgb, var(--warn) 30%, transparent);
+  color: var(--warn);
+}
+.chip.bad {
+  background: color-mix(in srgb, var(--bad) 15%, transparent);
+  border-color: color-mix(in srgb, var(--bad) 30%, transparent);
+  color: var(--bad);
+}
+.chip.ok {
+  background: color-mix(in srgb, var(--ok) 15%, transparent);
+  border-color: color-mix(in srgb, var(--ok) 30%, transparent);
+  color: var(--ok);
+}
+
+/* ───────── 顶部状态条 ───────── */
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 28px;
+  background: var(--tabbar-bg);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line);
+  font-size: var(--fs-sm);
+}
+.topbar .stats {
+  display: flex;
+  gap: 22px;
+  align-items: center;
+  color: var(--muted);
+  flex-wrap: wrap;
+}
+.topbar .stats b {
+  color: var(--text);
+  font-weight: 600;
+}
+.topbar nav {
+  display: flex;
+  gap: 4px;
+}
+
+/* ───────── 客户档案卡（首页的主角） ───────── */
+
+.dossier {
+  display: grid;
+  grid-template-columns: 52px minmax(0, 1fr);
+  gap: 16px;
+}
+.avatar {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--text-2);
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+}
+/* 询盘原文：像真的在后台看客户消息 */
+.inquiry {
+  background: var(--panel-2);
+  border-left: 2px solid var(--line-strong);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+  padding: 12px 14px;
+  color: var(--text-2);
+  white-space: pre-wrap;
+  font-size: var(--fs-sm);
+  line-height: 1.7;
+}
+
+/* ───────── 聊天气泡 ───────── */
+
+.bubble {
+  max-width: 76%;
+  border-radius: var(--r-lg);
+  padding: 10px 14px;
+  white-space: pre-wrap;
+  word-break: break-word;
+  line-height: 1.7;
+}
+.bubble.me {
+  background: var(--accent);
+  color: var(--on-accent);
+  border-bottom-right-radius: 4px;
+}
+/* ★ 自己那侧的气泡是强调色实底，次级文字不能用全局的那几档 ★
+   --muted / --faint 是照着深底调的，落到蓝底上只有 3:1 不到（系统动作那行小字就糊在里面）。
+   在这一块里把两档就地换成 --on-accent 的透明度档——底色变了，次级档也得跟着换参照。 */
+.bubble.me .muted,
+.bubble.me .faint {
+  color: rgba(255, 255, 255, 0.78);
+}
+.bubble.them {
+  background: var(--panel-2);
+  border: 1px solid var(--line);
+  border-bottom-left-radius: 4px;
+}
+/* 客户消息下面的「译成中文」：不抢眼，贴着气泡左下角；译文在气泡里原文下方，虚线隔开 */
+.zh-toggle {
+  margin-top: 4px;
+  padding: 2px 4px;
+  background: none;
+  border: none;
+  box-shadow: none;
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  cursor: pointer;
+}
+.zh-toggle:hover:not(:disabled) {
+  text-decoration: underline;
+}
+.zh-toggle:disabled {
+  color: var(--faint);
+  cursor: default;
+}
+.bubble-zh {
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px dashed var(--line-strong);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+}
+
+/* ───────── 报告页 ───────── */
+
+.report h1 {
+  font-size: var(--fs-xl);
+  margin: 0 0 24px;
+}
+.report h2 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin: 36px 0 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--line);
+}
+/* 报告里的每一节也挂同一根泓红竖条——报告和教练台是同一套读法 */
+.report h2::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 17px;
+  border-radius: var(--r-hair);
+  background: var(--accent);
+}
+.report h3 {
+  font-size: var(--fs-base);
+  margin: 22px 0 8px;
+  color: var(--text-2);
+}
+.report p {
+  margin: 7px 0;
+  color: var(--text-2);
+}
+.report li {
+  margin: 4px 0 4px 18px;
+  color: var(--text-2);
+}
+.report blockquote {
+  margin: 10px 0;
+  padding: 10px 14px;
+  border-left: 2px solid var(--line-strong);
+  background: var(--panel-2);
+  color: var(--muted);
+  border-radius: 0 var(--r-md) var(--r-md) 0;
+}
+.report table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 10px 0;
+  font-size: var(--fs-sm);
+}
+.report td {
+  border-bottom: 1px solid var(--line);
+  padding: 9px 12px;
+  vertical-align: top;
+  color: var(--text-2);
+}
+.report tr:first-child td {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  border-bottom-color: var(--line-strong);
+}
+.report code {
+  background: var(--panel-2);
+  padding: 2px 6px;
+  border-radius: var(--r-xs);
+  font-size: var(--fs-xs);
+}
+
+/* ───────── 滚动条 ───────── */
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--scroll-thumb);
+  border-radius: var(--r-full);
+  border: 3px solid var(--bg);
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--scroll-thumb-hover);
+}
+
+/**
+ * ── 跑局页对话区的滚动条 ──
+ * 这一块本来就能滚（overflowY: auto），但全局那套滚动条在这里几乎不存在：
+ * thumb 只有 0.09 的透明度，10px 宽还要减掉左右各 3px 的边框，实际可见宽度只剩 4px；
+ * 更要命的是那圈边框取的是 var(--bg) 页面底色，而对话区坐在 .card 上（--panel），
+ * 两个颜色对不上，等于用另一种背景色去描边——于是"能滚"这件事完全没有被告知。
+ *
+ * 这里单独给它一条看得见的：轨道留一道浅槽，让人知道滚动范围有多长；
+ * 边框改用 --panel 与卡片同色，滑块才像浮在卡片上，而不是压着一条黑边。
+ * ★ 只作用于对话区 ★ 输入框、按钮条、右侧信息卡都不在这个容器内，不受影响。
+ */
+.chat-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+.chat-scroll::-webkit-scrollbar-track {
+  background: var(--chat-track);
+  border-radius: var(--r-full);
+  margin: 4px 0;
+}
+.chat-scroll::-webkit-scrollbar-thumb {
+  background: var(--chat-thumb);
+  border-radius: var(--r-full);
+  border: 2px solid var(--panel);
+}
+.chat-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--chat-thumb-hover);
+}
+/* Firefox 不吃 ::-webkit-*，它只认这两个属性 */
+.chat-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--chat-thumb) var(--chat-track);
+}
+
+/* ── 标尺校准表（报告页底部，仅主管可见）── */
+.calib-row {
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  background: var(--panel-2);
+}
+.calib-head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+.calib-name {
+  font-weight: 600;
+  min-width: 56px;
+}
+.calib-anchor {
+  margin-top: 6px;
+  line-height: 1.5;
+}
+/* 归因区用左边一道竖线拎出来：它是"这一格判得不一样"之后才出现的追问 */
+.calib-cause {
+  margin-top: 10px;
+  padding-left: 12px;
+  border-left: 2px solid var(--warn);
+}
+.calib-foot {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+/**
+ * ── 复盘页：记录在左，答题在右 ──
+ * 复盘问的是「第 3 轮你为什么…」，看不到那一轮说过什么就只能凭印象编。
+ * 两栏各自滚：左边翻记录不会把右边的输入框顶走，右边答题也不会带着记录乱跑。
+ * 宽度与全站同口径（var(--page)），右栏 560 是原来单栏 720 减去舒适阅读的余量——
+ * 问题文案本来就短，560 够读，省下的宽度给记录。
+ */
+.debrief-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 560px);
+  gap: 20px;
+  height: 100vh;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 20px 28px;
+}
+.debrief-log {
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.debrief-main {
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+@media (max-width: 980px) {
+  /* 窄屏放不下两栏。记录收到答题下面——答题是主任务，不能被记录挤下去；
+     整页恢复正常滚动，两个 100vh 的滚动区在窄屏里会互相抢手势。 */
+  .debrief-grid {
+    grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    padding: 24px 20px;
+  }
+  .debrief-log {
+    order: 2;
+    max-height: 60vh;
+  }
+  .debrief-main {
+    order: 1;
+    overflow: visible;
+  }
+}
+
+/* ═══════════════ 应用外壳：顶部横向 TAB + 居中定宽内容 ═══════════════ */
+
+/**
+ * ★ 固定宽度 1200 ★
+ * ① 两栏客户卡各 ~588px，询盘原文不会挤成窄条
+ * ② 15px 字号下正文行长落在 45–55 字，中文阅读甜区
+ * ③ 1440 笔记本左右各留 120px，2000px 屏各留 400px——
+ *    留白是"这是设计过的"的信号，不是浪费
+ * 纯阅读页（报告、考前必读）另设 760px，1200 对长文太宽。
+ */
+:root {
+  --page: 1200px;
+  --page-narrow: 760px;
+}
+
+.container {
+  width: 100%;
+  max-width: var(--page);
+  margin: 0 auto;
+  padding: 0 28px;
+}
+.container.narrow {
+  max-width: calc(var(--page-narrow) + 56px);
+}
+
+/* ── 版头横幅：标题行 + 元信息带 ── */
+/**
+ * 横幅通栏，内层与内容同宽同 padding——元信息与正文共用一条左边界。
+ * 底色比页面亮一档（不是发光，是"这是版头"的一层纸），
+ * 用一道极浅的向下渐变收边，比画两条线干净。
+ */
+.hero {
+  /* 母版 .header 同款：135° 深蓝 → 靛紫 → 深蓝。
+     全站唯一一处大面积彩色渐变，别处一律实色（见文件头自律第 2 条）。 */
+  background: linear-gradient(135deg, var(--hero-from) 0%, var(--hero-mid) 50%, var(--hero-to) 100%);
+  border-bottom: 1px solid var(--line);
+  padding: 17px 0 14px;
+}
+
+.hero-top {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 30px;
+}
+.hero-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+.hero-name {
+  font-size: var(--fs-lg);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+/* 版本号。★ 不是徽章，是元数据 ★（2026-08-27 去掉彩色胶囊）
+   原来它是一个蓝底圆角标签，紧挨着系统名。问题在于**彩色胶囊在界面语言里是
+   「状态」的意思**——Beta、内测、已下线，那类需要人当场调整预期的东西。
+   稳定版本号不是状态：它只在报障对账时被读一次，平时不需要任何人注意它。
+   给它上强调色，等于让一个零行动价值的信息和产品名抢眼球。
+   现在降成安静的小灰字：要找的时候找得到，不找的时候不存在。 */
+.hero-ver {
+  font-size: var(--fs-2xs);
+  line-height: 1;
+  color: var(--faint);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  /* 和系统名基线错开一点，读起来是「附注」不是标题的一部分 */
+  align-self: flex-end;
+  padding-bottom: 2px;
+}
+/* 署名贴右，绝对定位——它不参与居中，标题才是居中的那个 */
+.hero-credit {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  white-space: nowrap;
+}
+
+/* 橙底版在页头和登录页用品牌规范的 40px 尺寸。 */
+.brand-mark {
+  display: block;
+  width: 40px;
+  height: 40px;
+  background: url('/stc-logo.svg') center / contain no-repeat;
+  flex-shrink: 0;
+}
+
+/* ★ 页脚是出处位 ★ 上行品牌名 13px/600/正文色，
+   下行系统名版本 + 引擎/方法论出处 11px/400/次级色。 */
+.site-footer {
+  border-top: 1px solid var(--line);
+  margin-top: 48px;
+  padding: 20px 28px 28px;
+  text-align: center;
+}
+.site-footer-brand {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--text);
+}
+.cooperation-link {
+  color: var(--muted);
+  font-weight: 400;
+  text-decoration: underline;
+  text-decoration-color: var(--line-strong);
+  text-underline-offset: 3px;
+}
+.cooperation-link:hover,
+.cooperation-link:focus-visible {
+  color: var(--accent-text);
+}
+.site-footer-by {
+  margin-top: 4px;
+  font-size: var(--fs-2xs);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* 元信息带：标签灰、数字亮，靠留白分组。扫一遍就走，不在这里做判断 */
+/**
+ * ★ 分隔符去掉了，改成 column-gap ★（2026-08-23）
+ * 原来相邻两组之间画一道竖线（`span + span::before`）。六项一行放不下时会换行，
+ * 而那道线是**跟在后一项身上**的——换行后它就甩到了第二行行首，
+ * 看着像上一句话没说完（截图里那条「| 当前状态 …」）。
+ * 六项每项自带标签，本来就分得开，不需要线；间距给足即可，换行也不会破相。
+ */
+.hero-meta {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  /* ★ 组间距比组内大一档 ★ 26 是原来六格平铺时的统一间距；
+     分组之后组内收到 22、组间靠分隔线自己撑开，这样「哪几格是一伙的」
+     不用读文字就看得出来。 */
+  column-gap: 18px;
+  row-gap: 4px;
+  margin-top: 11px;
+  font-size: var(--fs-xs);
+  line-height: 1.9;
+  color: var(--muted);
+}
+.hero-meta-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  column-gap: 22px;
+  row-gap: 4px;
+}
+/* 组间那条竖线。★ 只画线，不占语义 ★ 它在 JSX 里是 aria-hidden 的空 span：
+   读屏软件按顺序念完两组即可，中间插一个"竖线"只会打断句子。 */
+.hero-meta-sep {
+  width: 1px;
+  height: 12px;
+  flex: none;
+  background: var(--line-strong);
+}
+/* 窄屏元信息带改成逐行左对齐（见下面的媒体查询），竖线在那种排布下没有意义 */
+@media (max-width: 720px) {
+  .hero-meta-sep {
+    display: none;
+  }
+}
+.hero-meta i {
+  font-style: normal;
+  color: var(--faint);
+  letter-spacing: 0.03em;
+  margin-right: 5px;
+}
+.hero-meta b {
+  color: var(--text);
+  font-weight: 600;
+}
+/**
+ * ★ 窄屏不再靠 nth-child 砍格 ★（2026-08-23，与上面去掉分隔符是同一次改动）
+ * 旧规则在 narrow 容器和 900px 以下各砍掉第一组，为的是把带子压回一行。
+ * 那套写法有两个毛病：一是砍位跟着 span 序号走，元信息一增删就砍错人
+ *（2026-08-07 就砍掉过最该留的「当前状态」）；二是现在这六项**每一项都是
+ * 当事人自己的状态**，没有一项是可以随手丢的家底数。
+ * 换行本来就不再破相（没有分隔符了），那就让它换行。
+ */
+
+/* ── 选人入口页 ── */
+/* 不套版头：这一刻还不知道你是谁，版头没内容可显示 */
+.signin {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  padding: 40px 20px;
+}
+.signin-box {
+  width: 100%;
+  max-width: 440px;
+}
+.signin-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 22px;
+}
+.signin-list {
+  display: grid;
+  gap: 8px;
+}
+/* 一行一个人，整行可点——名字小得要瞄准才点得中最烦人 */
+.who {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  text-align: left;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  transition: border-color 0.15s, background 0.15s, transform 0.08s;
+}
+.who:hover {
+  background: var(--card-hover-bg);
+  border-color: var(--line-strong);
+}
+.who:active {
+  transform: translateY(1px);
+}
+.who-av {
+  width: 38px;
+  height: 38px;
+  border-radius: var(--r-md);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+.who-main {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+.who-main b {
+  color: var(--text);
+  font-size: var(--fs-md);
+}
+.who-go {
+  color: var(--faint);
+  transition: color 0.15s, transform 0.15s;
+}
+.who:hover .who-go {
+  color: var(--accent);
+  transform: translateX(3px);
+}
+/* 「加一个业务员」：四列一行，顶部对齐。
+   ★ 不能用 align-items: flex-end ★ 「简码」下面多一行小字，那一格就比别的高，
+   底部对齐时它的输入框会被顶到别人上面去（出过：三个框高低不一）。
+   改成顶部对齐，小字自己往下长，不影响同一行的其他格子。 */
+.signin-add-form {
+  display: grid;
+  grid-template-columns: minmax(120px, 180px) minmax(150px, 230px) minmax(130px, 170px) auto;
+  gap: 12px 14px;
+  align-items: start;
+  justify-content: start;
+  margin-top: 10px;
+}
+.signin-add-form > div {
+  min-width: 0;
+}
+.signin-add-form label {
+  display: block;
+  margin-bottom: 6px;
+  white-space: nowrap;
+}
+.signin-add-form input,
+.signin-add-form select,
+.signin-add-form button {
+  height: 40px;
+  box-sizing: border-box;
+}
+@media (max-width: 720px) {
+  .signin-add-form {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+@media (max-width: 460px) {
+  .signin-add-form {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 团队名册 ── */
+.team-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--fs-sm);
+}
+.team-table th {
+  text-align: left;
+  font-weight: 400;
+  font-size: var(--fs-xs);
+  letter-spacing: 0.04em;
+  color: var(--faint);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line-strong);
+  white-space: nowrap;
+}
+.team-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--line);
+  color: var(--text-2);
+  vertical-align: middle;
+}
+.team-table tr:last-child td {
+  border-bottom: none;
+}
+.team-table tr:hover td {
+  background: var(--raise-1);
+}
+/* 数字右对齐才好上下扫着比 */
+.team-table .num-col {
+  text-align: right;
+}
+.team-table form {
+  display: inline;
+}
+
+/* ───── 账号一览的格子 ─────
+   ★ 2026-08-26：不折行那条规矩撤了 ★
+   它是 2026-08-22 加的，当时的症结是「表里塞满了控件」——select 的全局 width:100%
+   会让下拉塌成一个只剩箭头的方块、按钮的字竖着排成「保／存」。不折行是那个局面下的对策。
+   现在控件全部收进了编辑抽屉，读行里只剩文字，前提没有了；
+   而列宽改由 <colgroup> 锁死之后，再不折行就会顶破列。
+   ★ 只有操作列还保留不折行 ★ 那几个按钮横着排才认得出是一组动作。 */
+.team-table.roster th,
+.team-table.roster td {
+  padding: 11px 14px;
+}
+.team-table.roster .cell-ops {
+  white-space: nowrap;
+}
+/* 一格两行：上面是结论，下面是小字出处 */
+.team-table.roster .cell-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.team-table.roster .num-col .cell-main {
+  justify-content: flex-end;
+}
+.team-table.roster .cell-main + .tiny,
+.team-table.roster .cell-line + .tiny,
+.team-table.roster .cell-form + .tiny,
+.team-table.roster .cell-line + .cell-line,
+.team-table.roster .tiny + .cell-form,
+.team-table.roster .cell-form + form {
+  margin-top: 5px;
+}
+/* 「角色 [下拉] 改」这样的一行 */
+.team-table.roster .cell-line {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.team-table.roster .cell-label {
+  flex: none;
+  width: 26px;
+  color: var(--faint);
+  font-size: var(--fs-2xs);
+}
+.team-table.roster form.cell-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+/* 表里的控件按内容撑开，不吃全局那条 width:100% */
+.team-table.roster select,
+.team-table.roster input:not([type='checkbox']):not([type='hidden']) {
+  width: auto;
+  padding: 6px 10px;
+  font-size: var(--fs-sm);
+}
+.team-table.roster select {
+  min-width: 96px;
+}
+.team-table.roster .cell-reason {
+  width: 98px;
+}
+/* 「我知道这会收走他的分配权」独占一行，别跟下拉挤在一起 */
+.team-table.roster .cell-ack {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--warn);
+}
+.team-table.roster .cell-ack input {
+  width: auto;
+  padding: 0;
+}
+/* 右边那一列操作按钮 */
+/* 按钮靠右——它们是这张表最右的一列，右边缘对齐才排得整齐。
+   ★ 表头居中，不跟着靠右 ★（2026-08-27 王老师定）
+   .team-table th 默认 text-align:left，只让 td 靠右，表头会孤零零留在左边、
+   和它管的那一列对不上；可让表头也贴右边缘又显得被挤出去了。
+   居中是这两者之间那个位置：认得出是这一列的名字，也不抢按钮的边。 */
+.team-table.roster .cell-ops {
+  text-align: right;
+}
+.team-table.roster th.cell-ops {
+  text-align: center;
+}
+.team-table.roster .cell-ops form + form {
+  margin-left: 6px;
+}
+
+/* ───── 表格外壳：不描边 ─────（2026-08-28 立）
+   ★ 表不再套一层 .card ★ 在这之前每张表外面都包一个卡片，于是同一件事被说了四遍：
+   章节标题左边那根蓝竖条说了一遍、标题底下那条分割线说了一遍、上面 56px 的白说了一遍，
+   卡片边框是第四遍——而表自己还有表头线和每行的 hairline，等于**框里又套线**。
+   本文件 .section-block 那儿早就写着「靠间距把块分开，不靠框」，这次是让代码追上那句话。
+
+   ★ 顺便定死边框的语义（新铁律）★
+   框（border / .card）只有两个意思：① 这是一条警报或提示；② 这是一个能整体点开的对象。
+   除此之外一律无框。留着的那几处正是这两类：教练台待办条、考试闸门的说明块、
+   「加一个业务员」表单、折叠块（.section-fold）、EmptyState、Help 浮层。
+   一屏上的框预算 0~2 个——框用光了，红色的待办条就喊不出来了，
+   它会和旁边五个灰框长得一样，只是颜色不同。
+
+   ★ 去了框，框干的活得有人接 ★ 三件事分别交给：
+     分组   → --gap-section（同日 44 → 56，见令牌层那段）
+     左边界 → 下面那条首列 padding-left: 0
+     悬停   → 下面那条 --raise-2 */
+.table-wrap {
+  overflow-x: auto;
+}
+/* ★ 首列贴左、末列贴右 ★
+   无框的表看起来是「设计过的」还是「样式没写完」，八成就落在这一条上。
+   卡片有 16px 内边距时，表的第一列比章节标题往右缩 16px 是看不出来的（框把它圆过去了）；
+   框一去，整页左边缘立刻变成锯齿状——那才是「不专业」的真正来源，不是没有框。
+   现在表的第一列、章节标题、页面正文共用同一条左基线。
+
+   ★ 为什么写在 .roster 那一堆规则的后面 ★ 两边权重同为 (0,2,1)，
+   压不过靠权重，只能靠源码顺序——挪到 TAB 条前面就会被 .team-table.roster
+   的 `padding: 11px 14px` 盖回去。 */
+.table-wrap .team-table th:first-child,
+.table-wrap .team-table td:first-child {
+  padding-left: 0;
+}
+.table-wrap .team-table th:last-child,
+.table-wrap .team-table td:last-child {
+  padding-right: 0;
+}
+/* ★ 行悬停要提一档 ★ --raise-1 是 1.5% 白，当初是配着 --panel 卡片底（#0f1623）调的；
+   表直接坐到页面底（#080d18）上之后那一档基本没了，鼠标扫过去没有任何回应。 */
+.table-wrap .team-table tr:hover td {
+  background: var(--raise-2);
+}
+
+.task-score-window,
+.task-verdict {
+  display: inline-flex;
+  gap: 8px;
+}
+.task-score-window {
+  align-items: baseline;
+  gap: 10px;
+  white-space: nowrap;
+}
+.task-gap-detail {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+/* 留出备注列宽，窄窗在表格内横滚。 */
+.daily-verdict-table {
+  min-width: 1080px;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+}
+.daily-verdict-table .task-verdict {
+  white-space: nowrap;
+}
+
+/* ───── 列表外壳：.table-wrap 的非表格版 ─────（2026-08-28）
+   「最近的局」「考试题库」这类一条一个 <div> 的列表，原来也各自套一层 .card。
+   和表一样的道理：上面已经有 .section-title 了，框是第四遍。
+   ★ 行之间用发丝线，不用框 ★ 去了外框还得让人看出"这是一条一条的"，
+   靠的是行与行之间那条线——它同时也把行高统一了，比卡片内的自由堆叠更整齐。 */
+.list-wrap {
+  display: flex;
+  flex-direction: column;
+}
+.list-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  /* 首尾贴边，和 .table-wrap 的首列同一条左基线 */
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+.list-wrap > .list-row:last-child {
+  border-bottom: none;
+}
+/* 可点的行：悬停提一档。★ 和 .table-wrap 里的行一样贴着左基线 ★
+   本来想用负 margin 让高亮往两边各溢出一点，但那样发丝线也会跟着变宽、
+   和上面表格的线对不齐——一页上两种列表的左右边缘不一致，比高亮窄一点难看得多。 */
+a.list-row:hover,
+button.list-row:hover {
+  background: var(--raise-2);
+}
+
+/* ── TAB 条：单独一层，sticky 到顶 ── */
+/* 放在 .hero 外面才能吸住整页；塞进横幅里，横幅一滚走导航就跟着没了 */
+.tabbar {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  background: var(--tabbar-bg);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
+  /* ★ 导航要压住从它底下滚过去的内容 ★ 只有一条 1px 边线时，
+     滚动中的表格会像是从导航"里面"长出来的——毛玻璃虚化了内容，
+     但没有任何东西说明这两层谁在上面。一道向下的软影就够了。 */
+  box-shadow: var(--elev-bar);
+}
+
+/* TAB 居中，身份贴右——身份不参与居中，TAB 才是居中的那个 */
+.tabbar-inner {
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+/* 右侧那一组（齿轮 + 身份）整体贴右，不参与 TAB 的居中 */
+.tabbar-right {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+/* ★ 窄页（报告、对话）里右侧那一组不能再绝对定位 ★（2026-11-12 录屏前发现）
+   窄容器只有 ~816px，居中的 5 个 TAB 占 ~560px，两边各剩 ~130px，
+   而右侧那一组有 ~220px 宽——绝对定位贴右就压在「账号管理」上。
+   窄页改成一行：TAB 靠左、右侧那一组靠右，各占各的位置。 */
+.container.narrow .tabbar-inner {
+  justify-content: space-between;
+  gap: 10px;
+}
+.container.narrow .tabbar-right {
+  position: static;
+  transform: none;
+}
+/* 一行还是放不下（TAB 530 + 右侧 243 > 760）：窄页和手机一样，身份只留头像 */
+.container.narrow .whoami-main,
+.container.narrow .whoami-switch {
+  display: none;
+}
+.whoami {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+
+/* 图标按钮：低频入口用它，别让它长得像主操作 */
+.icon-btn {
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  border-radius: var(--r-md);
+  line-height: 1;
+  /* ★ 图标换成单色 SVG 之后不再需要 saturate ★ 那一档是给彩色 emoji 去色用的：
+     emoji 的颜色不归 CSS 管，只能靠滤镜压下去。现在图标跟随 currentColor，
+     直接调颜色即可——静默态给 --muted，点亮时给正文色，比滤镜准，也少一层合成。 */
+  color: var(--muted);
+  transition: background 0.15s, color 0.15s;
+}
+.icon-btn:hover {
+  background: var(--raise-3);
+  color: var(--text);
+}
+.icon-btn.on {
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+.whoami-av {
+  width: 24px;
+  height: 24px;
+  border-radius: var(--r-sm);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-3xs);
+  font-weight: 600;
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+}
+.whoami-main {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.whoami-main b {
+  color: var(--text-2);
+  font-weight: 500;
+}
+.whoami-role {
+  font-size: var(--fs-3xs);
+  line-height: 1;
+  padding: 3px 5px;
+  border-radius: var(--r-xs);
+  background: var(--accent-dim);
+  color: var(--tab-accent-text);
+}
+.whoami-switch {
+  color: var(--faint);
+  font-size: var(--fs-xs);
+  padding: 3px 7px;
+  border-radius: var(--r-sm);
+  transition: color 0.15s, background 0.15s;
+}
+.whoami-switch:hover {
+  color: var(--text);
+  background: var(--raise-3);
+}
+
+/* 横向 TAB：靠下划线标记当前页，不靠填充色 */
+/**
+ * ★ 宽屏不做溢出容器 ★（2026-08-07）
+ * 这里原先挂着 overflow-x: auto，本意是窄屏能横滑。可它让 .tabs 成了滚动容器，
+ * 宽屏下会在 TAB 组右缘渲染出一条竖直的滚动条——看着像一道刻意画的隔断，
+ * 而 CSS 里根本没有那条线，DOM 里也没有分隔元素，查起来毫无线索。
+ * 横滑只有窄屏才需要，已挪进下面的窄屏档；宽屏 TAB 本来就放得下，不必是滚动容器。
+ */
+.tabs {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2px;
+  height: 46px;
+  min-width: 0;
+}
+/**
+ * TAB 交互四层，从轻到重——每层只负责一个问题：
+ *   hover   「这块能点」   底色浮起 + 图标由灰回彩
+ *   press   「点下去了」   整块下沉 1px
+ *   pending 「在路上」     底部扫光，等多久亮多久（见 NavTabs.tsx）
+ *   on      「你在这」     强调色 + 下划线展开
+ * 用同一个强调色贯穿，不引第二种颜色——下面的主按钮也是这个泓红，
+ * 换个色 TAB 就跟正文抢眼睛了。想整体换色只改 --tab-accent 一行。
+ */
+:root {
+  --tab-accent: var(--accent);
+  --tab-accent-text: var(--accent-text);
+}
+
+.tabs a {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 100%;
+  padding: 0 16px;
+  font-size: var(--fs-md);
+  color: var(--muted);
+  white-space: nowrap;
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  transition: color 0.15s, background 0.15s, transform 0.08s;
+}
+.tabs a:hover {
+  color: var(--text);
+  background: var(--raise-2);
+}
+/* 按下去要有落地感。1px 就够——2px 开始像坏了 */
+.tabs a:active {
+  transform: translateY(1px);
+  background: var(--raise-4);
+}
+/* 键盘走到这儿也得看得见，别只照顾鼠标 */
+.tabs a:focus-visible {
+  outline: 2px solid var(--tab-accent);
+  outline-offset: -3px;
+  color: var(--text);
+}
+.tabs a.on {
+  color: var(--tab-accent-text);
+  background: var(--tab-on-bg);
+}
+.tabs a.on::after {
+  content: '';
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 2px;
+  background: var(--tab-accent);
+  border-radius: var(--r-hair) var(--r-hair) 0 0;
+  transform-origin: center;
+  animation: tab-underline 0.24s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+/* 下划线从中间展开：翻页时眼睛跟得上"当前页跳到哪了" */
+@keyframes tab-underline {
+  from {
+    transform: scaleX(0.2);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}
+
+/* 图标平时压成半灰，指上去才回彩——五个 emoji 同时满色会盖过文字 */
+.tabs .ic {
+  display: flex;
+  line-height: 1;
+  /* 同 .icon-btn：单色图标靠透明度分档，不靠滤镜。
+     ★ 放大那一下留着 ★ 它是「点上了」的手感，和颜色是两件事。 */
+  opacity: 0.62;
+  transition: opacity 0.15s, transform 0.15s;
+}
+.tabs a:hover .ic,
+.tabs a.on .ic {
+  opacity: 1;
+  transform: scale(1.08);
+}
+
+.tabs .badge {
+  font-size: var(--fs-2xs);
+  line-height: 1;
+  padding: 3px 6px;
+  border-radius: var(--r-xs);
+  background: var(--raise-4);
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+  transition: background 0.15s, color 0.15s;
+}
+.tabs a.on .badge {
+  background: var(--accent-dim);
+  color: var(--tab-accent-text);
+}
+
+/* 等待条：点了到新页面出现之间那段空白，页面必须有反应 */
+.tab-pending {
+  position: absolute;
+  left: 12px;
+  right: 12px;
+  bottom: -1px;
+  height: 2px;
+  border-radius: var(--r-hair);
+  overflow: hidden;
+  background: color-mix(in srgb, var(--accent) 24%, transparent);
+}
+.tab-pending::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 45%;
+  border-radius: var(--r-hair);
+  background: var(--tab-accent);
+  animation: tab-sweep 0.9s ease-in-out infinite;
+}
+@keyframes tab-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(330%);
+  }
+}
+
+/* 关了动效的人不该被扫光和缩放骚扰，状态本身仍要看得出来 */
+@media (prefers-reduced-motion: reduce) {
+  .tabs a,
+  .tabs .ic {
+    transition: none;
+  }
+  .tabs a.on::after {
+    animation: none;
+  }
+  .tabs a:hover .ic,
+  .tabs a.on .ic {
+    transform: none;
+  }
+  .tab-pending::after {
+    animation: none;
+    width: 100%;
+    opacity: 0.7;
+  }
+}
+
+.page-body {
+  padding: 34px 0 100px;
+}
+
+/* ── KPI 条 ── */
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+  gap: 14px;
+}
+.kpi {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 15px 17px;
+  /* 母版 .kpi-card 同款：顶边一条 2px 渐变。四格并排时它就是分组线，
+     比给每格描个亮边轻得多——描边会把四个格子各自框成一个盒子。 */
+  position: relative;
+  overflow: hidden;
+  /* ★ 一格里的三行（名字、数字、小字）一律居中 ★（2026-08-23 王老师定）
+     左对齐时数字长短不一，四格并排看过去参差不齐；居中之后每一格自成一块，
+     一眼扫过去是四个并列的数，不是四段左边框。 */
+  text-align: center;
+}
+.kpi::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--accent), var(--grad-cyan));
+}
+/* 三档轮换，跟母版 .kpi-card.c1/.c2/.c3 一一对应。
+   顺序靠 :nth-child 自动排，组件那边不用手写类名。 */
+.kpis .kpi:nth-child(3n + 2)::before {
+  background: linear-gradient(90deg, var(--grad-violet), var(--ok-solid));
+}
+.kpis .kpi:nth-child(3n)::before {
+  background: linear-gradient(90deg, var(--warn-solid), var(--grad-pink));
+}
+.kpi .v {
+  font-size: var(--fs-xl);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  margin-top: 5px;
+  font-variant-numeric: tabular-nums;
+  /* 母版数字一律等宽：四格并排时小数点和位数对得齐 */
+  font-family: var(--font-mono), ui-monospace, "Cascadia Code", "SF Mono", Consolas, monospace;
+}
+
+/* ── 客户询盘列表：一行一个客户 ──
+ *
+ * ★ 一行一个，不是一张卡 ★（2026-08-06 改）
+ * 卡片式一屏只放得下 2–3 个客户，人设一多就得一直滚。
+ * 收件箱的本职是「一眼扫完有谁在等」，询盘原文是点开才看的细节。
+ * 用原生 details/summary 做展开——首页是 server component，不为一个折叠引入 JS。
+ * summary 里的「接待」是 <a>，点它会跳走，顺带 toggle 无所谓。
+ */
+.ilist {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.irow {
+  border-bottom: 1px solid var(--line);
+}
+.irow:last-child {
+  border-bottom: 0;
+}
+.irow > summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 9px 14px 9px 18px;
+  transition: background 0.12s;
+}
+.irow > summary::-webkit-details-marker {
+  display: none;
+}
+.irow > summary:hover {
+  background: var(--panel-2);
+}
+.irow[open] > summary {
+  background: var(--panel-2);
+}
+/* 左侧难度色带：整行高度，一眼分辨简单/标准/困难 */
+.irow > summary::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--stripe, var(--line-strong));
+}
+.irow-caret {
+  color: var(--muted);
+  font-size: var(--fs-3xs);
+  flex-shrink: 0;
+  transition: transform 0.15s;
+}
+.irow[open] .irow-caret {
+  transform: rotate(90deg);
+}
+.irow-av {
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-sm);
+  display: grid;
+  place-items: center;
+  font-size: var(--fs-3xs);
+  font-weight: 600;
+  background: var(--panel-2);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  flex-shrink: 0;
+}
+.irow[open] .irow-av {
+  background: var(--panel);
+}
+.irow-name {
+  font-size: var(--fs-md);
+  font-weight: 600;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.irow-co {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.irow-meta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-shrink: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  white-space: nowrap;
+}
+.irow-meta .sep {
+  color: var(--line-strong);
+}
+.irow-go {
+  padding: 5px 12px;
+  font-size: var(--fs-xs);
+  border-radius: var(--r-md);
+  flex-shrink: 0;
+}
+.irow-body {
+  padding: 2px 18px 15px 55px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+/* ── 跑局页的返回 ──
+ * 摆在局号左边，是这一页唯一的出口。做成安静的次要按钮：
+ * 它得随时找得到，但不能比「发送」和「结束并复盘」更抢眼。
+ */
+.drill-back {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  padding: 3px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  background: var(--panel-2);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  line-height: 1.6;
+  white-space: nowrap;
+  transition:
+    background 0.12s,
+    color 0.12s;
+}
+.drill-back:hover {
+  background: var(--panel);
+  color: var(--text);
+  text-decoration: none;
+}
+
+/* ── 询盘分档：简单 / 标准 / 困难，三档默认全收起 ──
+ * 十七封平铺要滚三屏。收起来之后首页只剩三行，
+ * 而那三行本身就是一条学习路径：先把话听清楚 → 再学怎么推进 → 最后练判断。
+ * 组头右侧那句说明写的是「这一档的局共同错在哪里」，不是装饰文案。
+ */
+.igroups {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.igroup {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.igroup > summary {
+  list-style: none;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 16px 13px 18px;
+  transition: background 0.12s;
+}
+.igroup > summary::-webkit-details-marker {
+  display: none;
+}
+.igroup > summary:hover {
+  background: var(--panel-2);
+}
+.igroup[open] > summary {
+  background: var(--panel-2);
+  border-bottom: 1px solid var(--line);
+}
+/* 组头也带难度色带，和组内每一行的色带对齐成一条 */
+.igroup > summary::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--stripe, var(--line-strong));
+}
+.igroup[open] > summary .irow-caret {
+  transform: rotate(90deg);
+}
+.igroup-label {
+  font-weight: 600;
+  font-size: var(--fs-md);
+  letter-spacing: 0.03em;
+}
+.igroup-count {
+  color: var(--muted);
+  font-size: var(--fs-xs);
+}
+.igroup-hint {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  text-align: right;
+}
+/* 组内列表外框由 .igroup 提供，这里把自己的边框圆角让出来 */
+.igroup-list {
+  background: transparent;
+  border: 0;
+  border-radius: 0;
+}
+
+/* 1100px 这一档原先砍的是静态的「评分维度」组，那一组 2026-08-07 已从 AppShell 删除。
+   现在三组全是会变的数（客户库 / 我的记录 / 当前状态），1100px 也放得下，于是不再砍——
+   真正砍不下时由下面 900px 那档接手砍客户库。 */
+@media (max-width: 820px) {
+  /* 窄屏行内先丢公司名与登录天数——姓名、难度、接待按钮不许丢 */
+  .irow-co,
+  .irow-meta .drop-narrow {
+    display: none;
+  }
+  .irow-body {
+    padding-left: 18px;
+  }
+  /* 组头那句说明是引导语，不是判断依据，窄屏第一个让位 */
+  .igroup-hint {
+    display: none;
+  }
+}
+@media (max-width: 860px) {
+  /* 窄屏先丢署名——它是落款，不是信息 */
+  .hero-credit {
+    display: none;
+  }
+}
+@media (max-width: 720px) {
+  .hero {
+    padding: 14px 0 12px;
+  }
+  .hero-name {
+    font-size: var(--fs-base);
+  }
+  /* 元信息带改为逐行左对齐：居中在窄屏会读成锯齿 */
+  .hero-meta {
+    flex-direction: column;
+    align-items: flex-start;
+    row-gap: 0;
+    line-height: 1.8;
+  }
+  /* TAB 改为可横滑，居中会把第一项推出屏幕。
+     overflow-x 只在这一档开——宽屏开着会渲染出一条竖直滚动条，见上面 .tabs 的注释 */
+  .tabs {
+    justify-content: flex-start;
+    overflow-x: auto;
+  }
+  /* 窄屏身份只留头像 */
+  .tabbar-right {
+    position: static;
+    transform: none;
+  }
+  .tabbar-inner {
+    justify-content: space-between;
+    gap: 10px;
+  }
+  .whoami-main,
+  .whoami-switch {
+    display: none;
+  }
+  .tabs a {
+    padding: 0 12px;
+  }
+}
+
+/* ───────── 说明气泡 ─────────
+   ★ 解释性文字一律收进「?」★（2026-08-21）
+   原来每个小标题下面都压着两三行口径说明，一页下来全是字，
+   像说明书不像看板。规则不会变，属于「要查的时候查」，
+   会变的数（谁没考、待裁几条）才该一直摊在面上。 */
+
+/* ★ .section-head 已于 2026-08-22 删除 ★ 它的活是「把小标题和 ❓ 摆成一行」，
+   而 .section-title 本身就是 flex 行，❓ 直接写在标题里即可，不用再套一层。 */
+
+.help {
+  position: relative;
+  display: inline-flex;
+  vertical-align: middle;
+  line-height: 1;
+}
+
+/* 触发器：默认只有一个 15px 的灰圆点，安静到不抢标题 */
+.help-btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  color: var(--faint);
+  border-radius: var(--r-full);
+  transition: color 0.12s, background 0.12s, border-color 0.12s;
+}
+.help-mark {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 15px;
+  height: 15px;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  border-radius: 50%;
+  font-size: var(--fs-3xs);
+  font-weight: 600;
+  line-height: 1;
+  padding-bottom: 1px;
+}
+.help-label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.02em;
+}
+.help-btn:hover,
+.help-btn:focus-visible {
+  color: var(--accent-text);
+}
+.help-btn:hover .help-mark,
+.help-btn:focus-visible .help-mark {
+  border-color: var(--accent);
+}
+.help[data-open] .help-btn,
+.help .help-btn[aria-expanded='true'] {
+  color: var(--accent-text);
+}
+.help .help-btn[aria-expanded='true'] .help-mark {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* 气泡本体：浮在内容上方，不把下面的表格顶下去——
+   顶下去就等于换了个方式占版面，等于没收 */
+.help-pop {
+  position: absolute;
+  z-index: 60;
+  top: calc(100% + 8px);
+  left: 0;
+  display: block;
+  width: max-content;
+  max-width: min(440px, 80vw);
+  padding: 11px 14px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: 0 12px 30px var(--shadow-pop);
+  color: var(--text-2);
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: normal;
+  text-transform: none;
+  text-align: left;
+  white-space: normal;
+  cursor: auto;
+  /* ★ max-height / overflow-y 已于 2026-08-27 删除 ★
+     它们当初是为了兜住装不下的东西：一整套判定阈值并进这个气泡之后
+     会顶出视口，只好给它一个上限让它自己滚。
+     但**气泡里出现滚动条，本身就是内容放错了容器的信号**——
+     现在气泡只装一句话（summary，硬上限 60 字，超了开发环境直接报错），
+     一句话撑不出滚动条，这两条也就没有存在的理由了。长口径去抽屉。 */
+  max-width: min(320px, 78vw);
+}
+.help-pop.right {
+  left: auto;
+  right: 0;
+}
+/* 侧栏、弹窗这类窄容器：它们自己开了 overflow，气泡宽了会被裁掉半句 */
+.help-pop.narrow {
+  max-width: 240px;
+}
+.help-pop b {
+  color: var(--text);
+  font-weight: 600;
+}
+/* 气泡里另起一段用它，不用 <div>（外层是 span，套 div 是非法嵌套） */
+.help-pop .p + .p {
+  display: block;
+  margin-top: 6px;
+}
+/* ───── 气泡里的分点 ─────（2026-08-22 王老师定：分点陈述更清楚）
+   规则本来就是一条一条的，写成一大段读者得自己在心里断句。
+   数字挂在左边、回行的字对齐在数字右侧不缩回去——一眼看得出这是第几条。
+   ★ 仍然只能用 span ★ 外层是 span，套 <ol><li> 是非法嵌套。 */
+.help-pop .li:first-child {
+  margin-top: 0;
+}
+.help-pop .li {
+  display: block;
+  margin-top: 6px;
+  padding-left: 1.55em;
+  text-indent: -1.55em;
+}
+.help-pop .li + .p {
+  display: block;
+  margin-top: 8px;
+}
+.help-pop .p {
+  display: block;
+}
+
+/* ── 气泡的新结构 ──（2026-08-27）
+   一句话摘要 + 一条通往完整说明的路。就这两样，没有第三样。 */
+.help-pop-sum {
+  display: block;
+  color: var(--text-2);
+}
+.help-pop-more {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-block;
+  width: 100%;
+  margin-top: 9px;
+  padding-top: 8px;
+  border-top: 1px solid var(--line);
+  cursor: pointer;
+  color: var(--accent-text);
+  font-size: var(--fs-2xs);
+  font-weight: 600;
+}
+.help-pop-more:hover,
+.help-pop-more:focus-visible {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 640px) {
+  /* 窄屏一律贴左，右对齐反而会撑出屏幕 */
+  .help-pop,
+  .help-pop.right {
+    left: 0;
+    right: auto;
+    max-width: 78vw;
+  }
+}
+
+/* ───────── 筛选条 + 历史台账 ─────────
+   ★ 2026-08-21：历史从「一天一张卡」改成一张连续的表 ★
+   原来七个业务日就是七张圆角卡、七个日期标题，主管要看一个人的走势
+   得跨七张卡自己拼，而且每张卡都没有表头，列全靠数位置。 */
+
+/* ── 筛选条：一行下拉，均匀分布 ──（2026-08-21 王老师定）
+   原来是一排 chip 按钮，人一多、档位一多就排成两三行，还得一个个看哪个是选中的。
+   下拉每组只占一格，当前选的是什么写在框里，一眼就看得见。 */
+.filter-bar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.filter-bar label {
+  font-size: var(--fs-xs);
+  letter-spacing: 0.06em;
+  color: var(--faint);
+  margin-bottom: 4px;
+}
+.filter-bar select {
+  padding: 7px 10px;
+  font-size: var(--fs-sm);
+}
+
+/* 非此即彼的开关（「隐藏 0 轮空局」这种），不值得占一个下拉。
+   贴着格子底边，高度与旁边的下拉对齐，一行看着才是齐的。 */
+.filter-toggle {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  align-self: end;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-md);
+  background: var(--field-bg);
+  color: var(--text-2);
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.filter-toggle:hover {
+  border-color: var(--hover-line);
+}
+.filter-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.filter-toggle.on {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+.filter-toggle .box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 14px;
+  height: 14px;
+  flex: none;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-xs);
+  font-size: var(--fs-3xs);
+  line-height: 1;
+}
+.filter-toggle.on .box {
+  border-color: var(--accent);
+}
+.filter-toggle .n {
+  margin-left: auto;
+  font-size: var(--fs-xs);
+  color: var(--faint);
+}
+.filter-toggle.on .n {
+  color: var(--accent-text);
+  opacity: 0.7;
+}
+
+/* 台账：横竖都能滚，表头冻在顶上——翻到第 40 行还知道哪列是哪列 */
+/* ★ 限高滚动区是唯一保留「面」的表，但用底色，不用描边 ★（2026-08-28）
+   它和上面那些表不一样：只有它会在页面中间把内容截断。不给一个看得见的范围，
+   表读起来像是凭空断在半空——所以这里的边界是有活干的，不是装饰。
+   但深底上 7% 白的描边发灰发脏（见令牌层开头那段），换成一层 --panel 底就够说明
+   「框到这儿为止」，因此照样不描边、不投影。
+   ★ 有底色就得有内边距 ★ 首列不跟着 .table-wrap 那条 padding-left: 0，
+   贴着填充边缘的文字会挤。 */
+.ledger-wrap {
+  background: var(--panel);
+  border-radius: var(--r-lg);
+  padding: 0;
+  max-height: 62vh;
+  overflow: auto;
+}
+.ledger thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: var(--panel);
+  /* sticky 之后 border-bottom 会跟着内容滚走，用 inset 阴影画这条线 */
+  border-bottom: 0;
+  box-shadow: inset 0 -1px 0 var(--line-strong);
+}
+/* 换一天时描一条稍重的线：连成一张表，又看得出天与天的界 */
+.ledger tbody tr.day-break td {
+  border-top: 1px solid var(--line-strong);
+}
+.ledger tbody td {
+  padding: 9px 16px;
+}
+
+/* 翻页条：一页 10 行，超了就翻 */
+/* ★ 居中，不再靠右 ★ 靠右是跟着「下一页」这个动作走的（手停在右下角），
+   但这条现在挂在十几张表下面，宽的窄的都有——靠右时它会跟着表宽左右横跳，
+   同一页上下两张表的翻页条对不齐。居中之后位置只跟容器走，翻页条永远在表的正下方。 */
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+.pager-at {
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+/* 翻页按钮。原来蹭的是筛选 chip 的样式，筛选换成下拉之后它得有自己的 */
+.pager-btn {
+  all: unset;
+  box-sizing: border-box;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--fs-xs);
+  line-height: 1;
+  padding: 7px 12px;
+  border-radius: var(--r-full);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  white-space: nowrap;
+  transition: background 0.12s, border-color 0.12s, color 0.12s;
+}
+.pager-btn:hover:not(:disabled) {
+  border-color: var(--hover-line);
+  background: var(--raise-1);
+}
+.pager-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+.pager-btn:disabled {
+  cursor: default;
+  opacity: 0.38;
+}
+
+/* ───────── 章节标题 ─────────
+   ★ 2026-08-21：教练台的每一块要读得出是「一章」★
+   原来所有小标题都用 .section-label——12px、灰、大写字距。
+   那个样式是给「一格数据的名字」用的（KPI 卡那种），不是给章节用的；
+   教练台一页摞着六七块内容，全用它，整页读下来就是表格接表格、没有分界。 */
+
+/* 页面大标题那一行。★ 全站一套 ★（2026-08-27）
+   原来七个页面各写各的内联 flex：有的 space-between、有的不带 marginBottom、
+   有的 22——于是「标题到第一块内容」的距离每页都不一样。
+   右侧要放东西（导出、返回、去某页）就用 .page-head-right，它自己靠右。 */
+.page-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  /* ★ 上间距也要有 ★（2026-08-27 补）
+     页头**通常**是第一个元素，所以第一版只写了 margin-bottom。
+     但考试闸门那一页不是：实习业务员的结算横幅、正式业务员的进度卡
+     都排在状态屏的页头之前——于是那张卡的底边直接贴着「考试闸门」四个字，
+     中间一点白都没有。页头前面有东西时，那段距离和模块间距同一档。 */
+  margin-top: var(--gap-section);
+  margin-bottom: 22px;
+}
+.page-head:first-child {
+  margin-top: 0;
+}
+/* 后代选择器，不是直接子级：考试闸门那页标题底下还挂着一行副标题，
+   两者被包在同一个 div 里，写成 > 就够不着了 */
+.page-head h1 {
+  font-size: var(--fs-xl);
+}
+.page-head-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+/* 页标题底下那一句话说明。★ 它属于页头，不属于内容 ★
+   不给它单独定规矩的话，「标题→副标题→第一块」会比「标题→第一块」
+   平白多出一整段模块距离——同样是页头，有没有副标题差了 54px。 */
+.page-sub {
+  margin: 0 0 22px;
+  max-width: 68ch;
+  font-size: var(--fs-sm);
+  line-height: 1.8;
+  color: var(--muted);
+}
+/* 有副标题时页头自己收紧：两者加起来仍然是一整个页头 */
+.page-head:has(+ .page-sub) {
+  margin-bottom: 8px;
+}
+.page-sub + .section-block {
+  margin-top: 0;
+}
+
+/* ★ 「标题→第一块内容」是一个固定距离，不管第一块是什么 ★（2026-08-27）
+   不加这条的话：教练台第一块是张普通卡片，距离 = 页头的 22；
+   而账号管理第一块正好是 .section-block，距离 = 22 + 44 = 66。
+   同样是「标题下面第一块」，两页差了三倍——这正是要消掉的那种不一致。 */
+.page-head + .section-block {
+  margin-top: 0;
+}
+
+.section-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+  color: var(--text);
+  /* ★ 上间距写在这儿，不写在每个调用点 ★（2026-08-27）
+     原来是 margin: 0 0 14px，于是每处都得自己补一个内联 marginTop——
+     补多少全凭当时手感，这就是间距不一致的来源。 */
+  margin: var(--gap-section) 0 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--line);
+}
+/* 一段里的第一个标题不自己拿距离：那段距离该由外面那一层给，
+   不然模块开头会白白多出一截。 */
+.section-title:first-child,
+.section-block > .section-title:first-child,
+.card > .section-title:first-child {
+  margin-top: 0;
+}
+/* 左边一小段泓红竖条：余光里就能看出「新的一章开始了」 */
+.section-title::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 17px;
+  border-radius: var(--r-hair);
+  background: var(--accent);
+}
+/* 标题后面跟的那些数（「· 最近 26 局」「29 个业务日」）不跟标题抢重量 */
+.section-title .sub {
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  letter-spacing: normal;
+  color: var(--muted);
+}
+/* 章与章之间留够白，靠间距把块分开，不靠框。
+
+   ★ 2026-08-27：从 `.section-block + .section-block` 改成无条件 ★
+   相邻兄弟选择器只在「前一个也是 .section-block」时才生效。
+   可训练台、考试闸门这些页面，第一个模块前面摆的是一张状态卡（不是 section-block），
+   选择器匹配不上，间距直接变成 0——卡片和下一个模块标题挤在一起。
+   现在无条件给，只把「整页的第一个」排除掉。 */
+.section-block {
+  margin-top: var(--gap-section);
+}
+.section-block:first-child {
+  margin-top: 0;
+}
+
+/* 折叠起来的那几章（标尺校准 / 考试题库 / 标尺调参 / 历史台账）。
+   收起来时它自己就是一整块，所以不描下划线，由卡片边框担这个活 */
+.section-fold {
+  margin: 0;
+}
+/* ★ 折叠块同时也是一个模块时，间距归模块规则管 ★（2026-08-27）
+   上面那条 `margin: 0` 排在 .section-block 后面、权重又一样，
+   于是把模块间距整个吃掉了——教练台的「难度系数」「考试题库」两块
+   紧贴着上一块，中间一点白都没有。这里用两个类叠加把权重提上去。 */
+.section-fold.section-block {
+  margin-top: var(--gap-section);
+}
+.section-fold.section-block:first-child {
+  margin-top: 0;
+}
+.section-fold > summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  list-style: none;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--text);
+}
+.section-fold > summary::-webkit-details-marker {
+  display: none;
+}
+.section-fold > summary::before {
+  content: '▸';
+  flex: none;
+  color: var(--accent);
+  font-size: var(--fs-xs);
+  transition: transform 0.15s;
+}
+.section-fold[open] > summary::before {
+  transform: rotate(90deg);
+}
+.section-fold > summary .sub {
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ───────── 小节标题 ─────────
+   一章里面还要再分小块时用它（复盘页的记录栏、工作日历的两栏、题库的槽位、指引里的各段）。
+   同一根泓红竖条，字号退一档、不描下划线——层级一眼看得出，又不跟 .section-title 抢重量。
+   ★ 它不是 .section-label 的替代 ★ .section-label 只给「一格数据的名字」（KPI 卡那种）用。 */
+
+.subsection-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--fs-md);
+  font-weight: 700;
+  line-height: 1.4;
+  color: var(--text);
+  margin: 0 0 10px;
+}
+.subsection-title::before {
+  content: '';
+  flex: none;
+  width: 3px;
+  height: 14px;
+  border-radius: var(--r-hair);
+  background: var(--accent);
+}
+.subsection-title .sub {
+  font-size: var(--fs-xs);
+  font-weight: 400;
+  color: var(--muted);
+}
+
+/* ───────── 明面规则清单 ─────────
+   ★ 2026-08-22 王老师定：考试规则不进气泡，直接摊开 ★
+   气泡（Help）适合「想查的时候点一下」，但开考门槛是每个人开考前都得知道的东西——
+   收进「?」里等于没写。这个样式给这类必须一直看得见的分点规则用。
+   数字挂在左边、回行的字对齐在数字右侧不缩回去，一眼看得出这是第几条。 */
+
+.rulebook {
+  display: grid;
+  gap: 18px;
+  margin-top: 14px;
+}
+.rulebook .grp > .subsection-title {
+  margin-bottom: 8px;
+}
+.rulebook .li {
+  display: block;
+  font-size: var(--fs-sm);
+  line-height: 1.85;
+  color: var(--muted);
+  padding-left: 1.55em;
+  text-indent: -1.55em;
+}
+.rulebook .li + .li {
+  margin-top: 5px;
+}
+/* 规则里加粗的都是「记不住会吃亏」的那半句，颜色要压得住正文灰 */
+.rulebook .li b {
+  color: var(--text);
+}
+
+
+/* ───────── 判定窗口那 6 格 ─────────
+   ★ 2026-08-22：缺考要看得见 ★
+   窗口是「2 个业务日 × 3 局」，写成一句话谁也数不清自己缺了几局。
+   排成固定 6 格、当天没考就空着——缺考藏不住，也不会有人以为旧分能顶上。 */
+
+.wingrid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 22px;
+  margin-top: 12px;
+}
+.wday-label {
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  margin-bottom: 6px;
+}
+.wcells {
+  display: flex;
+  gap: 6px;
+}
+.wcell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 46px;
+  height: 38px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  background: var(--panel-2);
+  font-size: var(--fs-md);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+/* 空格＝那一局没有分。虚线边框，一眼分得出「有分」和「没分」 */
+.wcell.empty {
+  background: transparent;
+  border-style: dashed;
+  color: var(--faint);
+  font-weight: 400;
+}
+
+/* ───────── 账号管理 · 我的账号：七格一行 ─────────
+   原来是 auto-fit + minmax(150px)：7 格要 1158px，卡片内宽只有 1104，
+   于是「最近登录」被挤到第二行，一格孤零零占一整行。
+   改成显式 7 轨 auto——每格按自己的内容取宽（"角色/业务员"本来就不需要 150），
+   富余的宽度再均分回去，间隙收到 16 刚好一行装下。 */
+.account-fields {
+  display: grid;
+  grid-template-columns: repeat(7, auto);
+  gap: 16px;
+}
+@media (max-width: 1080px) {
+  .account-fields {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+  }
+}
+@media (max-width: 720px) {
+  .account-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ═══════════════ 首页「今日待接待」三张卡 ═══════════════ */
+/**
+ * 为什么从「一行一个客户」改成三张卡（2026-08-23）：
+ * 104 封平铺时，被点开过的只有 17 封，点击全卡在每档头几行。
+ * 列表这个形态本身在要求业务员做一件他做不到的事——从 104 个外国人名里
+ * 判断今天该练哪一封。所以首页不再给列表，只给系统派的三封；
+ * 卡片比行多出来的那点面积，正好摆下「这局考什么」和「你练过没有」。
+ */
+.queue-head {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+.queue-head .spacer {
+  flex: 1;
+}
+.queue-cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+@media (max-width: 900px) {
+  .queue-cards {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.queue-card {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  padding: 15px 16px;
+}
+/* 左侧难度色带，与 .irow 同一套语言 */
+.queue-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: var(--stripe, var(--line-strong));
+}
+.queue-kind {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  letter-spacing: 0.03em;
+}
+.queue-who {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.queue-who .queue-name {
+  font-size: var(--fs-base);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.queue-point {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.queue-foot {
+  margin-top: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding-top: 4px;
+}
+/* 「看询盘原文」：卡片里不摆原文，摆了三张卡就有三屏高 */
+.queue-more > summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+}
+.queue-more > summary::-webkit-details-marker {
+  display: none;
+}
+.queue-more > summary:hover {
+  color: var(--text);
+}
+.queue-more[open] > summary {
+  margin-bottom: 9px;
+}
+.queue-more > div {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+/* 「为什么是这三封」：规则要能自证，不能让人觉得是随机塞的 */
+.queue-why > summary {
+  list-style: none;
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  color: var(--muted);
+  width: fit-content;
+}
+.queue-why > summary::-webkit-details-marker {
+  display: none;
+}
+.queue-why > summary:hover {
+  color: var(--text);
+}
+.queue-why > div {
+  margin-top: 8px;
+  font-size: var(--fs-xs);
+  color: var(--text-2);
+  line-height: 1.75;
+}
+
+/* ───────── 难度系数：两栏 ─────────（2026-08-23 王老师定的版式）
+   左列上下两块（调节器 / 调节理由），右列一整块（折算表）。
+   ★ 折算表必须和调节器并排 ★ 拖滑杆时要能同时看见「分数怎么变」，
+   摞在下面就得来回滚屏，那样这张表就白摆了。 */
+.difficulty-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 14px;
+  /* ★ 两列等高 ★ 左边「调节器 + 调节理由」两块加起来，正好等于右边折算表的高度。
+     不写 align-items:start，让网格默认的 stretch 生效——两列自己对齐，
+     谁高谁定高度，不用去猜表格有几行。 */
+}
+/* 左列自己再分上下两块：调节器按内容走，调节理由把剩下的高度吃掉 */
+.difficulty-col {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 14px;
+}
+/* 被撑高的那块，内容仍然顶头排，不要垂直居中飘在中间 */
+.difficulty-col > .card {
+  align-content: start;
+}
+/* 折算表那张卡：表格吃满剩余高度，行距自己撑开，底下不留空白块 */
+.difficulty-grid > .card > table {
+  border-collapse: collapse;
+}
+.difficulty-grid > .card > table td,
+.difficulty-grid > .card > table th {
+  padding: 2px 0;
+}
+/* 窄屏落回单栏——并排会把滑杆挤到没法拖 */
+@media (max-width: 900px) {
+  .difficulty-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── 图标 + 文字的按钮 ──
+   ★ 2026-08-26 加 ★ 图标从 emoji 换成 SVG 之后，emoji 那种「跟着字排」的
+   行内行为没有了：<svg> 是替换元素，默认按基线坐，会把文字顶高两三个像素。
+   凡是「图标 + 一句话」的按钮都挂这个类，交给 flex 做垂直居中。 */
+.with-ico {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+/* ───────── 骨架屏 ─────────
+   ★ 2026-08-26 加 ★ 见 components/Skeleton.tsx 顶上那段：这几页服务端要跑一秒多，
+   而在这之前那一秒是**完全静止**的。 */
+
+/* 只给读屏软件的文字。骨架屏本身对它是纯噪音，得有一句话说明在等什么 */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skeleton {
+  display: block;
+  border-radius: var(--r-xs);
+  /* 底色取 --raise-4：比卡片面亮一档，深浅两套皮各自成立，不用判断当前是哪套 */
+  background: var(--raise-4);
+  position: relative;
+  overflow: hidden;
+}
+/* 扫光。★ 用 ::after 而不是给背景做动画 ★ 背景渐变位移会让整块反复重绘，
+   一屏几十个骨架条时很费；伪元素位移只走合成层。 */
+.skeleton::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, var(--raise-2), transparent);
+  animation: skeleton-sweep 1.4s ease-in-out infinite;
+}
+
+@keyframes skeleton-sweep {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+/* ★ 左右内边距归零 ★（2026-08-28）真表去框之后首列贴着左基线，
+   骨架还留着 16px 的话，加载完那一瞬间整张表会往左跳一格。 */
+.skeleton-row {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 16px;
+  align-items: center;
+  padding: 13px 0;
+  border-top: 1px solid var(--line);
+}
+.skeleton-row:first-child {
+  border-top: 0;
+}
+/* 表头那一行比正文行矮一点，底下压一条稍重的线，和真表的表头对得上。
+   ★ 不再铺底色 ★ 真表的表头本来就没有底，去框之后那一小块灰底会孤零零浮在页面上 */
+.skeleton-head {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line-strong);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  /* ★ 关掉扫光，但骨架本身留着 ★ 「有东西在这儿、还没到」这个信息不该跟动画一起消失 */
+  .skeleton::after {
+    animation: none;
+    display: none;
+  }
+}
+
+/* ───────── 空状态 ─────────
+   见 components/EmptyState.tsx 顶上那段：它要说的是「这里还没开始」，
+   不是「这里坏了」。所以底色仍用卡片面、边框仍是常规细线——
+   一旦染成警示色，第一天进系统的新人会以为自己弄坏了什么。 */
+/* ★ 2026-08-28 去框 ★ 它占的是「表还没有数据时那个位置」——
+   表已经不套卡片了（见 .table-wrap），空状态再框一圈，就会变成
+   「没数据时有个框、有数据时框没了」，同一个位置的形状跟着数据变。
+   左边缘也跟着对齐：横向内边距归零，图标和下面表格的首列在同一条线上。
+   ★ 图标那个凹块留着 ★ 没有框之后它是唯一的视觉锚点，去掉就只剩两行灰字了。 */
+.empty {
+  display: flex;
+  align-items: flex-start;
+  gap: 13px;
+  padding: 2px 0 6px;
+}
+/* 图标坐在一个凹下去的小方块里：它是插图不是按钮，不能看起来可点 */
+.empty-ico {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  flex: none;
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+  box-shadow: var(--elev-sunken);
+  color: var(--faint);
+}
+.empty-body {
+  min-width: 0;
+  padding-top: 2px;
+}
+.empty-title {
+  font-size: var(--fs-sm);
+  color: var(--text-2);
+}
+/* ★ 第二行比第一行淡 ★ 第一行说缺什么，第二行说什么时候会有——
+   后者是补充，抢了注意力就本末倒置 */
+.empty-hint {
+  margin-top: 5px;
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  line-height: 1.8;
+}
+.empty-action {
+  margin-top: 12px;
+}
+
+/* ───────── 账号一览：读为默认，改为按需 ─────────
+   见 app/team/page.tsx 里那段注释：改之前这张表永远处于编辑态，
+   7 个人高 1321px、45 个交互控件、「改」出现 16 次。 */
+
+/* ★ 兜底写在外面，收起写在 @supports 里 ★
+   顺序反过来就危险了：不支持 :has() 的浏览器会把编辑行永久藏死，
+   那不是降级，是功能丢失。现在的写法是——不支持就常驻显示，等于退回今天的样子。 */
+@supports selector(:has(*)) {
+  .roster-edit {
+    display: none;
+  }
+  .roster-row:has(.row-toggle:checked) + .roster-edit {
+    display: table-row;
+  }
+  /* 展开时把这一对行连成一块：上行去掉圆角感、底线断开，读起来是「同一个人」 */
+  .roster-row:has(.row-toggle:checked) {
+    background: var(--raise-1);
+  }
+}
+
+/* 开关本体：视觉隐藏但**保留可聚焦**，键盘能用空格切换 */
+.row-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.row-edit-btn {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  font-size: var(--fs-xs);
+  line-height: 1;
+  padding: 6px 10px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--line-strong);
+  color: var(--text-2);
+  white-space: nowrap;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.row-edit-btn:hover {
+  border-color: var(--hover-line);
+  color: var(--text);
+}
+/* 焦点环要长在 label 上——checkbox 本体是看不见的 */
+.row-toggle:focus-visible + .row-edit-btn {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* 两段文案靠 CSS 换：收起时「编辑」，展开时「收起」。不用 JS 也说得清状态 */
+.row-edit-btn .on-expanded {
+  display: none;
+}
+.row-toggle:checked + .row-edit-btn {
+  border-color: var(--accent);
+  color: var(--accent-text);
+  background: var(--accent-dim);
+}
+.row-toggle:checked + .row-edit-btn .on-collapsed {
+  display: none;
+}
+.row-toggle:checked + .row-edit-btn .on-expanded {
+  display: inline;
+}
+
+/* 展开出来的编辑面板：整行通栏，凹一档表示"这是上面那一行的抽屉" */
+.roster-edit > td {
+  padding: 0;
+  border-top: 0;
+}
+.edit-panel {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 14px 26px;
+  padding: 14px 16px 16px;
+  background: var(--panel-2);
+  box-shadow: var(--elev-sunken);
+  /* 左边一道强调色竖条，把抽屉和它上面那一行绑在一起 */
+  border-left: 3px solid var(--accent);
+}
+.edit-field {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+}
+.edit-field-wide {
+  flex: 1 1 320px;
+}
+.edit-label {
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  letter-spacing: 0.03em;
+  white-space: nowrap;
+}
+
+/* 序号列。★ 它是定位用的，不是数据 ★ 所以要淡、要窄、要等宽——
+   人用它说「第 3 个那个」，而不是读它本身。
+   等宽数字（tabular-nums）让个位数和两位数的右边缘对齐，
+   否则 9 和 10 一换行整列就会跳一下。 */
+.cell-idx {
+  width: 44px;
+  text-align: right;
+  padding-right: 14px !important;
+  color: var(--faint);
+  font-size: var(--fs-xs);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+thead .cell-idx {
+  font-weight: 400;
+}
+
+/* ───────── 改口令 ─────────
+   ★ 表单限宽，不拉满一屏 ★ 三个口令框各自只装十几个字符，
+   拉到 1200px 宽会让人以为该往里填一大段东西；而且输入框一长，
+   光标和标签的距离就远了，看一眼标签再回来找光标要跨半个屏幕。 */
+.pw-form {
+  display: grid;
+  gap: 14px;
+  max-width: 420px;
+}
+.pw-form-foot {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-top: 2px;
+}
+
+/* ───────── 弹窗 ─────────
+   原生 <dialog> + showModal()：焦点陷阱、Esc 关闭、背景 inert 都由浏览器给，
+   见 components/ChangePassword.tsx 顶上那段。 */
+.modal {
+  /* dialog 默认有边框和内边距，而且是居中定位的一个小盒子——全部清掉，
+     让它铺满视口，居中交给里面的 .modal-scrim 用 flex 做 */
+  border: 0;
+  padding: 0;
+  margin: 0;
+  max-width: none;
+  max-height: none;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  color: var(--text);
+  overflow: visible;
+}
+.modal::backdrop {
+  background: var(--scrim);
+  backdrop-filter: blur(2px);
+}
+.modal-scrim {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 24px;
+}
+.modal-body {
+  display: grid;
+  gap: 14px;
+  width: min(440px, 100%);
+  max-height: 100%;
+  overflow: auto;
+  padding: 20px;
+  background: var(--panel);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-lg);
+  /* 弹窗比卡片再高一档：它浮在所有东西之上 */
+  box-shadow: 0 24px 60px var(--shadow-pop);
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: var(--fs-base);
+}
+.modal-x {
+  all: unset;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: var(--r-md);
+  color: var(--muted);
+  font-size: var(--fs-xs);
+  transition: background 0.15s, color 0.15s;
+}
+.modal-x:hover {
+  background: var(--raise-3);
+  color: var(--text);
+}
+.modal-x:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+/* 弹窗里的表单不用再限宽——弹窗本身就是限宽的 */
+.modal .pw-form {
+  max-width: none;
+}
+
+/* 长得像链接的按钮：给「口令 已设置 / 改口令」这种嵌在文字里的触发点用 */
+.link-btn {
+  all: unset;
+  cursor: pointer;
+  color: var(--accent-text);
+  border-bottom: 1px solid transparent;
+  transition: border-color 0.15s;
+}
+.link-btn:hover {
+  border-color: currentColor;
+}
+.link-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+/* 版头的退出：和名字同一档重量的细链接，不做成按钮 */
+.whoami-out {
+  font-size: var(--fs-xs);
+  color: var(--faint);
+  white-space: nowrap;
+  padding: 4px 2px;
+  transition: color 0.15s;
+}
+.whoami-out:hover {
+  color: var(--bad);
+}
+
+
+/* ═══════════════════════════════════════════════════════════════════
+   帮助体系（2026-08-27 重做）—— 分四层，每层一个容器
+
+   第 0 层  能被界面强制的规则，不写说明（简码禁改、删除只对干净账号出现）
+   第 1 层  .field-note            表单字段底下的常驻小字，不用点
+            （表头那一排 .th-note 当天晚些时候撤了：六列各挂一句，
+              排成一条比列名还长的灰带，见 app/team/page.tsx 的表头注释）
+   第 2 层  .help / .help-pop       「?」气泡，一句话
+   第 3 层  .help-drawer            页面抽屉，装得下整页口径
+   第 4 层  /help                   帮助中心，可通读、可深链
+
+   ★ 为什么要分层 ★ 原来只有第 2 层，于是第 3 层的内容（整页口径）
+   被硬塞进气泡，塞出了八条带滚动条的说明书。容器不对，写得再好也读不下去。
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ───────── 第 1 层：常驻小字 ─────────
+   ★ 人不知道自己不懂的时候，是不会去点问号的 ★
+   所以最高频的那几条解释不能藏：直接挂在表头/字段底下，一眼看得见。
+   代价是占几像素高度——值得，它省掉的是「照着字面猜、猜错了才发现」。 */
+.field-note {
+  display: block;
+  margin-top: 5px;
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  color: var(--faint);
+}
+.field-note b {
+  color: var(--warn);
+  font-weight: 600;
+}
+
+/* ───────── 第 3 层入口：「这页怎么用」 ─────────
+   ★ 有字，不是问号 ★ 问号是「这个字段什么意思」的手势。
+   一整页的说明用问号，点开是一整篇，人会觉得被骗了一下。
+   写成按钮，人才知道点了会出来什么。 */
+.page-help-btn {
+  all: unset;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-full);
+  cursor: pointer;
+  color: var(--muted);
+  font-size: var(--fs-2xs);
+  line-height: 1.6;
+  transition: color 0.12s, border-color 0.12s, background 0.12s;
+}
+.page-help-btn:hover,
+.page-help-btn:focus-visible {
+  color: var(--accent-text);
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+
+/* ───────── 第 3 层：页面帮助抽屉 ─────────
+   ★ 为什么是抽屉不是跳页 ★ 看说明的人正在做事——他要一边对着表格一边读口径。
+   跳走再回来，筛选、展开的行、翻到第几页全没了。抽屉盖在旁边，关掉就接着干。 */
+.help-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  background: var(--scrim);
+  display: flex;
+  justify-content: flex-end;
+}
+.help-drawer {
+  width: 460px;
+  max-width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--panel);
+  border-left: 1px solid var(--line);
+  box-shadow: -18px 0 44px var(--shadow-pop);
+  outline: none;
+  animation: help-slide 0.16s ease-out;
+}
+@keyframes help-slide {
+  from {
+    transform: translateX(18px);
+    opacity: 0.4;
+  }
+}
+.help-drawer-head {
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--line);
+}
+.help-drawer-kicker {
+  margin-bottom: 2px;
+  font-size: var(--fs-3xs);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--faint);
+}
+.help-drawer-head b {
+  font-size: var(--fs-lg);
+}
+.help-drawer-body {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 18px;
+  scroll-behavior: smooth;
+}
+.help-drawer-intro {
+  margin: 0 0 4px;
+  font-size: var(--fs-sm);
+  line-height: 1.85;
+  color: var(--muted);
+}
+.help-drawer-foot {
+  margin-top: 26px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: var(--fs-xs);
+}
+.help-drawer-foot a {
+  color: var(--accent-text);
+}
+
+/* 目录：11 节的页面没有它只能从头滚着找 */
+.help-toc {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 14px 0 4px;
+  padding: 12px;
+  background: var(--panel-2);
+  border-radius: var(--r-md);
+}
+.help-toc a {
+  padding: 3px 9px;
+  border-radius: var(--r-full);
+  background: var(--raise-2);
+  color: var(--text-2);
+  font-size: var(--fs-2xs);
+  text-decoration: none;
+}
+.help-toc a:hover {
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+
+/* ───────── 小节：抽屉和 /help 共用 ─────────
+   ★ 同一套类名两处用 ★ 内容是同一份 body()，样式也该是同一套——
+   两边长得不一样的话，人会以为看到的是两份东西。 */
+.help-sec {
+  margin-top: 24px;
+  scroll-margin-top: 12px;
+}
+.help-sec > h3 {
+  margin-bottom: 8px;
+  padding-left: 10px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-hair);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  line-height: 1.4;
+}
+/* 从气泡点「看完整说明」进来时，闪一下告诉人「你问的是这一节」 */
+.help-sec-hit > h3 {
+  animation: help-hit 1.4s ease-out;
+}
+@keyframes help-hit {
+  0%,
+  40% {
+    background: var(--accent-dim);
+  }
+  100% {
+    background: transparent;
+  }
+}
+
+/* 正文排版：这里终于可以用正经的 <p>/<ul>/<li> 了。
+   气泡时代只能用 <span>——外层是 span，套 <ol><li> 是非法嵌套。 */
+.help-body {
+  font-size: var(--fs-sm);
+  line-height: 1.9;
+  color: var(--text-2);
+}
+.help-body p {
+  margin: 0 0 8px;
+}
+.help-body p:last-child {
+  margin-bottom: 0;
+}
+.help-body b {
+  color: var(--text);
+  font-weight: 600;
+}
+.help-body a {
+  color: var(--accent-text);
+}
+.help-body ul {
+  margin: 0 0 8px;
+  padding-left: 1.15em;
+  list-style: none;
+}
+.help-body li {
+  position: relative;
+  margin-top: 5px;
+}
+.help-body li::before {
+  content: "·";
+  position: absolute;
+  left: -1.15em;
+  color: var(--faint);
+}
+/* 图例那一组：符号要能对齐，不然读不出「这一列是符号」 */
+.help-body .help-legend {
+  padding-left: 0;
+}
+.help-body .help-legend li::before {
+  content: none;
+}
+.help-body .help-legend .num {
+  display: inline-block;
+  min-width: 1.6em;
+}
+.help-body .faint {
+  color: var(--faint);
+}
+/* 单独拎出来的那一段（准入判定那句缓冲话） */
+.help-body .help-callout {
+  margin-top: 12px;
+  padding: 11px 13px;
+  border-left: 3px solid var(--accent);
+  border-radius: var(--r-md);
+  background: var(--panel-2);
+}
+
+/* ───────── 第 4 层：帮助中心 /help ───────── */
+.help-index {
+  display: grid;
+  gap: 14px;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  background: var(--panel-2);
+}
+.help-index-group {
+  display: grid;
+  gap: 6px;
+}
+.help-index-head {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+}
+.help-index-head:hover {
+  color: var(--accent-text);
+}
+.help-index-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.help-index-items a {
+  padding: 2px 9px;
+  border-radius: var(--r-full);
+  background: var(--raise-2);
+  color: var(--muted);
+  font-size: var(--fs-2xs);
+  text-decoration: none;
+}
+.help-index-items a:hover {
+  background: var(--accent-dim);
+  color: var(--accent-text);
+}
+.help-goto {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--fs-2xs);
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--muted);
+  text-decoration: none;
+}
+.help-goto:hover {
+  color: var(--accent-text);
+}
+
+/* 关掉动效的人看到的是直接出现，不是慢半拍的滑入 */
+@media (prefers-reduced-motion: reduce) {
+  .help-drawer {
+    animation: none;
+  }
+  .help-sec-hit > h3 {
+    animation: none;
+    background: var(--accent-dim);
+  }
+}
+
+@media (max-width: 640px) {
+  /* 窄屏抽屉铺满：460px 的侧板在手机上只剩一条缝 */
+  .help-drawer {
+    width: 100%;
+    border-left: none;
+  }
+}
+
+/* ───────── 题库工坊 ───────── */
+.ws-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 10px 0 16px;
+  border-bottom: 1px solid var(--line);
+}
+.ws-tabs a {
+  padding: 8px 14px;
+  border-bottom: 2px solid transparent;
+  color: var(--text-2);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.ws-tabs a.on {
+  color: var(--accent-text);
+  border-bottom-color: var(--accent);
+}
+.ws-tabs .badge {
+  font-size: var(--fs-2xs);
+  background: var(--accent);
+  color: var(--on-accent);
+  border-radius: var(--r-full);
+  padding: 1px 7px;
+}
+.ws-notice {
+  margin-bottom: 16px;
+  border-color: color-mix(in srgb, var(--warn) 40%, transparent);
+}
+.ws-grid {
+  display: grid;
+  gap: 16px;
+}
+.ws-drop {
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--r-lg);
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  background: var(--panel-2);
+}
+.ws-drop.over {
+  border-color: var(--accent);
+}
+.ws-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+.ws-kv {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 4px 14px;
+}
+.ws-kv dt {
+  color: var(--muted);
+}
+.ws-kv dd {
+  margin: 0;
+}
+.ws-quote {
+  white-space: pre-wrap;
+  background: var(--panel-2);
+  border-radius: var(--r-hair, 6px);
+  padding: 8px 10px;
+  max-height: 160px;
+  overflow: auto;
+}
+.choice-card {
+  display: grid;
+  gap: 10px;
+}
+.choice-q {
+  font-weight: 600;
+}
+.choice-opts {
+  display: grid;
+  gap: 6px;
+}
+.choice-opt {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  gap: 8px;
+  align-items: start;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: var(--r-hair, 6px);
+  cursor: pointer;
+}
+.choice-opt.on {
+  border-color: var(--accent);
+  background: var(--accent-dim);
+}
+.choice-rec {
+  margin-left: 8px;
+}
+.choice-effect {
+  display: block;
+  margin-top: 2px;
+}
+.choice-text {
+  width: 100%;
+  background: var(--field-bg);
+  color: inherit;
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-hair, 6px);
+  padding: 8px;
+}
+.choice-foot {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+.choice-err {
+  color: var(--bad);
+}
+@media (max-width: 640px) {
+  .ws-kv {
+    grid-template-columns: 1fr;
+  }
+}

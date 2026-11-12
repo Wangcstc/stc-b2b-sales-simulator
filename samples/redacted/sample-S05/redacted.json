@@ -1,0 +1,149 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 10,
+    "客户发言": 5,
+    "我方发言": 5,
+    "客户平均字数": 17,
+    "时间跨度": "2026-01-05 ~ 2026-01-06",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 47
+    },
+    {
+      "category": "业务员姓名",
+      "count": 33
+    },
+    {
+      "category": "公司名",
+      "count": 5
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S05.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S05",
+      "地区": "United Kingdom",
+      "负责人": "示例业务员",
+      "消息数量": "10",
+      "时间范围": "2026-01-05 ~ 2026-01-06"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S05",
+        "国家": "United Kingdom",
+        "买家等级": "-",
+        "注册时间": "2026-09"
+      },
+      "behavior90d": {
+        "90天登录天数": "9",
+        "90天浏览产品数": "310",
+        "90天有效询盘数": "14"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S05",
+        "time": "09:00",
+        "text": "Dear Sir, I am the Head of Purchasing at Summit Outfitters. We need 3000 sleeping pads for our stores. Please send your best price and catalogue.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hello, thanks for your inquiry. To prepare the right offer for you, may I ask a bit about your company and your role?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S05",
+        "time": "09:29",
+        "text": "To be honest, I am a sourcing agent. I buy for five small shops, not for Summit directly.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Thank you for telling me. Your account looks new, how long have you been in this business?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S05",
+        "time": "09:58",
+        "text": "I opened this account two months ago. My old account was closed.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "I see. What would the first order look like for each shop?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S05",
+        "time": "09:58",
+        "text": "The first order is about 120 pieces in total, about 20 each, mixed colors.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "That works. How would you handle the payment?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S05",
+        "time": "10:27",
+        "text": "I can pay the sample fee and a 30% deposit by T/T from my company in Malaysia.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:33",
+        "text": "Thank you. I will send the sample offer and a small-order price.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

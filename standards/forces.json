@@ -1,0 +1,11 @@
+{
+  "forces": [
+    { "key": "insight", "label": "洞察力", "meaning": "有没有挖出买家没说出口的真实需求、处境、顾虑" },
+    { "key": "guidance", "label": "引导力", "meaning": "有没有把对话带到该去的方向，而不是被买家牵着走" },
+    { "key": "solution", "label": "方案力", "meaning": "给出的方案是不是贴着买家的真实需求，能不能落地" },
+    { "key": "trust", "label": "信任力", "meaning": "有没有用专业、准确、一致的信息建立信任" },
+    { "key": "closing", "label": "闭环力", "meaning": "每一轮有没有拿到一个具体的、有时间点的下一步" },
+    { "key": "negotiation", "label": "博弈力", "meaning": "价格和条件上的让步有没有设计、有没有换到东西" },
+    { "key": "stability", "label": "稳定力", "meaning": "被催、被压、被冷落时，节奏和口径稳不稳" }
+  ]
+}

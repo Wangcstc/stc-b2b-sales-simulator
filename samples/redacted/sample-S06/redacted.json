@@ -1,0 +1,176 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 13,
+    "客户发言": 6,
+    "我方发言": 7,
+    "客户平均字数": 13,
+    "时间跨度": "2026-01-05 ~ 2026-01-16",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 56
+    },
+    {
+      "category": "业务员姓名",
+      "count": 41
+    },
+    {
+      "category": "公司名",
+      "count": 6
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S06.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S06",
+      "地区": "Australia",
+      "负责人": "示例业务员",
+      "消息数量": "13",
+      "时间范围": "2026-01-05 ~ 2026-01-16"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S06",
+        "国家": "Australia",
+        "买家等级": "A",
+        "注册时间": "2018-06"
+      },
+      "behavior90d": {
+        "90天登录天数": "27",
+        "90天浏览产品数": "58",
+        "90天有效询盘数": "2"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "09:00",
+        "text": "Hi, we are looking for self-inflating sleeping pads for the summer range, about 1000 pieces with our logo. FOB Ningbo please.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hello, for 1000 pcs SP-50 our price is USD 11.60 FOB Ningbo, lead time 35 days, logo printing plus 0.40 per piece.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "09:14",
+        "text": "Thanks, we are reviewing offers for the summer range.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-09",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:21",
+        "text": "Hi, just checking if you had a chance to review our offer?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-13",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:28",
+        "text": "Hi, we just finished a new batch of SP-50 samples in sand color. Is there anything in our offer you would like us to adjust?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "09:35",
+        "text": "Sorry for the delay. Honestly we got another quote with R-value 4 at a similar price.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:41",
+        "text": "Thanks for telling me. Where do your customers usually camp, and in which season?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "10:04",
+        "text": "Mostly beach camping in summer only. Nobody uses our pads in winter.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:10",
+        "text": "Then R-value 3.2 is plenty, and our pad is lighter. Who will make the final decision on the supplier?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "10:33",
+        "text": "I prepare the shortlist, but the owner decides.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:39",
+        "text": "Understood. When do you need the goods in stock for the season?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "client",
+        "sender": "示例买家 S06",
+        "time": "11:02",
+        "text": "We need stock by the end of October, so we must order by mid-August.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-16",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "11:08",
+        "text": "Thank you. I will send a one-page comparison for the owner today.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

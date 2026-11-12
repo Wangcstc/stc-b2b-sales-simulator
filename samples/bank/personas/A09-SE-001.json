@@ -1,0 +1,333 @@
+{
+  "id": "A09-SE-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "A09",
+    "name": "技术尽调型",
+    "session_type": "inquiry",
+    "difficulty": "standard",
+    "tests": "规格与合规问题正面接住：按型号书面举证，问清使用场景与续航要求，不说「没问题」",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing"
+    ],
+    "na_forces": [
+      "negotiation",
+      "stability"
+    ]
+  },
+  "pool_type": "admission_exam",
+  "open_card": {
+    "name": "Demo Buyer S03",
+    "country": "Sweden",
+    "company": "Nordvik Friluft AB",
+    "buyer_level": "A",
+    "categories": [
+      "Outdoor Lighting",
+      "Camping Gear",
+      "Kayak Accessories"
+    ],
+    "login_days_90d": 52,
+    "product_views_90d": 64,
+    "valid_inquiries_90d": 2,
+    "tags": [
+      "文件导向",
+      "回复时效敏感"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2017-02",
+    "email": "buyer-s03@nordvik-friluft.example",
+    "inquiry_text": "Hello,\n\nplease confirm the IP rating, battery capacity and certificates of your LT-300 lantern. We need documents before we can discuss price.\n\nBest regards,\nDemo Buyer S03"
+  },
+  "product": {
+    "model": "LT-300",
+    "name": "Rechargeable LED Camping Lantern 300 lm",
+    "attributes": {
+      "brightness": "300 lm",
+      "battery": "4400 mAh",
+      "charging": "USB-C",
+      "waterproof": "IPX4",
+      "modes": [
+        "high",
+        "medium",
+        "low",
+        "red light"
+      ],
+      "runtime_medium": "14 h"
+    },
+    "page_price": "USD 5.40-6.50",
+    "price_tiers": [
+      {
+        "min_qty": 500,
+        "max_qty": 1999,
+        "unit_price": 6.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 2000,
+        "max_qty": 4999,
+        "unit_price": 5.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 5000,
+        "max_qty": null,
+        "unit_price": 5.4,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 500,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 5,
+      "bulk_days": 30
+    },
+    "packing": {
+      "qty_per_carton": 40,
+      "carton_cm": "52 × 36 × 30",
+      "gross_kg": 15
+    },
+    "certifications": [
+      {
+        "name": "CE",
+        "market": "EU"
+      },
+      {
+        "name": "RoHS",
+        "market": "EU"
+      },
+      {
+        "name": "FCC",
+        "market": "US"
+      },
+      {
+        "name": "UN38.3",
+        "market": "电池运输"
+      }
+    ],
+    "surcharges": {
+      "logo_print": 0.15,
+      "color_box": 0.35
+    }
+  },
+  "hidden_card": {
+    "H1_end_use": {
+      "value": "灯给群岛皮划艇露营团用，整夜挂在帐篷外，常常淋雨——防水等级必须有书面证明",
+      "unlock": "问用途 / 使用场景 / 使用环境",
+      "unlock_patterns": [
+        "(how|where) (will|are) (the lanterns?|they|these) (be )?used",
+        "\\b(purpose|application|scenario)\\b",
+        "(what|which) (conditions|environment)",
+        "用途|使用场景|(什么|哪种)(环境|条件)"
+      ],
+      "leak_signals": [
+        "kayak",
+        "archipelago",
+        "outside the tent"
+      ]
+    },
+    "H2_burned_before": {
+      "value": "上一家供应商给的 IPX6 报告是别的型号的——所以她对「文件上的型号对不对得上」极其敏感",
+      "unlock": "问为什么文件这么重要 / 以前有没有遇到过问题",
+      "unlock_patterns": [
+        "(previous|last|former|old) supplier",
+        "why[^.?!]{0,30}(document|certificate|report|model number)",
+        "(problem|issue|bad experience)[^.?!]{0,20}(before|in the past|previously)",
+        "以前.{0,6}供应商|之前.{0,6}(问题|遇到)|为什么.{0,8}(文件|证书|报告)"
+      ],
+      "leak_signals": [
+        "previous supplier",
+        "different model",
+        "that mistake again"
+      ]
+    },
+    "H3_runtime_need": {
+      "value": "中档至少要连续亮 12 小时，覆盖一整夜",
+      "unlock": "问续航要求 / 需要亮多少小时",
+      "unlock_patterns": [
+        "how (many hours|long)[^.?!]{0,30}(need|require|last|charge)",
+        "(runtime|run time|battery life)[^.?!]{0,20}(need|require|expect)",
+        "(need|require|expect)[^.?!]{0,20}(runtime|run time|battery life)",
+        "续航|(亮|用)多少(个)?小时"
+      ],
+      "leak_signals": [
+        "12 hours",
+        "the whole night",
+        "medium mode"
+      ]
+    },
+    "H4_volume_timeline": {
+      "value": "夏季要 800 只左右，2 月底前决定",
+      "unlock": "问数量与决策时间",
+      "unlock_patterns": [
+        "how many",
+        "\\bquantity\\b|\\bqty\\b",
+        "(your|the) (timeline|schedule)",
+        "(when|by when) (will|do|can) you (order|decide|place)",
+        "数量|多少(个|只)|什么时候(下单|决定)"
+      ],
+      "leak_signals": [
+        "800 pieces",
+        "end of February",
+        "summer season"
+      ]
+    },
+    "H5_docs_list": {
+      "value": "要 IP 测试报告、UN38.3、MSDS、CE，四份都要写 LT-300 这个型号",
+      "unlock": "问具体需要哪些文件",
+      "unlock_patterns": [
+        "(which|what) (documents?|certificates?|reports?)",
+        "(list|checklist) of (documents?|certificates?)",
+        "需要哪些(文件|证书|报告)"
+      ],
+      "leak_signals": [
+        "UN38.3",
+        "MSDS",
+        "IP test report"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "Is your factory audited? We only work with audited suppliers.",
+      "tests": "别慌，照实回答审核情况，再回到技术问题上；不要用「我们都有」糊弄",
+      "unlocks": null,
+      "scoring": "照实答并回到需求 → trust 正常；含糊带过 → trust 扣分"
+    }
+  ],
+  "customs_capability": "欧盟进口：电池类运输要 UN38.3 与 MSDS，照明类要 CE/RoHS；问了正常答",
+  "init_state": {
+    "patience": 75,
+    "trust": 50,
+    "interest": 70
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Thank you. We will review the documents internally and come back to you.",
+    "patienceZero": null,
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "北欧专业采购的英语：语法规范、句子短而克制，Hello 开头、Best regards 收尾；只认书面证据，对「没问题」「都能办」这类口头保证明显不买账。只答被问到的。",
+  "verify_cases": [
+    {
+      "card": "H1_end_use",
+      "should": [
+        "How will the lanterns be used?",
+        "May I ask the application, so I send the right test report?",
+        "What conditions will they be used in?",
+        "这些灯用在什么环境？"
+      ],
+      "shouldNot": [
+        "Which documents do you need?",
+        "How many pieces do you need?"
+      ]
+    },
+    {
+      "card": "H2_burned_before",
+      "should": [
+        "Did you have any problem with your previous supplier?",
+        "May I ask why the model number on the documents is so important?",
+        "Did you have a bad experience before?"
+      ],
+      "shouldNot": [
+        "Which documents do you need?",
+        "How many hours do you need?"
+      ]
+    },
+    {
+      "card": "H3_runtime_need",
+      "should": [
+        "How many hours do you need on one charge?",
+        "What battery life do you need?",
+        "How long does it need to last on medium mode?",
+        "需要续航多少小时？"
+      ],
+      "shouldNot": [
+        "How will they be used?",
+        "Which documents do you need?"
+      ]
+    },
+    {
+      "card": "H4_volume_timeline",
+      "should": [
+        "How many pieces do you need?",
+        "What is your timeline for this project?",
+        "When will you decide on the supplier?"
+      ],
+      "shouldNot": [
+        "When your order is ready we will send you photos.",
+        "Which documents do you need?"
+      ]
+    },
+    {
+      "card": "H5_docs_list",
+      "should": [
+        "Which documents do you need exactly?",
+        "What certificates do you require?",
+        "Could you send me a list of documents you need?"
+      ],
+      "shouldNot": [
+        "How will the lanterns be used?",
+        "How many pieces do you need?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S03",
+    "quotes": [
+      {
+        "card": "H1_end_use",
+        "message_index": 2,
+        "quote": "They are for our guided kayak tours in the archipelago. The lanterns hang outside the tent all night, often in rain."
+      },
+      {
+        "card": "H3_runtime_need",
+        "message_index": 4,
+        "quote": "At least 12 hours on medium mode, the whole night."
+      },
+      {
+        "card": "H5_docs_list",
+        "message_index": 6,
+        "quote": "We need the IP test report, UN38.3, MSDS and the CE certificate, all showing the model number LT-300."
+      },
+      {
+        "card": "H2_burned_before",
+        "message_index": 8,
+        "quote": "Our previous supplier sent an IPX6 report that was for a different model. We will not make that mistake again."
+      },
+      {
+        "card": "H4_volume_timeline",
+        "message_index": 10,
+        "quote": "Around 800 pieces for the summer season. We decide by the end of February."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 A09 技术尽调型，改编自样品素材 sample-S03。"
+}

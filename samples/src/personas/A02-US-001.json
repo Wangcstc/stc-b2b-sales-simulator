@@ -1,0 +1,308 @@
+{
+  "id": "A02-US-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "A02",
+    "name": "只问价格型",
+    "session_type": "inquiry",
+    "difficulty": "standard",
+    "tests": "稳住不裸报价：先问数量、渠道、目标价与认证要求，再报带条件的价",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "negotiation"
+    ],
+    "na_forces": [
+      "stability"
+    ]
+  },
+  "pool_type": "drill",
+  "open_card": {
+    "name": "Mark Ellison",
+    "country": "United States",
+    "company": "Ridgeline Supply Co.",
+    "buyer_level": "B",
+    "categories": [
+      "Outdoor Lighting",
+      "Camping Gear"
+    ],
+    "login_days_90d": 18,
+    "product_views_90d": 240,
+    "valid_inquiries_90d": 6,
+    "tags": [
+      "价格敏感",
+      "比价中"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2021-08",
+    "email": "mark@ridgeline-supply.example",
+    "inquiry_text": "[Inquiry] Rechargeable LED Camping Lantern 300 lm\nQuantity: 500 Piece/s\n\nPrice?"
+  },
+  "product": {
+    "model": "LT-300",
+    "name": "Rechargeable LED Camping Lantern 300 lm",
+    "attributes": {
+      "brightness": "300 lm",
+      "battery": "4400 mAh",
+      "charging": "USB-C",
+      "waterproof": "IPX4",
+      "modes": [
+        "high",
+        "medium",
+        "low",
+        "red light"
+      ],
+      "runtime_medium": "14 h"
+    },
+    "page_price": "USD 5.40-6.50",
+    "price_tiers": [
+      {
+        "min_qty": 500,
+        "max_qty": 1999,
+        "unit_price": 6.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 2000,
+        "max_qty": 4999,
+        "unit_price": 5.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 5000,
+        "max_qty": null,
+        "unit_price": 5.4,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 500,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 5,
+      "bulk_days": 30
+    },
+    "packing": {
+      "qty_per_carton": 40,
+      "carton_cm": "52 × 36 × 30",
+      "gross_kg": 15
+    },
+    "certifications": [
+      {
+        "name": "CE",
+        "market": "EU"
+      },
+      {
+        "name": "RoHS",
+        "market": "EU"
+      },
+      {
+        "name": "FCC",
+        "market": "US"
+      },
+      {
+        "name": "UN38.3",
+        "market": "电池运输"
+      }
+    ],
+    "surcharges": {
+      "logo_print": 0.15,
+      "color_box": 0.35
+    }
+  },
+  "hidden_card": {
+    "H1_buyer_type": {
+      "value": "他在亚马逊美国站用自有小品牌卖露营装备——包装、说明书、条码都要按亚马逊要求",
+      "unlock": "带着理由问销售渠道 / 在哪卖 / 卖给谁；裸问「你是谁」不给",
+      "unlock_patterns_topic": [
+        "(sell|selling|resell)[^.?!]{0,20}(where|online|store|shop|channel|platform)",
+        "where (do|will) you sell",
+        "(your|which) (market|channel|store|platform|customers)",
+        "渠道|卖给谁|在哪(里)?卖|销售平台"
+      ],
+      "unlock_patterns_framing": [
+        "so (that )?(I|we) can",
+        "help you|for you",
+        "recommend|suggest|advise",
+        "\\bbetter\\b",
+        "帮你|推荐|更合适|方便"
+      ],
+      "leak_signals": [
+        "Amazon US",
+        "my own small brand",
+        "my store on Amazon"
+      ]
+    },
+    "H2_real_qty": {
+      "value": "500 只是试单，卖得动每季度约 2000",
+      "unlock": "问数量，或者问后续 / 每年 / 每季度的量",
+      "unlock_patterns": [
+        "how many",
+        "\\bquantity\\b|\\bqty\\b",
+        "(annual|monthly|yearly|quarterly)[^.?!]{0,20}(volume|need|demand)",
+        "数量|多少(个|件|台)|年用量"
+      ],
+      "leak_signals": [
+        "500 for a start",
+        "every quarter",
+        "around 2000"
+      ]
+    },
+    "H3_target_price": {
+      "value": "另一家报了 FOB 5.20——但那家多半不含 FCC 和电池文件",
+      "unlock": "问目标价 / 预算 / 有没有在比价",
+      "unlock_patterns": [
+        "target price",
+        "\\bbudget\\b",
+        "(other|another) (supplier|offer|quote)",
+        "price range",
+        "目标价|预算|比价"
+      ],
+      "leak_signals": [
+        "5.20",
+        "another supplier offered"
+      ]
+    },
+    "H4_cert_need": {
+      "value": "亚马逊要求 FCC 证书和电池的 UN38.3 报告",
+      "unlock": "问需要哪些认证 / 文件",
+      "unlock_patterns": [
+        "certif",
+        "\\bFCC\\b",
+        "test report",
+        "\\bdocuments?\\b",
+        "证书|认证|报告"
+      ],
+      "leak_signals": [
+        "FCC certificate",
+        "UN38.3",
+        "Amazon requires"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "Just give me a price, I am busy.",
+      "tests": "裸报价的诱饵。直接报 MOQ 单价就锁死在错误档位；正解是给一句理由，换一个关键信息",
+      "unlocks": null,
+      "scoring": "顶住并换到数量或渠道 → guidance 加分；直接报单价 → 触发 R1 风险"
+    }
+  ],
+  "customs_capability": "美国进口常规；亚马逊入仓对电池类有额外文件要求（这一条本身是暗牌，不要主动提）",
+  "init_state": {
+    "patience": 60,
+    "trust": 45,
+    "interest": 60
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Ok, I will check other offers. Thanks.",
+    "patienceZero": null,
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "美国小卖家的英语：极短、口语化，常常一句话就是一个问题；不寒暄，答得慢就去问别家。",
+  "verify_cases": [
+    {
+      "card": "H1_buyer_type",
+      "should": [
+        "Where do you sell these lanterns, so I can suggest the right packaging?",
+        "Which channel do you sell on? I can recommend the best version for you.",
+        "May I ask which market you sell to, so we can prepare the right documents?",
+        "你们在哪里卖？我好帮你推荐合适的包装"
+      ],
+      "shouldNot": [
+        "Where do you sell?",
+        "Who are you?"
+      ]
+    },
+    {
+      "card": "H2_real_qty",
+      "should": [
+        "How many pieces do you need?",
+        "What is your annual volume for this lantern?",
+        "Could you tell me the quantity?",
+        "你们需要多少个？"
+      ],
+      "shouldNot": [
+        "What is your target price?",
+        "Do you need FCC?"
+      ]
+    },
+    {
+      "card": "H3_target_price",
+      "should": [
+        "Do you have a target price?",
+        "What is your budget per piece?",
+        "Have you received another quote?"
+      ],
+      "shouldNot": [
+        "How many pieces do you need?",
+        "Where do you sell?"
+      ]
+    },
+    {
+      "card": "H4_cert_need",
+      "should": [
+        "Do you need any certification for this market?",
+        "Which documents do you need, FCC or test reports?",
+        "Do you need the FCC certificate?"
+      ],
+      "shouldNot": [
+        "What is your target price?",
+        "How many pieces do you need?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S02",
+    "quotes": [
+      {
+        "card": "H2_real_qty",
+        "message_index": 2,
+        "quote": "500 for a start. If it sells, around 2000 every quarter."
+      },
+      {
+        "card": "H1_buyer_type",
+        "message_index": 4,
+        "quote": "I sell camping gear on Amazon US under my own small brand."
+      },
+      {
+        "card": "H3_target_price",
+        "message_index": 6,
+        "quote": "Another supplier offered 5.20 FOB. Can you beat that?"
+      },
+      {
+        "card": "H4_cert_need",
+        "message_index": 8,
+        "quote": "Yes, Amazon requires the FCC certificate and the UN38.3 report for the battery."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 A02 只问价格型，改编自样品素材 sample-S02。"
+}

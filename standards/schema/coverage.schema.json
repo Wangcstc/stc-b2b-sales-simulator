@@ -1,0 +1,34 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/coverage.schema.json",
+  "title": "题库格式 v1 · 考纲覆盖",
+  "type": "object",
+  "required": ["syllabus_version", "by_type", "slots", "missing_types"],
+  "properties": {
+    "syllabus_version": { "type": "integer" },
+    "by_type": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["total", "drill", "admission_exam"],
+        "properties": {
+          "total": { "type": "integer" },
+          "drill": { "type": "integer" },
+          "admission_exam": { "type": "integer" }
+        },
+        "additionalProperties": false
+      }
+    },
+    "slots": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["types", "questions"],
+        "properties": { "types": { "type": "integer" }, "questions": { "type": "integer" } },
+        "additionalProperties": false
+      }
+    },
+    "missing_types": { "type": "array", "items": { "type": "string" } }
+  },
+  "additionalProperties": false
+}

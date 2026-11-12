@@ -1,0 +1,22 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/company.schema.json",
+  "title": "题库格式 v1 · 公司信息（来自公司信息表）",
+  "description": "全部选填，不含公司真实名称。",
+  "type": "object",
+  "properties": {
+    "company_type": { "type": "string" },
+    "main_categories": { "type": "string" },
+    "province": { "type": "string" },
+    "ports": { "type": "string" },
+    "capacity": { "type": "string" },
+    "certifications": { "type": "string" },
+    "payment_terms": { "type": "string" },
+    "oem_odm": { "type": "string" },
+    "qc_process": { "type": "string" },
+    "after_sales": { "type": "string" },
+    "not_accepted": { "type": "string" },
+    "notes": { "type": "string" }
+  },
+  "additionalProperties": false
+}

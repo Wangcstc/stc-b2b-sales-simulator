@@ -1,0 +1,290 @@
+{
+  "id": "A03-GB-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "A03",
+    "name": "身份存疑型",
+    "session_type": "inquiry",
+    "difficulty": "hard",
+    "tests": "背调意识：发现身份矛盾后，用业务问题自然核实，不冷冰冰地质问，也不因为怀疑就敷衍",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "negotiation"
+    ],
+    "na_forces": [
+      "stability"
+    ]
+  },
+  "pool_type": "drill",
+  "open_card": {
+    "name": "Daniel Hart",
+    "country": "United Kingdom",
+    "company": "Summit Outfitters Ltd",
+    "buyer_level": "-",
+    "categories": [
+      "Sleeping Pads",
+      "Tents",
+      "Backpacks",
+      "Camping Furniture"
+    ],
+    "login_days_90d": 9,
+    "product_views_90d": 310,
+    "valid_inquiries_90d": 14,
+    "tags": [
+      "新注册",
+      "询盘频繁"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2026-09",
+    "email": "summit.purchase.dept@freemail.example",
+    "inquiry_text": "Dear Sir,\n\nI am the Head of Purchasing at Summit Outfitters. We need 3000 sleeping pads for our stores. Please send your best price and catalogue.\n\nDaniel Hart"
+  },
+  "product": {
+    "model": "SP-50",
+    "name": "Self-Inflating Sleeping Pad 5 cm",
+    "attributes": {
+      "thickness": "5 cm",
+      "r_value": "3.2",
+      "size": "190 × 60 cm",
+      "fabric": "75D polyester + TPU",
+      "weight": "1.2 kg"
+    },
+    "page_price": "USD 10.90-12.50",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "max_qty": 999,
+        "unit_price": 12.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 1000,
+        "max_qty": 2999,
+        "unit_price": 11.6,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 3000,
+        "max_qty": null,
+        "unit_price": 10.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 300,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 7,
+      "bulk_days": 35
+    },
+    "packing": {
+      "qty_per_carton": 10,
+      "carton_cm": "65 × 40 × 45",
+      "gross_kg": 16
+    },
+    "certifications": [
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ],
+    "surcharges": {
+      "logo_print": 0.4,
+      "custom_color": 0.6
+    }
+  },
+  "hidden_card": {
+    "H1_real_role": {
+      "value": "他不是 Summit 的采购总监，是替五家小店集货的采购代理",
+      "unlock": "带着由头问公司 / 职位 / 替谁采购；冷冰冰质问不给",
+      "unlock_patterns_topic": [
+        "(your|the) (company|role|position|team|business)",
+        "(work|working|buy|buying) (for|with)",
+        "(are you|you are)[^.?!]{0,20}(agent|buyer|retailer|importer)",
+        "公司|职位|替谁|代理"
+      ],
+      "unlock_patterns_framing": [
+        "so (that )?(I|we) can",
+        "to prepare",
+        "help (you|us)",
+        "\\bbetter\\b",
+        "方便|更好地|帮你|准备"
+      ],
+      "leak_signals": [
+        "sourcing agent",
+        "five small shops",
+        "not for Summit"
+      ]
+    },
+    "H2_registered_gap": {
+      "value": "账号是两个月前新开的，旧账号被封了",
+      "unlock": "问做这行多久 / 账号是不是新开的",
+      "unlock_patterns": [
+        "how long[^.?!]{0,25}(business|company|trading|working|doing)",
+        "(new|recent)[^.?!]{0,15}(account|company|business)",
+        "(previous|other|old) account",
+        "做了多久|新(注册|开)|以前的账号"
+      ],
+      "leak_signals": [
+        "two months ago",
+        "old account was closed"
+      ]
+    },
+    "H3_real_qty": {
+      "value": "首单其实一共约 120 张，每家店 20 张左右——不是 3000",
+      "unlock": "弄清身份之后，问每家店 / 首单的真实数量",
+      "unlock_patterns": [
+        "(per|each|for each) (shop|store|customer)",
+        "first order",
+        "(real|actual|exact) (quantity|qty|order)",
+        "breakdown|\\bsplit\\b",
+        "每家|首单|分(几|多少)"
+      ],
+      "requires": [
+        "H1_real_role"
+      ],
+      "leak_signals": [
+        "120 pieces",
+        "about 20 each"
+      ]
+    },
+    "H4_payment_source": {
+      "value": "他愿意付样品费和 30% 定金，从他在马来西亚的公司 T/T 付款",
+      "unlock": "问付款方式 / 从哪付",
+      "unlock_patterns": [
+        "\\bpayment\\b",
+        "\\bpay (by|via|with|from)\\b",
+        "\\bdeposit\\b",
+        "付款|定金"
+      ],
+      "leak_signals": [
+        "from my company in Malaysia",
+        "Malaysia"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "We are a big company. Just send the catalogue and your lowest price.",
+      "tests": "大公司名头施压。先做背调、问清身份和真实需求，不要被「大公司」三个字带着报最低价",
+      "unlocks": null,
+      "scoring": "先核实再报价 → insight 加分；直接报最低价 → insight 扣分"
+    }
+  ],
+  "customs_capability": "英国进口常规；他实际从马来西亚付款（这一条本身是暗牌）",
+  "init_state": {
+    "patience": 65,
+    "trust": 40,
+    "interest": 65
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Ok, I will check other suppliers.",
+    "patienceZero": null,
+    "stagnant": null
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "英语流利、偏正式，开口很大（Head of Purchasing、3000 pcs）；被礼貌追问时会松口说实话，被冷冰冰质问就会回避。",
+  "verify_cases": [
+    {
+      "card": "H1_real_role",
+      "should": [
+        "To prepare the right offer, may I ask a bit about your company and your role?",
+        "Are you buying for Summit directly? I ask so we can prepare the right documents.",
+        "Could you tell me who you work for, so I can help you better?"
+      ],
+      "shouldNot": [
+        "Who are you?",
+        "Are you really from Summit?"
+      ]
+    },
+    {
+      "card": "H2_registered_gap",
+      "should": [
+        "How long have you been in this business?",
+        "Your account looks new, is it a new company?",
+        "Did you use another old account before?"
+      ],
+      "shouldNot": [
+        "How many pieces do you need?",
+        "How would you pay?"
+      ]
+    },
+    {
+      "card": "H3_real_qty",
+      "should": [
+        "What would the first order look like for each shop?",
+        "Could you give me the breakdown per store?",
+        "What is the actual quantity for the first order?"
+      ],
+      "shouldNot": [
+        "How many pieces do you need?",
+        "How long have you been in business?"
+      ]
+    },
+    {
+      "card": "H4_payment_source",
+      "should": [
+        "How would you handle the payment?",
+        "Can you pay a deposit by T/T?",
+        "Would you pay by bank transfer from your company?"
+      ],
+      "shouldNot": [
+        "How many pieces do you need?",
+        "Who do you buy for?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S05",
+    "quotes": [
+      {
+        "card": "H1_real_role",
+        "message_index": 2,
+        "quote": "To be honest, I am a sourcing agent. I buy for five small shops, not for Summit directly."
+      },
+      {
+        "card": "H2_registered_gap",
+        "message_index": 4,
+        "quote": "I opened this account two months ago. My old account was closed."
+      },
+      {
+        "card": "H3_real_qty",
+        "message_index": 6,
+        "quote": "The first order is about 120 pieces in total, about 20 each, mixed colors."
+      },
+      {
+        "card": "H4_payment_source",
+        "message_index": 8,
+        "quote": "I can pay the sample fee and a 30% deposit by T/T from my company in Malaysia."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 A03 身份存疑型，改编自样品素材 sample-S05。"
+}

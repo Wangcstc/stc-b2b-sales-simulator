@@ -1,0 +1,167 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 12,
+    "客户发言": 6,
+    "我方发言": 6,
+    "客户平均字数": 12,
+    "时间跨度": "2026-01-05 ~ 2026-01-20",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 65
+    },
+    {
+      "category": "业务员姓名",
+      "count": 48
+    },
+    {
+      "category": "公司名",
+      "count": 7
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S07.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S07",
+      "地区": "Canada",
+      "负责人": "示例业务员",
+      "消息数量": "12",
+      "时间范围": "2026-01-05 ~ 2026-01-20"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S07",
+        "国家": "Canada",
+        "买家等级": "A",
+        "注册时间": "2016-03"
+      },
+      "behavior90d": {
+        "90天登录天数": "21",
+        "90天浏览产品数": "47",
+        "90天有效询盘数": "1"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "09:00",
+        "text": "Please send 2 samples of LT-300, we will test them for our winter range.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Sure, the samples are shipped today. Tracking will follow.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-08",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "09:14",
+        "text": "Received, we will test them.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-14",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:21",
+        "text": "Hi, how did the lanterns perform in your tests?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "09:28",
+        "text": "Brightness is good, but the hook broke in our cold test at minus 15.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:34",
+        "text": "Sorry to hear that. What temperatures will your customers use them in?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "09:57",
+        "text": "Our stores are in Alberta. Customers go winter camping, it can be minus 20.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:03",
+        "text": "If we change the hook to a metal one and send new samples, would that work for you?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "10:26",
+        "text": "With a metal hook and a passed retest, we would order 1500 pieces.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:32",
+        "text": "Great. When will you make the decision?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "client",
+        "sender": "示例买家 S07",
+        "time": "10:55",
+        "text": "Our buying meeting is on the 15th next month.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-20",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "11:01",
+        "text": "We will send the metal-hook samples this week, in time for your meeting.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

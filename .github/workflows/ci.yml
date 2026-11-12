@@ -1,0 +1,160 @@
+# 三系统安装检查：每次推送都在 Windows、macOS、Linux 上按《安装说明》从零装一遍。
+# 装依赖 → npm run setup → 起 PostgreSQL 16 → 建表 → 建主管账号 → 装样品题库
+# → 单测与自检 → 主循环冒烟（落库，不调模型、不花钱）→ 生产构建 → 启动后打开登录页。
+# 任何一步不过，GitHub 上这次提交就显示红叉。
+name: 三系统安装检查
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  install-and-test:
+    name: ${{ matrix.os }} · Node ${{ matrix.node }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, macos-latest, ubuntu-latest]
+        node: ['24']
+        include:
+          # README 写的最低版本也要能装
+          - os: ubuntu-latest
+            node: '20'
+    env:
+      # 不给模型密钥：冒烟走确定性分支；npm run setup 写进 .env 的占位密钥被这里的空值盖住
+      DEEPSEEK_API_KEY: ''
+      NEXT_TELEMETRY_DISABLED: '1'
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # 版本号检查要看 git 标签
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - name: 装依赖
+        run: npm ci
+
+      - name: 生成 .env（npm run setup）
+        run: |
+          npm run setup
+          test -f .env
+          grep -E '^AUTH_SECRET="[A-Za-z0-9_-]{32,}"' .env > /dev/null
+
+      # 用户名、密码、库名、端口都与 .env.example 默认值一致，验的就是「照说明装、不改配置」能不能跑
+      - name: 起 PostgreSQL 16（Windows / Linux）
+        if: runner.os != 'macOS'
+        uses: ikalnytskyi/action-setup-postgres@v6
+        with:
+          username: drill
+          password: drill_local_dev
+          database: drill
+          port: 5433
+          postgres-version: '16'
+
+      # 上面那个现成步骤在 GitHub 新版 Mac 机器上起不来；Mac 用户本来就是 Homebrew 装，照着做
+      - name: 起 PostgreSQL 16（Mac：Homebrew）
+        if: runner.os == 'macOS'
+        run: |
+          brew install postgresql@16
+          PGBIN="$(brew --prefix postgresql@16)/bin"
+          PGDATA="$RUNNER_TEMP/pgdata"
+          "$PGBIN/initdb" -D "$PGDATA" -U postgres --auth=trust --encoding=UTF8 --locale=C
+          "$PGBIN/pg_ctl" -D "$PGDATA" -o "-p 5433" -l "$RUNNER_TEMP/pg.log" -w start
+          "$PGBIN/psql" -h localhost -p 5433 -U postgres -d postgres \
+            -c "CREATE USER drill WITH PASSWORD 'drill_local_dev';" \
+            -c "CREATE DATABASE drill OWNER drill;"
+
+      - name: 建表、建主管账号、装样品题库
+        run: |
+          npx prisma migrate deploy
+          npm run seed
+          npm run bank -- load samples/bank
+          npm run bank -- list
+
+      - name: 类型检查
+        run: npx tsc --noEmit
+
+      - name: 单测与自检（npm run verify）
+        run: npm run verify
+
+      - name: 主循环冒烟（真数据库、不调模型）
+        run: npm run smoke:turn
+
+      - name: 生产构建
+        run: npm run build
+
+      - name: 启动并打开登录页
+        run: |
+          npm run start > server.log 2>&1 &
+          for i in $(seq 1 60); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3100/signin || true)
+            if [ "$code" = "200" ]; then echo "✓ 登录页 200（第 $i 秒）"; exit 0; fi
+            sleep 1
+          done
+          echo "✗ 60 秒内登录页没有返回 200"; cat server.log; exit 1
+
+  # 部署说明「路线 B：自己的服务器 + Docker」，一条命令不改地照着跑一遍
+  docker:
+    name: Docker 部署（部署说明路线 B）
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 准备 .env（部署说明第五节要求的几项）
+        run: |
+          {
+            echo "POSTGRES_USER=drill"
+            echo "POSTGRES_PASSWORD=ci_$(openssl rand -hex 12)"
+            echo "DEEPSEEK_API_KEY="
+            echo "AUTH_SECRET=$(openssl rand -hex 32)"
+            echo "CRON_SECRET=$(openssl rand -hex 16)"
+          } > .env
+
+      - name: 构建并启动
+        run: docker compose -f docker-compose.prod.yml up -d --build
+
+      - name: 等网站起来
+        run: |
+          for i in $(seq 1 120); do
+            code=$(curl -s -o /dev/null -w '%{http_code}' http://localhost:3100/signin || true)
+            if [ "$code" = "200" ]; then echo "✓ 登录页 200（第 $i 秒）"; exit 0; fi
+            sleep 1
+          done
+          docker compose -f docker-compose.prod.yml logs app | tail -80; exit 1
+
+      - name: 建主管账号、放入并装样品题库
+        run: |
+          docker compose -f docker-compose.prod.yml exec -T app npm run seed
+          docker compose -f docker-compose.prod.yml cp samples/bank app:/app/bank
+          docker compose -f docker-compose.prod.yml exec -T app npm run bank -- load bank
+          docker compose -f docker-compose.prod.yml exec -T app npm run bank -- list
+
+      - name: 镜像里没有 .env
+        run: |
+          if docker compose -f docker-compose.prod.yml exec -T app test -e /app/.env; then
+            echo "✗ .env 被打进了镜像"; exit 1
+          fi
+          echo "✓ 镜像里没有 .env"

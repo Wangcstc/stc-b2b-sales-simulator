@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/products.schema.json",
+  "title": "题库格式 v1 · 产品目录（来自产品表）",
+  "type": "array",
+  "items": {
+    "type": "object",
+    "required": ["sku", "name", "category", "moq", "bulk_days"],
+    "properties": {
+      "sku": { "type": "string" },
+      "name": { "type": "string" },
+      "model": { "type": "string" },
+      "category": { "type": "string" },
+      "specs": { "type": "array", "items": { "type": "string" } },
+      "page_price": { "type": "string" },
+      "moq": { "type": "string" },
+      "sample_days": { "type": ["number", "null"] },
+      "bulk_days": { "type": ["number", "null"] },
+      "sample_policy": { "type": "string" },
+      "customization": { "type": "string" },
+      "price_tiers": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["min_qty", "unit_price", "currency", "incoterm"],
+          "properties": {
+            "min_qty": { "type": "number" },
+            "unit_price": { "type": "number" },
+            "currency": { "type": "string" },
+            "incoterm": { "type": "string" },
+            "port": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      },
+      "packing": {
+        "type": "object",
+        "properties": {
+          "qty_per_carton": { "type": "string" },
+          "carton_cm": { "type": "string" },
+          "gross_kg": { "type": ["number", "null"] },
+          "net_kg": { "type": ["number", "null"] },
+          "unit_pack": { "type": "string" }
+        },
+        "additionalProperties": false
+      },
+      "certifications": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "required": ["name"],
+          "properties": {
+            "name": { "type": "string" },
+            "market": { "type": "string" },
+            "number": { "type": "string" },
+            "valid_until": { "type": "string" }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "additionalProperties": false
+  }
+}

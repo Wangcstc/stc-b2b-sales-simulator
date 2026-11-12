@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://stc.local/schema/bg-package.schema.json",
+  "title": "题库格式 v1 · 买家背调包",
+  "description": "业务员做背调时看到的资料。可以刻意埋矛盾点，考业务员能不能识破。",
+  "type": "object",
+  "required": ["persona_id", "ai_report", "website", "social", "contacts"],
+  "properties": {
+    "persona_id": { "type": "string", "pattern": "^[A-G][0-9]{2}-[A-Z]{2}-[0-9]{3}$" },
+    "version": { "type": "string" },
+    "ai_report": { "type": "object" },
+    "website": { "type": ["object", "array"] },
+    "social": { "type": ["object", "array"] },
+    "contacts": { "type": ["object", "array"] }
+  },
+  "patternProperties": { "^_": {} },
+  "additionalProperties": false
+}

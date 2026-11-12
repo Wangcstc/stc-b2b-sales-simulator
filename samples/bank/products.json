@@ -1,0 +1,184 @@
+[
+  {
+    "sku": "SKU-001",
+    "name": "Aluminium Folding Camping Chair",
+    "model": "CC-120",
+    "category": "Camping Furniture",
+    "specs": [
+      "frame: 7075 aluminium",
+      "seat: 600D oxford",
+      "load: 120 kg",
+      "weight: 1.1 kg",
+      "colors: Black / Forest Green / Sand"
+    ],
+    "page_price": "USD 8.20-9.80",
+    "moq": "300 pcs",
+    "sample_days": 7,
+    "bulk_days": 35,
+    "sample_policy": "样品免费，运费买家付；下单后退样品运费",
+    "customization": "印 logo 起订 1000；定制颜色起订 3000",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "unit_price": 9.8,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 1000,
+        "unit_price": 8.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 3000,
+        "unit_price": 8.2,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      }
+    ],
+    "packing": {
+      "qty_per_carton": "20 pcs/ctn",
+      "carton_cm": "62 × 38 × 40",
+      "gross_kg": 24,
+      "net_kg": null,
+      "unit_pack": "彩盒"
+    },
+    "certifications": [
+      {
+        "name": "EN 581-1",
+        "market": "EU"
+      },
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ]
+  },
+  {
+    "sku": "SKU-002",
+    "name": "Rechargeable LED Camping Lantern 300 lm",
+    "model": "LT-300",
+    "category": "Outdoor Lighting",
+    "specs": [
+      "brightness: 300 lm",
+      "battery: 4400 mAh",
+      "charging: USB-C",
+      "waterproof: IPX4",
+      "modes: high / medium / low / red light",
+      "runtime_medium: 14 h"
+    ],
+    "page_price": "USD 5.40-6.50",
+    "moq": "500 pcs",
+    "sample_days": 5,
+    "bulk_days": 30,
+    "sample_policy": "样品免费，运费买家付；下单后退样品运费",
+    "customization": "印 logo 起订 1000；定制颜色起订 3000",
+    "price_tiers": [
+      {
+        "min_qty": 500,
+        "unit_price": 6.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 2000,
+        "unit_price": 5.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 5000,
+        "unit_price": 5.4,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      }
+    ],
+    "packing": {
+      "qty_per_carton": "40 pcs/ctn",
+      "carton_cm": "52 × 36 × 30",
+      "gross_kg": 15,
+      "net_kg": null,
+      "unit_pack": "彩盒"
+    },
+    "certifications": [
+      {
+        "name": "CE",
+        "market": "EU"
+      },
+      {
+        "name": "RoHS",
+        "market": "EU"
+      },
+      {
+        "name": "FCC",
+        "market": "US"
+      },
+      {
+        "name": "UN38.3",
+        "market": "电池运输"
+      }
+    ]
+  },
+  {
+    "sku": "SKU-003",
+    "name": "Self-Inflating Sleeping Pad 5 cm",
+    "model": "SP-50",
+    "category": "Sleeping Pads",
+    "specs": [
+      "thickness: 5 cm",
+      "r_value: 3.2",
+      "size: 190 × 60 cm",
+      "fabric: 75D polyester + TPU",
+      "weight: 1.2 kg"
+    ],
+    "page_price": "USD 10.90-12.50",
+    "moq": "300 pcs",
+    "sample_days": 7,
+    "bulk_days": 35,
+    "sample_policy": "样品免费，运费买家付；下单后退样品运费",
+    "customization": "印 logo 起订 1000；定制颜色起订 3000",
+    "price_tiers": [
+      {
+        "min_qty": 300,
+        "unit_price": 12.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 1000,
+        "unit_price": 11.6,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      },
+      {
+        "min_qty": 3000,
+        "unit_price": 10.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo"
+      }
+    ],
+    "packing": {
+      "qty_per_carton": "10 pcs/ctn",
+      "carton_cm": "65 × 40 × 45",
+      "gross_kg": 16,
+      "net_kg": null,
+      "unit_pack": "彩盒"
+    },
+    "certifications": [
+      {
+        "name": "REACH",
+        "market": "EU"
+      }
+    ]
+  }
+]

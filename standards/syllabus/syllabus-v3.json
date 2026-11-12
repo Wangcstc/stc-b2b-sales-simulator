@@ -1,0 +1,1923 @@
+{
+  "syllabus_version": 3,
+  "name": "STC 外贸询盘考纲",
+  "updated": "2026-11-06",
+  "naming_rule": "四个字概括买家的核心行为或处境，加一个「型」字，共五个字",
+  "code_rule": "阶段字母 + 两位序号；编码发布后不改，删型不回收编号",
+  "stages": [
+    {
+      "letter": "A",
+      "name": "询盘接待"
+    },
+    {
+      "letter": "B",
+      "name": "报价议价"
+    },
+    {
+      "letter": "C",
+      "name": "样品成交"
+    },
+    {
+      "letter": "D",
+      "name": "生产交付"
+    },
+    {
+      "letter": "E",
+      "name": "售后纠纷"
+    },
+    {
+      "letter": "F",
+      "name": "老客经营"
+    },
+    {
+      "letter": "G",
+      "name": "风险识别"
+    }
+  ],
+  "session_types": {
+    "inquiry": "探需局",
+    "followup": "跟进局"
+  },
+  "difficulties": {
+    "simple_with_distractors": "简单",
+    "standard": "标准",
+    "hard": "困难"
+  },
+  "exam_slots": [
+    {
+      "key": "STANDARD_INQUIRY",
+      "label": "探需 · 标准",
+      "session_type": "inquiry",
+      "difficulty": "standard"
+    },
+    {
+      "key": "HARD_INQUIRY",
+      "label": "探需 · 困难",
+      "session_type": "inquiry",
+      "difficulty": "hard"
+    },
+    {
+      "key": "FOLLOWUP",
+      "label": "跟进",
+      "session_type": "followup",
+      "difficulty": null
+    }
+  ],
+  "governance": "新增、改名、合并、删除题型及调整主考力，一律由王老师拍板并升考纲版本；抽屉只提建议，不自动新增题型。",
+  "types": [
+    {
+      "code": "A01",
+      "name": "配合探需型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "simple_with_distractors",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "guidance",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "有明确需求、愿意回答问题，节奏正常；中间会抛一两个干扰问题。",
+      "tests": "六要素问全（产品、数量、规格、市场用途、交期、贸易术语），流程完整不跳步。",
+      "full_marks": "先确认需求再报价；六要素在 6 轮内问齐；每轮结尾给出下一步。",
+      "typical_mistakes": "一上来就报价（R1）；被干扰项带跑，忘了收口。",
+      "material_signals": "买家回复积极、信息逐步给全、无明显冲突。",
+      "hidden_card_tips": "真实用途、目标市场、预算区间藏着，问到才说。",
+      "legacy_codes": [
+        "P1"
+      ],
+      "note": "考纲 v3 起只进演习：这一型只有简单档，考试槽位只收标准、困难询盘局和跟进局，放进考试池也永远抽不到。"
+    },
+    {
+      "code": "A02",
+      "name": "只问价格型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "guidance",
+        "insight",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation"
+      ],
+      "na_forces": [
+        "stability"
+      ],
+      "buyer_profile": "开口只要价格，不给数量、规格、用途，催着\"先报个价\"。",
+      "tests": "稳住不裸报价；会读平台买家数据（登录天数、询盘数、采购品类）判断买家分量。",
+      "full_marks": "给一个区间价稳住，同时用理由换信息；结合平台数据调整投入。",
+      "typical_mistakes": "直接报单价（R1）；只回\"请告诉我数量\"被买家嫌烦。",
+      "material_signals": "首条询盘只有\"price?\"类内容，后续追问才逐步透露。",
+      "hidden_card_tips": "真实数量、是否在比价、是否有目标价。",
+      "legacy_codes": [
+        "P2"
+      ]
+    },
+    {
+      "code": "A03",
+      "name": "身份存疑型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "needs_bg_package": true,
+      "key_forces": [
+        "insight",
+        "trust",
+        "guidance"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation"
+      ],
+      "na_forces": [
+        "stability"
+      ],
+      "buyer_profile": "自称的身份和平台资料、邮箱、所在地对不上。",
+      "tests": "背调意识；对矛盾点礼貌提问而非直接质疑。",
+      "full_marks": "查背调资料；用业务问题自然核实矛盾点；验证后再决定投入。",
+      "typical_mistakes": "没看背调；冷冰冰地质问；或因怀疑直接敷衍（R2）。",
+      "material_signals": "公司名、国家、邮箱域名、采购品类之间存在矛盾。",
+      "hidden_card_tips": "矛盾背后的真实原因（采购代理、新开公司、个人买家）。",
+      "legacy_codes": [
+        "P3"
+      ]
+    },
+    {
+      "code": "A04",
+      "name": "定制深挖型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "solution",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "要改产品参数、材质、功能，需求专业但描述零散。",
+      "tests": "定制需求深挖；起订量冲突处理；澄清比价对象。",
+      "full_marks": "把定制点逐项确认成可报价的规格；起订量不够时给替代方案。",
+      "typical_mistakes": "没问清就说\"都可以做\"；起订量冲突直接劝退。",
+      "material_signals": "出现图纸、样品图、参数修改要求。",
+      "hidden_card_tips": "定制背后的使用场景；能接受的起订量下限。",
+      "legacy_codes": [
+        "P5"
+      ]
+    },
+    {
+      "code": "A05",
+      "name": "语言错位型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "simple_with_distractors",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "英语不流利，用词不准，表达和真实意思有偏差；多为小客户。",
+      "tests": "听懂对方真正在说什么；小客户也给服务型破局。",
+      "full_marks": "用简单句复述确认；必要时用列表或图片沟通；不因订单小而敷衍。",
+      "typical_mistakes": "按字面意思回答；用复杂英语回复；嫌单小冷处理（R2）。",
+      "material_signals": "语法错误多、机翻痕迹、业务员多次误解。",
+      "hidden_card_tips": "被说错的那个关键需求。",
+      "legacy_codes": [
+        "P13"
+      ],
+      "note": "考纲 v3 起只进演习：这一型只有简单档，考试槽位只收标准、困难询盘局和跟进局，放进考试池也永远抽不到。"
+    },
+    {
+      "code": "A06",
+      "name": "答非所问型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "simple_with_distractors",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "问 A 答 B，或者问题本身问得不清楚。",
+      "tests": "听懂问题本身；敢于给出专业判断。",
+      "full_marks": "先确认买家真正想问什么；给出明确的专业建议，而不是把问题推回去。",
+      "typical_mistakes": "顺着错的问题回答；只会说\"请您说明\"。",
+      "material_signals": "多轮对话主题跳跃，业务员回答和买家问题不对应。",
+      "hidden_card_tips": "买家没说清的真实问题。",
+      "legacy_codes": [
+        "P17"
+      ],
+      "note": "考纲 v3 起只进演习：这一型只有简单档，考试槽位只收标准、困难询盘局和跟进局，放进考试池也永远抽不到。"
+    },
+    {
+      "code": "A07",
+      "name": "首响迟到型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "stability",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "询盘在业务员名下躺了很久没回，买家已经催过、不耐烦。",
+      "tests": "认领迟到并止损；用一条有分量的信息把节奏抢回来。",
+      "full_marks": "简短致歉不找借口；第一条就给出买家要的具体信息；约定下一步时间。",
+      "typical_mistakes": "长篇解释原因；回一句\"我问问经理\"又没下文（R3）。",
+      "material_signals": "首响时间远超平台标准，买家期间多次追问。",
+      "hidden_card_tips": "买家同时在接触的其他供应商；剩下的决策时间。",
+      "legacy_codes": [
+        "P19"
+      ]
+    },
+    {
+      "code": "A08",
+      "name": "模糊询盘型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "guidance",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "惜字如金，信息碎片化，又催着先报价。",
+      "tests": "在碎片里把六要素问全；顶住\"先报价\"；把模糊意向问成可报价的口径。",
+      "full_marks": "每轮只问最关键的一两个问题；用选择题式提问降低买家回答成本。",
+      "typical_mistakes": "一次甩十个问题；顶不住催促裸报价（R1）。",
+      "material_signals": "买家每条只有几个词，信息需要多轮拼凑。",
+      "hidden_card_tips": "真实数量、用途、目标价分散藏在不同轮次。",
+      "legacy_codes": [
+        "P21"
+      ]
+    },
+    {
+      "code": "A09",
+      "name": "技术尽调型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "solution",
+        "insight"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "专业买家，追问规格、合规、测试报告，要书面证据。",
+      "tests": "正面接住规格与合规问题不糊弄；参数前后一致、按型号举证；用专业判断替代硬卖。",
+      "full_marks": "按型号给出对得上的证书和报告；不确定的参数说\"我确认后书面回复\"并给时间。",
+      "typical_mistakes": "\"没问题\"\"都能办\"；前后参数对不上。",
+      "material_signals": "大量技术参数、证书名、测试标准出现。",
+      "hidden_card_tips": "买家被坑过的经历；真实的使用场景。",
+      "legacy_codes": [
+        "P22"
+      ]
+    },
+    {
+      "code": "A10",
+      "name": "交货口径型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "solution",
+        "insight",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "关心到手价，但没说清要 EXW、FOB 还是 DDP。",
+      "tests": "先问清交货口径再报价；把运费、装箱讲成买家能算的账。",
+      "full_marks": "确认贸易术语和目的港；报价时写清包含什么、不包含什么。",
+      "typical_mistakes": "报了 FOB 价让买家自己猜运费；报价口径前后不一致。",
+      "material_signals": "反复出现运费、到港价、海运或空运的讨论。",
+      "hidden_card_tips": "买家有没有自己的货代；真正关心的是到手总成本。",
+      "legacy_codes": [
+        "P23"
+      ]
+    },
+    {
+      "code": "A11",
+      "name": "大单幻觉型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "trust",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "一开口就是大订单，要邀请函、要先签合同、要先付各种费用。",
+      "tests": "识别大单幻觉；先验真再投入。",
+      "full_marks": "用业务细节验证真实性；不先付费、不先出邀请函；验证前控制投入。",
+      "typical_mistakes": "被大单冲昏头，满口答应；或一怀疑就粗暴拒绝（R2）。",
+      "material_signals": "订单金额异常大、要求邀请函或签证协助、催促跳过正常流程。",
+      "hidden_card_tips": "真实意图（骗签证、骗费用、骗样品）或真实但不成熟的需求。",
+      "legacy_codes": [
+        "P12"
+      ]
+    },
+    {
+      "code": "A12",
+      "name": "群发比价型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "guidance",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation"
+      ],
+      "na_forces": [
+        "stability"
+      ],
+      "buyer_profile": "模板化询盘，同时发给很多供应商，只想收报价表。",
+      "tests": "在一堆报价里让自己被记住；用一个精准问题把群发变成对话。",
+      "full_marks": "先给有参考价值的回复，再问一个只有认真看过的人才会问的问题。",
+      "typical_mistakes": "跟着模板回模板；只发产品目录。",
+      "material_signals": "询盘文字通用、无具体产品链接、称呼泛泛（Dear Sir）。",
+      "hidden_card_tips": "真正的采购清单和决策时间。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A13",
+      "name": "同行套价型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "自称买家，实为同行或竞争对手，套取价格、工艺、客户信息。",
+      "tests": "识别套价信号；在不得罪真买家的前提下保护敏感信息。",
+      "full_marks": "先问采购细节验证身份；敏感信息分层释放。",
+      "typical_mistakes": "把成本结构、工厂信息全盘托出；或怀疑后直接拒绝（R2）。",
+      "material_signals": "问题集中在成本、工艺、供应商来源，对数量和市场含糊。",
+      "hidden_card_tips": "真实身份。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A14",
+      "name": "采购代理型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "solution",
+        "guidance"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "采购代理或贸易中间商，代表终端客户询价，信息隔一层。",
+      "tests": "问出终端客户的真实需求；设计对代理有利的合作方式。",
+      "full_marks": "分清哪些信息代理能决定、哪些要问终端；给代理留出利润空间。",
+      "typical_mistakes": "把代理当终端；绕过代理直接找终端。",
+      "material_signals": "出现\"my client\"\"our customer\"，需求来回转述。",
+      "hidden_card_tips": "终端客户的真实要求和代理的佣金预期。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A15",
+      "name": "起订冲突型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "solution",
+        "insight",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation"
+      ],
+      "na_forces": [
+        "stability"
+      ],
+      "buyer_profile": "要的数量低于起订量，但有潜力。",
+      "tests": "不直接劝退；给出拼单、库存款、阶梯价等替代方案。",
+      "full_marks": "先问清为什么只要这么少；给两种可选方案；把小单设计成长期合作的起点。",
+      "typical_mistakes": "\"MOQ 是 1000，不能少\"；或无条件降起订量。",
+      "material_signals": "买家数量明显低于产品起订量。",
+      "hidden_card_tips": "试销计划和后续采购量。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A16",
+      "name": "一站采购型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "solution",
+        "trust",
+        "insight"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "一次要很多品类，其中有些不是你生产的。",
+      "tests": "分清能做和不能做的；用核心品类拿下订单，不能做的给合理处理。",
+      "full_marks": "先确认核心品类；不能做的坦白说明或提供可靠渠道。",
+      "typical_mistakes": "什么都说能做；直接放弃整单。",
+      "material_signals": "询盘列出多个不相关品类。",
+      "hidden_card_tips": "哪一个品类是买家最在意的。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A17",
+      "name": "认证准入型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "目标市场有准入要求（CE、FDA、LFGB、REACH 等），先问证书。",
+      "tests": "清楚目标市场的准入要求；证书与产品型号对得上。",
+      "full_marks": "按市场说出必需的证书；给出证书编号和适用型号；没有的说明获取周期和费用。",
+      "typical_mistakes": "随便答\"有证书\"；拿错证书。",
+      "material_signals": "首几轮就出现证书、法规名称。",
+      "hidden_card_tips": "买家所在国的具体法规和过往被扣货经历。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A18",
+      "name": "招标项目型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "solution",
+        "insight"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "项目或招标采购，有截止日期、格式要求、资质要求。",
+      "tests": "按要求完整响应；抓住评标真正看重的点。",
+      "full_marks": "确认截止时间与格式；逐项响应；问清评标标准。",
+      "typical_mistakes": "漏项；错过截止时间；只拼价格。",
+      "material_signals": "出现 tender、RFQ、deadline、技术规格书。",
+      "hidden_card_tips": "评标的真实权重（价格、交期、资质）。",
+      "legacy_codes": []
+    },
+    {
+      "code": "A19",
+      "name": "贴牌定制型",
+      "stage": "A",
+      "stage_name": "询盘接待",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "solution",
+        "insight",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "要做自有品牌：印 logo、定制包装、做说明书。",
+      "tests": "问清品牌、包装、标签的全部要求；讲清贴牌的起订量、费用、周期。",
+      "full_marks": "列清单逐项确认；先出设计稿确认再报价。",
+      "typical_mistakes": "漏问包装与标签要求，事后加价。",
+      "material_signals": "出现 OEM、private label、logo、packaging design。",
+      "hidden_card_tips": "销售渠道（亚马逊、商超）对包装的特殊要求。",
+      "legacy_codes": []
+    },
+    {
+      "code": "B01",
+      "name": "极限压价型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "stability",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "开口就给一个极低的目标价，强势压价。",
+      "tests": "破解价格锚点；报价口径前后一致。",
+      "full_marks": "不跟着锚点走；用配置、数量、条款重新定义价格；每次让步都换回条件。",
+      "typical_mistakes": "一压就降；报价口径前后矛盾。",
+      "material_signals": "买家首轮就给出明显低于市场的价格。",
+      "hidden_card_tips": "目标价的来源（别家报价、预算、试探）。",
+      "legacy_codes": [
+        "P7"
+      ]
+    },
+    {
+      "code": "B02",
+      "name": "比价试单型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "insight",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation"
+      ],
+      "na_forces": [
+        "stability"
+      ],
+      "buyer_profile": "拿着别家报价来比，想先下小单试试。",
+      "tests": "比价澄清不裸降；挖出价格之外的决策标准；把试单谈成有条件的返单。",
+      "full_marks": "问清对方报价的配置和条件；试单价格与返单数量挂钩。",
+      "typical_mistakes": "直接降到对方价格；试单无条件给最低价。",
+      "material_signals": "出现\"other supplier offers\"\"trial order\"。",
+      "hidden_card_tips": "别家报价的配置差异；真正的决策标准。",
+      "legacy_codes": [
+        "P24"
+      ]
+    },
+    {
+      "code": "B03",
+      "name": "报价沉默型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "stability",
+        "guidance"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "报价发出后再无回音。",
+      "tests": "四级跟进阶梯；禁止空催。",
+      "full_marks": "每次跟进都带新信息或新理由；逐级升级跟进方式。",
+      "typical_mistakes": "\"有消息吗？\"（R3）；连续多天同一句话。",
+      "material_signals": "业务员报价后买家多日未回复。",
+      "hidden_card_tips": "沉默的真实原因（比价中、预算没批、项目推迟）。",
+      "legacy_codes": [
+        "P4"
+      ]
+    },
+    {
+      "code": "B04",
+      "name": "临门砍价型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "closing",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "快要下单时突然再砍一刀。",
+      "tests": "最后一公里的让步设计；用价值替代降价。",
+      "full_marks": "先确认砍完就下单；用赠品、付款条件、交期替代降价。",
+      "typical_mistakes": "直接答应降价，订单反而又拖。",
+      "material_signals": "确认细节后买家突然提出新的价格要求。",
+      "hidden_card_tips": "买家的真实底线和下单时间。",
+      "legacy_codes": [
+        "P16"
+      ]
+    },
+    {
+      "code": "B05",
+      "name": "跟进比价型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "stability",
+        "insight"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "已经谈了一段时间，突然拿出更低的报价来压。",
+      "tests": "顶住目标价不崩；用落地成本和配置方案替代裸降；挖出流失真因并救回。",
+      "full_marks": "拆解对方报价的真实落地成本；给出有取舍的方案。",
+      "typical_mistakes": "一次降到对方价；或直接放弃。",
+      "material_signals": "跟进期出现竞品报价截图或数字。",
+      "hidden_card_tips": "竞品报价里隐藏的条件差异。",
+      "legacy_codes": [
+        "P32"
+      ]
+    },
+    {
+      "code": "B06",
+      "name": "付款条件型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "solution",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "价格谈妥，卡在付款方式：要求赊账、尾款见提单、信用证。",
+      "tests": "在风险可控的前提下给出付款方案。",
+      "full_marks": "了解买家为什么要这种付款方式；给两到三种组合方案（定金比例、信用保险、平台担保）。",
+      "typical_mistakes": "为了成交接受全额赊账；或一口回绝。",
+      "material_signals": "出现 T/T、L/C、O/A、deposit、balance 的讨论。",
+      "hidden_card_tips": "买家的资金周转压力和过往付款记录。",
+      "legacy_codes": []
+    },
+    {
+      "code": "B07",
+      "name": "调价通知型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "negotiation",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "我方因原材料、汇率上涨要调价，买家抵触。",
+      "tests": "说清调价的依据；给缓冲方案；守住客户关系。",
+      "full_marks": "提前通知并给出依据；提供锁价窗口或分批调价。",
+      "typical_mistakes": "突然通知涨价；被拒后马上撤回。",
+      "material_signals": "业务员发出价格调整通知，买家回复不满。",
+      "hidden_card_tips": "买家的承受上限和是否已在找替代供应商。",
+      "legacy_codes": []
+    },
+    {
+      "code": "B08",
+      "name": "决策断链型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "guidance",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "对接人热情，但每到关键处就说\"要问老板\"，推进不下去。",
+      "tests": "识别真正的决策者；破解假性推进。",
+      "full_marks": "问清决策流程和决策人；给对接人准备好能拿去说服老板的材料。",
+      "typical_mistakes": "一直和对接人空转；越过对接人引起反感。",
+      "material_signals": "反复出现\"my boss\"\"management will decide\"。",
+      "hidden_card_tips": "决策人真正关心的点。",
+      "legacy_codes": [
+        "P6"
+      ]
+    },
+    {
+      "code": "B09",
+      "name": "买手静默型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "insight",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "专业买手，客气地拖延，一直\"在评估\"。",
+      "tests": "静默期破冰；把客气的拖延变成具体动作。",
+      "full_marks": "用一个具体的小动作（确认样品、确认规格）打破静默。",
+      "typical_mistakes": "只是礼貌问候；被\"再看看\"打发。",
+      "material_signals": "买家回复礼貌但没有实质内容，周期长。",
+      "hidden_card_tips": "评估卡在哪一项。",
+      "legacy_codes": [
+        "P11"
+      ]
+    },
+    {
+      "code": "B10",
+      "name": "淡季搁置型",
+      "stage": "B",
+      "stage_name": "报价议价",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "guidance",
+        "closing",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "中间商以淡季为由搁置采购，可能已转到平台外沟通。",
+      "tests": "越过淡季推进；转出平台后重新触达。",
+      "full_marks": "用旺季备货周期倒推现在下单的理由。",
+      "typical_mistakes": "等淡季过去再说；空催（R3）。",
+      "material_signals": "出现 slow season、after holiday、next year。",
+      "hidden_card_tips": "旺季的真实备货时间点。",
+      "legacy_codes": [
+        "P15"
+      ]
+    },
+    {
+      "code": "C01",
+      "name": "样品先行型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "insight",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "什么都没谈，先要免费样品。",
+      "tests": "样品政策的设计；用样品换信息、换承诺。",
+      "full_marks": "先问清用途和后续计划；样品费可在下单时抵扣。",
+      "typical_mistakes": "无条件寄免费样品；或一口拒绝。",
+      "material_signals": "首条或前几条就要求 free sample。",
+      "hidden_card_tips": "买家是否在同时向多家要样品。",
+      "legacy_codes": []
+    },
+    {
+      "code": "C02",
+      "name": "样品沉默型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "guidance",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "样品寄出后没有反馈。",
+      "tests": "样品跟进节奏；拿到具体反馈并推进下单。",
+      "full_marks": "寄样时就约定反馈时间；跟进时问具体测试结果。",
+      "typical_mistakes": "\"收到样品了吗？\"之后再无下文（R3）。",
+      "material_signals": "寄样后买家长时间未回复。",
+      "hidden_card_tips": "样品的真实测试结果和问题点。",
+      "legacy_codes": []
+    },
+    {
+      "code": "C03",
+      "name": "首单合规型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "solution",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "新卖家或自有品牌，首单对合规与定制要求多，还在样品期。",
+      "tests": "首单的合规与定制要求一次问清；用样品和条款建立信任；不靠催单降价推进。",
+      "full_marks": "列出合规与定制清单逐项确认；用样品确认书锁定标准。",
+      "typical_mistakes": "边做边改，事后扯皮；催单时降价。",
+      "material_signals": "买家是新店或新品牌，问题集中在合规和包装。",
+      "hidden_card_tips": "买家销售平台的合规要求。",
+      "legacy_codes": [
+        "P31"
+      ]
+    },
+    {
+      "code": "C04",
+      "name": "催款收口型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "insight",
+        "guidance"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "口头确认下单，但迟迟不付款。",
+      "tests": "分辨拖延和真意向；问出付款卡点；拿到有时间点的下一步，且不被拉离平台。",
+      "full_marks": "问清卡在哪一环；给台阶的同时约定付款日期。",
+      "typical_mistakes": "一味催促（R3）；同意平台外付款。",
+      "material_signals": "PI 已发，买家多次说\"马上付\"但没有动作。",
+      "hidden_card_tips": "真实卡点（资金、内部审批、还在比价）。",
+      "legacy_codes": [
+        "P27"
+      ]
+    },
+    {
+      "code": "C05",
+      "name": "成交反悔型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "negotiation",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "已经下单或确认，突然要撤单或改条件。",
+      "tests": "证伪撤单理由；不降价、重构订单结构。",
+      "full_marks": "问清反悔的真实原因；用分批、改配置等方式保住订单。",
+      "typical_mistakes": "直接同意撤单；用降价挽留。",
+      "material_signals": "确认订单后买家提出取消或大幅修改。",
+      "hidden_card_tips": "反悔的真实原因。",
+      "legacy_codes": [
+        "P18"
+      ]
+    },
+    {
+      "code": "C06",
+      "name": "转出平台型",
+      "stage": "C",
+      "stage_name": "样品成交",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "guidance",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "要求转到 WhatsApp、邮箱沟通，或要求平台外付款。",
+      "tests": "保住平台保障；在不得罪买家的情况下守住规则。",
+      "full_marks": "说明平台交易对双方的保障；可以多渠道沟通，但交易留在平台。",
+      "typical_mistakes": "直接答应平台外付款；生硬拒绝。",
+      "material_signals": "出现 WhatsApp 号码、私人邮箱、要求换收款账户。",
+      "hidden_card_tips": "买家转出的真实动机（习惯、避税、诈骗）。",
+      "legacy_codes": []
+    },
+    {
+      "code": "D01",
+      "name": "交付收口型",
+      "stage": "D",
+      "stage_name": "生产交付",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "solution",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "订单已下，进入生产与发货阶段，要求多而零散。",
+      "tests": "发货前把交付要求一次问齐；给出货代能直接用的精确数据；主动同步进度。",
+      "full_marks": "发货前列出交付清单；装箱数据精确到毛重体积；定期主动报进度。",
+      "typical_mistakes": "\"看情况再说\"；数据给错导致货代返工。",
+      "material_signals": "讨论唛头、装箱单、货代、船期。",
+      "hidden_card_tips": "买家货代的特殊要求。",
+      "legacy_codes": [
+        "P26"
+      ]
+    },
+    {
+      "code": "D02",
+      "name": "交期延误型",
+      "stage": "D",
+      "stage_name": "生产交付",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "stability",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "我方生产延误，买家着急甚至愤怒。",
+      "tests": "主动通报；给出可信的新交期和补救方案。",
+      "full_marks": "先于买家发现问题时主动告知；给出具体新日期和补偿方案。",
+      "typical_mistakes": "瞒到最后一刻；反复改交期。",
+      "material_signals": "出现 delay、behind schedule、ETD 变动。",
+      "hidden_card_tips": "买家下游的销售档期。",
+      "legacy_codes": []
+    },
+    {
+      "code": "D03",
+      "name": "验货争议型",
+      "stage": "D",
+      "stage_name": "生产交付",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "solution",
+        "negotiation"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "第三方验货不合格或结果有争议。",
+      "tests": "分清事实与标准；给出返工、复检或折扣的合理方案。",
+      "full_marks": "先核对验货标准与合同是否一致；对确实的问题给出具体整改。",
+      "typical_mistakes": "一味辩解；或全部接受不合理判定。",
+      "material_signals": "出现 AQL、inspection report、fail。",
+      "hidden_card_tips": "验货标准与合同约定的差异。",
+      "legacy_codes": []
+    },
+    {
+      "code": "D04",
+      "name": "单证清关型",
+      "stage": "D",
+      "stage_name": "生产交付",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "solution",
+        "closing",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "目的港清关卡住，要原产地证、发票、特殊文件。",
+      "tests": "清楚目的国单证要求；快速补齐、减少损失。",
+      "full_marks": "发货前确认单证清单；出问题时给出补办时间表。",
+      "typical_mistakes": "不懂单证，来回问；拖延补办。",
+      "material_signals": "出现 Form A、CO、commercial invoice、customs clearance。",
+      "hidden_card_tips": "目的国的特殊单证要求。",
+      "legacy_codes": []
+    },
+    {
+      "code": "E01",
+      "name": "售后纠纷型",
+      "stage": "E",
+      "stage_name": "售后纠纷",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "stability",
+        "trust",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "收货后投诉质量、数量或包装问题。",
+      "tests": "先稳情绪再挖真实诉求；给具体补救动作而非空承诺；守住底线并体面收尾或挽回。",
+      "full_marks": "先承接情绪；要照片和数据核实；给出具体补救方案和时间。",
+      "typical_mistakes": "先推卸责任；空口承诺\"会处理\"。",
+      "material_signals": "出现 damaged、defective、complaint、照片。",
+      "hidden_card_tips": "买家真实想要的结果（退款、补货、折扣）。",
+      "legacy_codes": [
+        "P25"
+      ]
+    },
+    {
+      "code": "E02",
+      "name": "差评威胁型",
+      "stage": "E",
+      "stage_name": "售后纠纷",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "stability",
+        "negotiation",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "用差评、平台纠纷、拒付来施压。",
+      "tests": "不被威胁带节奏；按事实解决问题。",
+      "full_marks": "冷静确认事实；给出合理方案；必要时引导平台介入。",
+      "typical_mistakes": "被吓到无原则让步；情绪化回应。",
+      "material_signals": "出现 bad review、dispute、chargeback。",
+      "hidden_card_tips": "买家威胁背后的真实诉求。",
+      "legacy_codes": []
+    },
+    {
+      "code": "E03",
+      "name": "索赔谈判型",
+      "stage": "E",
+      "stage_name": "售后纠纷",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "solution",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "问题属实，要求赔偿，金额偏高。",
+      "tests": "核算合理赔偿；用下单折扣、补货等方式替代现金赔付。",
+      "full_marks": "按损失核算依据；提出组合补偿方案。",
+      "typical_mistakes": "全额照赔；拒不赔偿导致客户流失。",
+      "material_signals": "出现 compensation、refund、claim 及具体金额。",
+      "hidden_card_tips": "买家的真实损失和底线。",
+      "legacy_codes": []
+    },
+    {
+      "code": "F01",
+      "name": "顺利推进型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "closing",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "合作顺利的客户，没有明显问题。",
+      "tests": "顺风局的上限经营：把执行期问成下一单；报价不掉档。",
+      "full_marks": "顺利时主动问销售情况和下一步计划；推荐相关产品。",
+      "typical_mistakes": "只做执行，不问下一单；顺手降价。",
+      "material_signals": "订单顺利推进，买家满意。",
+      "hidden_card_tips": "买家的新品计划或扩张计划。",
+      "legacy_codes": [
+        "P20"
+      ]
+    },
+    {
+      "code": "F02",
+      "name": "复购唤醒型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "guidance",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "买过但很久没再下单；或执行期出现了上升信号没被接住。",
+      "tests": "唤醒沉默复购客；承接上升信号。",
+      "full_marks": "用对方关心的新信息唤醒（新品、市场变化）；问清上次之后的销售情况。",
+      "typical_mistakes": "群发式问候；只推产品不问情况。",
+      "material_signals": "上次成交后长时间无联系，或买家提到扩张但没被跟进。",
+      "hidden_card_tips": "买家没再下单的原因。",
+      "legacy_codes": [
+        "P8"
+      ]
+    },
+    {
+      "code": "F03",
+      "name": "换人涨价型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "trust",
+        "negotiation",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "原业务员离职，新业务员接手时需要涨价，买家拿旧价格说事。",
+      "tests": "建立涨价的正当性；分清人情和推进。",
+      "full_marks": "先承认关系、补回信任；讲清旧价格的配置与现价差异。",
+      "typical_mistakes": "被旧价格绑住；否认前任的承诺。",
+      "material_signals": "买家提到前任业务员的价格或承诺。",
+      "hidden_card_tips": "旧报价的真实配置与现在的差异。",
+      "legacy_codes": [
+        "P9"
+      ]
+    },
+    {
+      "code": "F04",
+      "name": "返单博弈型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [
+        "standard"
+      ],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "insight",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "老客户返单，想要更低价格或更快交期。",
+      "tests": "返单的价格台阶设计；交期与折扣的分寸；识别客户底线。",
+      "full_marks": "用返单数量、付款条件换折扣；交期和价格不同时让。",
+      "typical_mistakes": "老客户一开口就降；交期和价格同时让步。",
+      "material_signals": "老客户再次询价并要求优惠。",
+      "hidden_card_tips": "客户的真实底线和替代选择。",
+      "legacy_codes": [
+        "P10",
+        "P28"
+      ]
+    },
+    {
+      "code": "F05",
+      "name": "情感绑定型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "stability",
+        "trust",
+        "negotiation"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "用私交、感情来要求特殊条件。",
+      "tests": "守住专业边界；切割情感与条款。",
+      "full_marks": "肯定关系，但条款按规则走；给面子不给底线。",
+      "typical_mistakes": "被感情绑架给出不合理条件；生硬拒绝伤关系。",
+      "material_signals": "大量私人话题、称兄道弟、\"as friends\"。",
+      "hidden_card_tips": "买家的真实商业诉求。",
+      "legacy_codes": [
+        "P14"
+      ]
+    },
+    {
+      "code": "F06",
+      "name": "情分兑现型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "closing",
+        "insight",
+        "guidance"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "高信任的老客户，聊得很好但迟迟没有新订单。",
+      "tests": "把信任兑现成有时间点的业务下一步；做动销诊断；不被寒暄带跑。",
+      "full_marks": "寒暄后迅速切到业务；问清上批货的销售情况；约定下一单时间。",
+      "typical_mistakes": "一直闲聊没有业务推进。",
+      "material_signals": "关系很好，但对话以寒暄为主。",
+      "hidden_card_tips": "上批货的动销情况。",
+      "legacy_codes": [
+        "P29"
+      ]
+    },
+    {
+      "code": "F07",
+      "name": "散单整合型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "solution",
+        "closing"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing"
+      ],
+      "na_forces": [
+        "negotiation",
+        "stability"
+      ],
+      "buyer_profile": "小客户，话术极简，零碎地加购不同产品。",
+      "tests": "在破碎表达里把需求问全；把散碎加购理成一单；起订量冲突给替代方案。",
+      "full_marks": "汇总清单让买家确认；凑整到合理起订量。",
+      "typical_mistakes": "一单一单零散处理；起订量冲突直接劝退。",
+      "material_signals": "多次零碎加购，每条信息很短。",
+      "hidden_card_tips": "买家的总预算。",
+      "legacy_codes": [
+        "P30"
+      ]
+    },
+    {
+      "code": "F08",
+      "name": "独家代理型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "negotiation",
+        "solution",
+        "insight"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "想要某个国家或地区的独家代理权。",
+      "tests": "用业绩条件换独家；保护公司的市场布局。",
+      "full_marks": "问清对方的渠道能力；独家权与年度采购量挂钩并设考核期。",
+      "typical_mistakes": "无条件给独家；一口回绝。",
+      "material_signals": "出现 exclusive、distributor、agent agreement。",
+      "hidden_card_tips": "对方真实的渠道覆盖和采购能力。",
+      "legacy_codes": []
+    },
+    {
+      "code": "F09",
+      "name": "竞品挖角型",
+      "stage": "F",
+      "stage_name": "老客经营",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": true,
+      "key_forces": [
+        "insight",
+        "negotiation",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "老客户说竞争对手给了更好的条件，准备转单。",
+      "tests": "挖出流失的真实原因；用价值留住客户。",
+      "full_marks": "问清对方条件的细节；对比真实总成本和服务差异。",
+      "typical_mistakes": "直接跟价；放弃客户。",
+      "material_signals": "老客户提到其他供应商的报价或条件。",
+      "hidden_card_tips": "流失的真实原因（价格、服务、质量）。",
+      "legacy_codes": []
+    },
+    {
+      "code": "G01",
+      "name": "诈骗钓鱼型",
+      "stage": "G",
+      "stage_name": "风险识别",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "stability"
+      ],
+      "na_forces": [
+        "negotiation"
+      ],
+      "buyer_profile": "发可疑链接、要求登录、发假付款截图、冒充平台。",
+      "tests": "识别钓鱼和诈骗信号；按规范处理而不中招。",
+      "full_marks": "不点陌生链接；付款以到账为准；可疑情况上报。",
+      "typical_mistakes": "点击链接；凭截图发货。",
+      "material_signals": "出现短链接、文件下载要求、付款截图、紧急施压。",
+      "hidden_card_tips": "诈骗手法的具体套路。",
+      "legacy_codes": []
+    },
+    {
+      "code": "G02",
+      "name": "仿牌侵权型",
+      "stage": "G",
+      "stage_name": "风险识别",
+      "session_type": "inquiry",
+      "default_difficulty": "standard",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "trust",
+        "solution"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "要求做带知名品牌标志的产品，或模仿专利设计。",
+      "tests": "识别侵权风险；拒绝侵权的同时保留合法生意。",
+      "full_marks": "明确告知不能做侵权产品；推荐自有品牌或无标替代方案。",
+      "typical_mistakes": "答应做仿牌；简单拒绝后失去客户。",
+      "material_signals": "出现知名品牌名、要求\"same as\"某品牌。",
+      "hidden_card_tips": "买家是否真的需要那个品牌，还是只要外观相似。",
+      "legacy_codes": []
+    },
+    {
+      "code": "G03",
+      "name": "制裁风险型",
+      "stage": "G",
+      "stage_name": "风险识别",
+      "session_type": "inquiry",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "stability"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "来自受制裁地区，或要求通过第三国转运、第三方付款。",
+      "tests": "识别制裁与合规风险；按公司合规流程处理。",
+      "full_marks": "核实终端用户和最终目的地；涉及风险时按流程上报，不擅自承诺。",
+      "typical_mistakes": "为了订单忽略风险；对正常的同地区买家一律拒绝（R2）。",
+      "material_signals": "出现转运、第三国收货、特殊付款路线。",
+      "hidden_card_tips": "真实的终端用户和目的地。",
+      "legacy_codes": [],
+      "note": "这一型考的是**识别与上报**，不是教业务员如何规避制裁。"
+    },
+    {
+      "code": "G04",
+      "name": "代付风险型",
+      "stage": "G",
+      "stage_name": "风险识别",
+      "session_type": "followup",
+      "default_difficulty": "hard",
+      "also_difficulties": [],
+      "exam_eligible": false,
+      "key_forces": [
+        "insight",
+        "stability",
+        "trust"
+      ],
+      "active_forces": [
+        "insight",
+        "guidance",
+        "solution",
+        "trust",
+        "closing",
+        "negotiation",
+        "stability"
+      ],
+      "na_forces": [],
+      "buyer_profile": "付款方和买家不是同一主体，或要求多付后退差额。",
+      "tests": "识别代付与退款诈骗；按规范处理。",
+      "full_marks": "核实付款方关系；拒绝多付退差。",
+      "typical_mistakes": "接受陌生第三方付款；多收后退款被骗。",
+      "material_signals": "付款人名称与买家不符，要求退回多付款。",
+      "hidden_card_tips": "代付背后的真实安排。",
+      "legacy_codes": []
+    }
+  ]
+}

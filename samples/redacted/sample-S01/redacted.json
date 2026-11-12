@@ -1,0 +1,176 @@
+{
+  "_comment": "已脱敏的聊天记录素材。真名↔化名映射未保存，不可还原。这是做人设的原料，不是人设本身——暗牌、解锁条件、价格阶梯还得人工设计。 样品素材（虚构数据），由 samples/raw-materials/chats 经 npm run import:chat 脱敏生成。",
+  "digest": {
+    "消息数": 13,
+    "客户发言": 7,
+    "我方发言": 6,
+    "客户平均字数": 13,
+    "时间跨度": "2026-01-05 ~ 2026-01-06",
+    "是否成交": "未知",
+    "有客户面板": true,
+    "有画像": false
+  },
+  "audit": [
+    {
+      "category": "客户姓名",
+      "count": 10
+    },
+    {
+      "category": "业务员姓名",
+      "count": 7
+    },
+    {
+      "category": "公司名",
+      "count": 1
+    }
+  ],
+  "chat": {
+    "source": {
+      "file": "sample-S01.html",
+      "exporterVersion": "alibaba-chat-export v6.0"
+    },
+    "header": {
+      "客户": "示例买家 S01",
+      "地区": "Germany",
+      "负责人": "示例业务员",
+      "消息数量": "13",
+      "时间范围": "2026-01-05 ~ 2026-01-06"
+    },
+    "customer": {
+      "fields": {
+        "公司名称": "示例买家公司 S01",
+        "国家": "Germany",
+        "买家等级": "A",
+        "注册时间": "2019-04"
+      },
+      "behavior90d": {
+        "90天登录天数": "41",
+        "90天浏览产品数": "86",
+        "90天有效询盘数": "3"
+      }
+    },
+    "okki": null,
+    "profile": null,
+    "buying": null,
+    "order": null,
+    "messages": [
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "09:00",
+        "text": "Hello, we are interested in your aluminium folding camping chair. Could you send us more information?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:06",
+        "text": "Hi, thanks for your inquiry! May I ask what the chairs will be used for, so I can recommend the right version?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "09:29",
+        "text": "We run a camping equipment rental in Bavaria, so the chairs will be used by many different guests every season.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:35",
+        "text": "Got it, durability is key then. How many pieces do you plan for the first order, and which colors?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "09:58",
+        "text": "For the first order we need 600 pieces, 400 black and 200 green.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:04",
+        "text": "Noted. Do you need any customization, such as your logo?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "10:27",
+        "text": "Yes, we would like a small white logo on the backrest.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "10:33",
+        "text": "Sure. When do you need the goods to arrive?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-05",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "10:56",
+        "text": "We need them in Hamburg by mid-March, before our season opening in April.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:23",
+        "text": "And how would you like to ship, FOB or CIF?",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "09:46",
+        "text": "FOB is fine, we have our own forwarder in China.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "me",
+        "sender": "示例业务员",
+        "time": "09:52",
+        "text": "Perfect, I will prepare the quotation with the logo price and send it today.",
+        "kind": "text",
+        "attachments": []
+      },
+      {
+        "date": "2026-01-06",
+        "side": "client",
+        "sender": "示例买家 S01",
+        "time": "10:15",
+        "text": "Thank you, looking forward to it.",
+        "kind": "text",
+        "attachments": []
+      }
+    ]
+  }
+}

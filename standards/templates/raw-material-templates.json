@@ -1,0 +1,91 @@
+{
+  "template_version": "1.0",
+  "description": "原材料模板的列定义。Excel 模板由 `npm run gen:templates` 按它生成，抽屉读取模板时也按它解析——两边共用这一份，改列只改这里。",
+  "files": [
+    {
+      "key": "products",
+      "file_name": "产品表模板-v1.0.xlsx",
+      "title": "产品表 · 原材料模板 v1.0",
+      "sheets": [
+        {
+          "name": "产品",
+          "purpose": "一行一个产品",
+          "columns": [
+            { "key": "sku", "label": "产品编号", "required": true, "type": "text", "width": 12, "example": "SKU-001", "hint": "自己编，用来和其他三张表对应" },
+            { "key": "name", "label": "品名", "required": true, "type": "text", "width": 30, "example": "Aluminium Folding Camping Chair", "hint": "英文品名" },
+            { "key": "model", "label": "型号", "required": false, "type": "text", "width": 12, "example": "CC-120", "hint": "内部型号" },
+            { "key": "category", "label": "品类", "required": true, "type": "text", "width": 14, "example": "Camping Furniture", "hint": "大类" },
+            { "key": "specs", "label": "主要规格", "required": false, "type": "list", "width": 36, "example": "7075 aluminium frame; 600D oxford seat; load 120 kg", "hint": "一格写多项，用分号隔开" },
+            { "key": "page_price", "label": "页面价", "required": false, "type": "text", "width": 16, "example": "USD 8.20-9.80", "hint": "平台页面上展示的价格区间" },
+            { "key": "moq", "label": "起订量", "required": true, "type": "text", "width": 12, "example": "300 pcs", "hint": "数字 + 单位" },
+            { "key": "sample_days", "label": "打样天数", "required": false, "type": "number", "width": 10, "example": 7 },
+            { "key": "bulk_days", "label": "大货交期（天）", "required": true, "type": "number", "width": 12, "example": 30 },
+            { "key": "sample_policy", "label": "样品政策", "required": false, "type": "text", "width": 34, "example": "样品免费，运费买家付；下单后退样品费" },
+            { "key": "customization", "label": "定制能力", "required": false, "type": "text", "width": 34, "example": "印 logo 起订 1000；定制颜色起订 3000" }
+          ]
+        },
+        {
+          "name": "价格阶梯",
+          "purpose": "一行一个档位。这里的价格就是 AI 买家判断业务员报价对不对的标准答案",
+          "columns": [
+            { "key": "sku", "label": "产品编号", "required": true, "type": "text", "width": 12, "example": "SKU-001" },
+            { "key": "min_qty", "label": "数量下限", "required": true, "type": "number", "width": 12, "example": 1000, "hint": "这一档从多少件起" },
+            { "key": "unit_price", "label": "单价", "required": true, "type": "number", "width": 10, "example": 8.9 },
+            { "key": "currency", "label": "币种", "required": true, "type": "choice", "choices": ["USD", "EUR", "CNY", "GBP"], "width": 8, "example": "USD" },
+            { "key": "incoterm", "label": "贸易术语", "required": true, "type": "choice", "choices": ["EXW", "FOB", "CFR", "CIF", "DAP", "DDP"], "width": 10, "example": "FOB" },
+            { "key": "port", "label": "港口或地点", "required": false, "type": "text", "width": 14, "example": "Ningbo" }
+          ]
+        },
+        {
+          "name": "包装物流",
+          "purpose": "一行一个产品",
+          "columns": [
+            { "key": "sku", "label": "产品编号", "required": true, "type": "text", "width": 12, "example": "SKU-001" },
+            { "key": "qty_per_carton", "label": "装箱数", "required": false, "type": "text", "width": 12, "example": "20 pcs/ctn" },
+            { "key": "carton_cm", "label": "外箱尺寸（cm）", "required": false, "type": "text", "width": 16, "example": "62 × 38 × 40" },
+            { "key": "gross_kg", "label": "毛重（kg）", "required": false, "type": "number", "width": 10, "example": 24 },
+            { "key": "net_kg", "label": "净重（kg）", "required": false, "type": "number", "width": 10, "example": 22.5 },
+            { "key": "unit_pack", "label": "单品包装", "required": false, "type": "text", "width": 14, "example": "彩盒" }
+          ]
+        },
+        {
+          "name": "认证",
+          "purpose": "一行一张证书",
+          "columns": [
+            { "key": "sku", "label": "产品编号", "required": true, "type": "text", "width": 12, "example": "SKU-001" },
+            { "key": "name", "label": "证书名", "required": true, "type": "text", "width": 14, "example": "EN 581-1" },
+            { "key": "market", "label": "适用市场", "required": false, "type": "text", "width": 16, "example": "欧盟" },
+            { "key": "number", "label": "证书编号", "required": false, "type": "text", "width": 18, "example": "" },
+            { "key": "valid_until", "label": "有效期", "required": false, "type": "text", "width": 12, "example": "2027-06" }
+          ]
+        }
+      ]
+    },
+    {
+      "key": "company",
+      "file_name": "公司信息模板-v1.0.xlsx",
+      "title": "公司信息 · 原材料模板 v1.0",
+      "sheets": [
+        {
+          "name": "公司信息",
+          "purpose": "全部选填。不填公司真实名称",
+          "layout": "rows",
+          "rows": [
+            { "key": "company_type", "label": "公司类型", "type": "choice", "choices": ["工厂", "贸易", "工贸一体"], "example": "工贸一体" },
+            { "key": "main_categories", "label": "主营品类", "type": "text", "example": "户外露营家具、露营灯、睡垫" },
+            { "key": "province", "label": "工厂所在省份", "type": "text", "example": "只填到省", "hint": "只填到省，不要写到市县" },
+            { "key": "ports", "label": "常用发货港口", "type": "text", "example": "宁波、上海" },
+            { "key": "capacity", "label": "年产能", "type": "text", "example": "约 80 万件" },
+            { "key": "certifications", "label": "主要认证", "type": "text", "example": "BSCI、ISO 9001" },
+            { "key": "payment_terms", "label": "接受的付款方式", "type": "text", "example": "T/T 30% 定金，余款见提单副本；信用证" },
+            { "key": "oem_odm", "label": "是否接 OEM / ODM", "type": "text", "example": "都接" },
+            { "key": "qc_process", "label": "质检流程", "type": "text", "example": "来料检、过程检、出货前全检" },
+            { "key": "after_sales", "label": "售后政策", "type": "text", "example": "质量问题凭照片补货或下单抵扣" },
+            { "key": "not_accepted", "label": "明确不做的业务", "type": "text", "example": "不做仿牌；不接受平台外付款" },
+            { "key": "notes", "label": "补充说明", "type": "text", "example": "业务重点、新人常犯的错（可选）" }
+          ]
+        }
+      ]
+    }
+  ]
+}

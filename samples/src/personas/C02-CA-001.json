@@ -1,0 +1,307 @@
+{
+  "id": "C02-CA-001",
+  "version": "1.0",
+  "skeleton": {
+    "type_code": "C02",
+    "name": "样品沉默型",
+    "session_type": "followup",
+    "difficulty": "standard",
+    "tests": "样品寄出后沉默：问具体测试结果而不是「收到了吗」，挖出问题并给出解决方案，拿到有时间点的下一步",
+    "active_forces": [
+      "insight",
+      "guidance",
+      "solution",
+      "trust",
+      "closing",
+      "stability"
+    ],
+    "na_forces": [
+      "negotiation"
+    ]
+  },
+  "pool_type": "drill",
+  "open_card": {
+    "name": "Ryan Cole",
+    "country": "Canada",
+    "company": "Maple Trail Gear Inc.",
+    "buyer_level": "A",
+    "categories": [
+      "Outdoor Lighting",
+      "Winter Camping"
+    ],
+    "login_days_90d": 21,
+    "product_views_90d": 47,
+    "valid_inquiries_90d": 1,
+    "tags": [
+      "样品已寄",
+      "决策慢"
+    ],
+    "blacklisted_count": 0,
+    "spam_inquiry_count": 0,
+    "registered_at": "2016-03",
+    "email": "ryan@mapletrail-gear.example",
+    "inquiry_text": "【本局起点：三周前寄了 2 只样品，客户签收后一直没反馈】\n\n你三周前寄出：LT-300 露营灯样品 2 只，快递显示已签收。\n客户签收当天的消息：「Received, we will test them.」\n之后再无回复。\n\n──── 现在轮到你开口 ────\n你发出去的第一条消息，就是这一局的第一手。"
+  },
+  "product": {
+    "model": "LT-300",
+    "name": "Rechargeable LED Camping Lantern 300 lm",
+    "attributes": {
+      "brightness": "300 lm",
+      "battery": "4400 mAh",
+      "charging": "USB-C",
+      "waterproof": "IPX4",
+      "modes": [
+        "high",
+        "medium",
+        "low",
+        "red light"
+      ],
+      "runtime_medium": "14 h"
+    },
+    "page_price": "USD 5.40-6.50",
+    "price_tiers": [
+      {
+        "min_qty": 500,
+        "max_qty": 1999,
+        "unit_price": 6.5,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 2000,
+        "max_qty": 4999,
+        "unit_price": 5.9,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      },
+      {
+        "min_qty": 5000,
+        "max_qty": null,
+        "unit_price": 5.4,
+        "currency": "USD",
+        "incoterm": "FOB",
+        "port": "Ningbo",
+        "variant": null
+      }
+    ],
+    "moq": {
+      "qty": 500,
+      "unit": "pcs"
+    },
+    "lead_time": {
+      "sample_days": 5,
+      "bulk_days": 30
+    },
+    "packing": {
+      "qty_per_carton": 40,
+      "carton_cm": "52 × 36 × 30",
+      "gross_kg": 15
+    },
+    "certifications": [
+      {
+        "name": "CE",
+        "market": "EU"
+      },
+      {
+        "name": "RoHS",
+        "market": "EU"
+      },
+      {
+        "name": "FCC",
+        "market": "US"
+      },
+      {
+        "name": "UN38.3",
+        "market": "电池运输"
+      }
+    ],
+    "surcharges": {
+      "logo_print": 0.15,
+      "color_box": 0.35
+    }
+  },
+  "hidden_card": {
+    "H1_test_result": {
+      "value": "亮度没问题，但挂钩在零下 15 度的低温测试里断了——这才是沉默的原因",
+      "unlock": "问测试结果 / 样品表现；只问「收到了吗」不给",
+      "unlock_patterns": [
+        "\\btest(s|ed|ing)?\\b",
+        "(how|what)[^.?!]{0,25}(sample|samples|lanterns?)[^.?!]{0,20}(perform|work|go|result)",
+        "(any|your) feedback",
+        "测试|样品(怎么样|表现|反馈)"
+      ],
+      "leak_signals": [
+        "the hook broke",
+        "cold test",
+        "minus 15"
+      ]
+    },
+    "H2_cold_requirement": {
+      "value": "门店在阿尔伯塔，客户冬季露营，低到零下 20 度",
+      "unlock": "知道低温出了问题之后，问使用温度 / 环境",
+      "unlock_patterns": [
+        "temperature",
+        "\\bcold\\b|\\bwinter\\b",
+        "(what|which) (conditions|climate|weather)",
+        "低温|温度|冬天"
+      ],
+      "requires": [
+        "H1_test_result"
+      ],
+      "leak_signals": [
+        "Alberta",
+        "winter camping",
+        "minus 20"
+      ]
+    },
+    "H3_solution_ok": {
+      "value": "换金属挂钩、复测通过，他会下 1500 只",
+      "unlock": "提出解决方案并问他能不能接受",
+      "unlock_patterns": [
+        "(if|what if)[^.?!]{0,30}(change|replace|switch|upgrade)",
+        "(metal|steel|aluminium|aluminum) hook",
+        "如果.{0,10}(换|改)|金属(挂)?钩"
+      ],
+      "requires": [
+        "H2_cold_requirement"
+      ],
+      "leak_signals": [
+        "1500 pieces",
+        "metal hook"
+      ]
+    },
+    "H4_timeline": {
+      "value": "下个月 15 号开采购会",
+      "unlock": "问什么时候决定 / 时间线",
+      "unlock_patterns": [
+        "(when|by when) (will|do|can) you (decide|make the decision|review)",
+        "(buying|purchase|purchasing) meeting",
+        "(your|the) (timeline|schedule)",
+        "什么时候(决定|开会)"
+      ],
+      "leak_signals": [
+        "buying meeting",
+        "the 15th"
+      ]
+    }
+  },
+  "leak_fallback": "Ok. Please send me your offer.",
+  "distractors": [
+    {
+      "code": "D1",
+      "turn_range": [
+        2,
+        3
+      ],
+      "content": "We are still testing.",
+      "tests": "别回「好的等您消息」。问具体测了什么、哪一项有问题",
+      "unlocks": null,
+      "scoring": "追问具体测试项 → insight 加分；空等 → R3 风险"
+    }
+  ],
+  "customs_capability": "加拿大进口常规；问了正常答",
+  "init_state": {
+    "patience": 65,
+    "trust": 50,
+    "interest": 55
+  },
+  "rules_override": {},
+  "exit_lines": {
+    "maxTurns": "Thanks, we will discuss it in our meeting.",
+    "patienceZero": null,
+    "stagnant": "Ok, we will let you know."
+  },
+  "quote_reactions": {
+    "compliant": "Thank you, this is clear. Let me review it and come back to you.",
+    "redline_R1": "Ok.",
+    "qty_mismatch": "That is not the quantity I meant.",
+    "oneline_big_quote": "Could you send a proper quotation sheet with the details?"
+  },
+  "language_style": "加拿大户外店买手的英语：礼貌、平和，回复简短；有问题不会主动抱怨，问到才说。",
+  "verify_cases": [
+    {
+      "card": "H1_test_result",
+      "should": [
+        "How did the lanterns perform in your tests?",
+        "Did you test the samples?",
+        "Any feedback on the samples?",
+        "样品测试得怎么样？"
+      ],
+      "shouldNot": [
+        "Did you receive the samples?",
+        "Any update?"
+      ]
+    },
+    {
+      "card": "H2_cold_requirement",
+      "should": [
+        "What temperatures will your customers use them in?",
+        "Will they be used in winter?",
+        "What weather conditions do your customers camp in?"
+      ],
+      "shouldNot": [
+        "When will you decide?",
+        "Did you receive the samples?"
+      ]
+    },
+    {
+      "card": "H3_solution_ok",
+      "should": [
+        "If we change the hook to a metal one, would that work for you?",
+        "What if we replace the hook and send new samples?",
+        "Would a metal hook solve the problem?"
+      ],
+      "shouldNot": [
+        "When will you decide?",
+        "Did you receive the samples?"
+      ]
+    },
+    {
+      "card": "H4_timeline",
+      "should": [
+        "When will you make the decision?",
+        "Do you have a buying meeting coming up?",
+        "What is your timeline for the winter range?"
+      ],
+      "shouldNot": [
+        "When your order is ready we will send you photos.",
+        "Did you receive the samples?"
+      ]
+    }
+  ],
+  "_source": {
+    "material_id": "sample-S07",
+    "quotes": [
+      {
+        "card": "H1_test_result",
+        "message_index": 4,
+        "quote": "Brightness is good, but the hook broke in our cold test at minus 15."
+      },
+      {
+        "card": "H2_cold_requirement",
+        "message_index": 6,
+        "quote": "Our stores are in Alberta. Customers go winter camping, it can be minus 20."
+      },
+      {
+        "card": "H3_solution_ok",
+        "message_index": 8,
+        "quote": "With a metal hook and a passed retest, we would order 1500 pieces."
+      },
+      {
+        "card": "H4_timeline",
+        "message_index": 10,
+        "quote": "Our buying meeting is on the 15th next month."
+      }
+    ]
+  },
+  "_comment": "样品题（虚构数据）。题型 C02 样品沉默型，改编自样品素材 sample-S07。",
+  "preset_elements": [
+    "product_attr",
+    "quantity",
+    "address"
+  ]
+}
